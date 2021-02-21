@@ -7,11 +7,9 @@
     android:background="@color/colorPrimary"
     app:contentInsetEnd="80dp"
     app:contentInsetStart="80dp"
-    app:menu="@menu/toolbar_menu"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     app:popupTheme="@style/ToolbarPopupTheme"
     app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
-    app:title="@string/app_name"
     app:titleMarginStart="20dp"
     app:titleTextColor="@color/white">
 
