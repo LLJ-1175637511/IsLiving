@@ -6,7 +6,7 @@ import com.llj.living.utils.ToastUtils
 class MyApplication:Application() {
     override fun onCreate() {
         super.onCreate()
-        ToastUtils.init(this)
+        ToastUtils.init(this.applicationContext)
     }
 
 }

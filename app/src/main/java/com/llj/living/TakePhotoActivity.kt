@@ -10,7 +10,7 @@ import android.provider.MediaStore
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_take_photo.*
 import java.io.File
 import java.io.IOException
 
@@ -38,7 +38,7 @@ class TakePhotoActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_take_photo)
 
         take_photo.setOnClickListener {
             val outputImage = File(externalCacheDir, "output_image.jpg")

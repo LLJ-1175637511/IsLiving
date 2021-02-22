@@ -1,5 +1,7 @@
 package com.llj.living.ui.activity
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.ViewGroup
@@ -11,9 +13,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.SavedStateViewModelFactory
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import com.llj.living.R
 import com.llj.living.data.bean.ToolbarConfig
 import com.llj.living.databinding.ActivityBaseViewBinding
@@ -33,9 +33,7 @@ abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity() {
 
     open fun init() {}
 
-    open fun showToolbar(): Boolean {
-        return true
-    }
+    open fun showToolbar(): Boolean = true
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +43,36 @@ abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity() {
         initToolbar()
         init()
 
+    }
+
+    fun getToolbar() = mToolbar
+
+    fun getDataBinding() = mDataBinding
+
+    /**
+     * 初始化toolbar参数
+     */
+    fun setToolbar(toolbarConfig: ToolbarConfig) {
+        mToolbarConfig.apply {
+            title = toolbarConfig.title
+            isShowBack = toolbarConfig.isShowBack
+            isShowMenu = toolbarConfig.isShowMenu
+        }
+    }
+
+    /**
+     * 便捷初始化viewModel
+     */
+    fun <VM:AndroidViewModel> initViewModel(vm: Class<VM>) = ViewModelProvider(this, SavedStateViewModelFactory(application, this))[vm]
+
+    inline fun <reified VM:AndroidViewModel> initViewModel() = initViewModel(VM::class.java)
+
+    fun <T:Activity> startCommonActivity(activity:Class<T>){
+        startActivity(Intent(this,activity))
+    }
+
+    inline fun <reified T:Activity> startCommonActivity(){
+        startCommonActivity(T::class.java)
     }
 
     private fun initView() {
@@ -102,28 +130,6 @@ abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity() {
             }
         }
     }
-
-    fun getToolbar() = mToolbar
-
-    fun getDataBinding() = mDataBinding
-
-    /**
-     * 初始化toolbar参数
-     */
-    fun setToolbar(toolbarConfig: ToolbarConfig) {
-        mToolbarConfig.apply {
-            title = toolbarConfig.title
-            isShowBack = toolbarConfig.isShowBack
-            isShowMenu = toolbarConfig.isShowMenu
-        }
-    }
-
-    /**
-     * 便捷初始化viewModel
-     */
-    fun <VM:AndroidViewModel> initViewModel(vm: Class<VM>) = ViewModelProvider(this, SavedStateViewModelFactory(application, this))[vm]
-
-    inline fun <reified VM:AndroidViewModel> initViewModel() = initViewModel(VM::class.java)
 
 /*private fun setFullScreen() {
         //沉浸式效果
