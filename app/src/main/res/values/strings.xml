@@ -8,5 +8,6 @@
     <string name="user_name_is_null">用户名不能为空</string>
     <string name="user_pwd_is_null">密码不能为空</string>
     <string name="sp_saved_fail">数据保存失败 请重试</string>
+    <string name="activity_face_auth">人脸鉴权</string>
 
 </resources>

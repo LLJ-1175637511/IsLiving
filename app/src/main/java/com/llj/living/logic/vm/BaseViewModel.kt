@@ -1,6 +1,8 @@
 package com.llj.living.logic.vm
 
 import android.app.Application
+import android.content.Context
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -29,6 +31,7 @@ abstract class BaseViewModel(
             }
         } catch (e: Exception) {
             e.printStackTrace()
+            LogUtils.d(TAG,e.message.toString())
         }
         return savedStateHandle.getLiveData(name)
     }
@@ -42,6 +45,7 @@ abstract class BaseViewModel(
                 savedStateHandle.set(name, type)
             } catch (e: Exception) {
                 e.printStackTrace()
+                LogUtils.d(TAG,e.message.toString())
             }
         }
         return savedStateHandle.getLiveData(name)
@@ -54,4 +58,6 @@ abstract class BaseViewModel(
         getLiveDataListForKey(name, mutableListOf<T>())
 
     fun getSavedHandle() = savedStateHandle
+
+    fun getSP(key:String) = getApplication<Application>().getSharedPreferences(key, Context.MODE_PRIVATE)
 }

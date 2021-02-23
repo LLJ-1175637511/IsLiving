@@ -11,3 +11,4 @@ fun SharedPreferences.save(block: SharedPreferences.Editor.() -> Unit): Boolean 
     block(edit)
     return edit.commit()
 }
+

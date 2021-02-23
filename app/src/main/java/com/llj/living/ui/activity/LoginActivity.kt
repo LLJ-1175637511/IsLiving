@@ -1,26 +1,21 @@
-package com.llj.living
+package com.llj.living.ui.activity
 
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import com.llj.living.R
+import com.llj.living.custom.ext.baseObserver
 import com.llj.living.data.bean.ToolbarConfig
 import com.llj.living.databinding.ActivityLoginBinding
 import com.llj.living.logic.vm.LoginViewModel
-import com.llj.living.ui.activity.BaseActivity
-import com.llj.living.ui.activity.MainActivity
-import com.llj.living.utils.ToastUtils
 import kotlinx.coroutines.launch
 
-class LoginActivity:BaseActivity<ActivityLoginBinding>(){
+class LoginActivity : BaseActivity<ActivityLoginBinding>() {
 
     override fun getLayoutId(): Int = R.layout.activity_login
 
-    private lateinit var viewModel:LoginViewModel
-
-    init {
-        setToolbar(ToolbarConfig(title = "LoginActivity",isShowBack = true,isShowMenu = false))
-    }
+    private lateinit var viewModel: LoginViewModel
 
     override fun init() {
+        setToolbar(ToolbarConfig(title = "LoginActivity", isShowBack = false, isShowMenu = false))
         initListener()
         initVM()
     }
@@ -28,17 +23,13 @@ class LoginActivity:BaseActivity<ActivityLoginBinding>(){
     private fun initVM() {
         viewModel = initViewModel<LoginViewModel>()
 
-        /*viewModel.getRememberPwdLiveData().baseObserver(this) {
-            ToastUtils.toastShort("记住密码:${it}")
-        }*/
-
-        viewModel.getRememberPwdLiveData().observe(this, Observer {
-            ToastUtils.toastShort("记住密码:${it}")
-        })
+        viewModel.getRememberPwdLiveData().baseObserver(this) {
+            getDataBinding().cbRememPwdLogin.isChecked = it
+        }
 
         getDataBinding().loginVm = viewModel
 
-        viewModel.test()
+        viewModel.loadUserData()
     }
 
     private fun initListener() {
@@ -50,7 +41,6 @@ class LoginActivity:BaseActivity<ActivityLoginBinding>(){
                 viewModel.getRememberPwdLiveData().postValue(this.isChecked)
             }
         }
-        mutableListOf<String>()
         getDataBinding().btLoginActivity.setOnClickListener {
             lifecycleScope.launch {
                 val isSuc = viewModel.login()
@@ -59,7 +49,6 @@ class LoginActivity:BaseActivity<ActivityLoginBinding>(){
                     finish()
                 }
             }
-
         }
     }
 

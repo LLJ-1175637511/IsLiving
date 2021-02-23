@@ -34,7 +34,7 @@ class TakePhotoActivity : AppCompatActivity() {
             }
         }
 
-    var imageUri: Uri? = null
+    private var imageUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,8 +90,6 @@ class TakePhotoActivity : AppCompatActivity() {
 
     }
 */
-
-
         }
     }
 }

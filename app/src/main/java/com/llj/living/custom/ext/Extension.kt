@@ -1,10 +1,9 @@
 package com.llj.living.custom.ext
 
-import android.content.Context
+import android.util.Base64
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import com.llj.living.LoginActivity
 
 
 /**
@@ -13,3 +12,9 @@ import com.llj.living.LoginActivity
 fun <T> LiveData<T>.baseObserver(lifecycleOwner: LifecycleOwner, block: (T)->Unit){
     this.observe(lifecycleOwner, Observer { block(it) })
 }
+
+/**
+ * byte 转 base64
+ * 建议子线程调用
+ */
+fun ByteArray.toBase64():String = Base64.encodeToString(this,Base64.DEFAULT)
