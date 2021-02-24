@@ -7,3 +7,11 @@ enum class BaseDataEnum {
 enum class UrlType{
     Face,Token,Mysql
 }
+
+enum class ImageType{
+    BASE64,FACE_TOKEN,URL
+}
+
+enum class ActionType{
+    APPEND,REPLACE
+}

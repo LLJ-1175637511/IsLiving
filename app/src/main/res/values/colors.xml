@@ -29,4 +29,6 @@
     <color name="qq_section_text_color">#8c8c8c</color>
     <color name="black_1">#070606</color>
     <color name="qq_blue">#00acff</color>
+    <color name="grey_dark">#333232</color>
+    <color name="grey">#272626</color>
 </resources>

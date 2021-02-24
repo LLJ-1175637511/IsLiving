@@ -5,7 +5,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.llj.living.R
-import com.llj.living.TakePhotoActivity
 import com.llj.living.data.bean.ToolbarConfig
 import com.llj.living.databinding.ActivityMainBinding
 

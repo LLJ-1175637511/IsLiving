@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.llj.living.custom.exception.TypeConvertException
 import com.llj.living.data.bean.TokenBean
 import com.llj.living.net.network.FaceAuthNetwork
+import com.llj.living.utils.LogUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.lang.Exception
@@ -23,6 +24,10 @@ object FaceAuthRepository {
         }else{ //请求错误 json转化正确请求的数据类
             convertTokenData<TokenBean.TokenSuc>{ strResult }
         }
+    }
+
+    suspend fun sendRegisterFaceRequest(token:String,map: Map<String,String>): String = withContext(Dispatchers.IO){
+        FaceAuthNetwork.registerFace(token, map).string()
     }
 
     private suspend inline fun <reified T> convertTokenData(

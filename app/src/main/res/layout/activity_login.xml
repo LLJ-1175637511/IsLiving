@@ -9,117 +9,208 @@
             type="com.llj.living.logic.vm.LoginViewModel" />
     </data>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_gravity="center"
+
+        <ImageView
+            android:id="@+id/iv_user_logo"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:background="@mipmap/logo"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.2" />
+
+        <EditText
+            android:id="@+id/et_user_name_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            app:layout_constraintTop_toBottomOf="@+id/iv_user_logo"
+            android:hint="@string/user_name"
+            android:theme="@style/codeEdit"
+            android:textColorHint="@color/grey"
+            android:ems="10"
+            android:text="@={loginVm.userNameLiveData}"
+            android:textColor="@android:color/black"
+            android:inputType="text"
+            android:imeOptions="actionNext"/>
+
+        <EditText
+            android:id="@+id/et_user_pwd_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:text="@={loginVm.passWordLiveData}"
+            android:textColorHint="@color/grey"
+            android:textColor="@android:color/black"
+            app:layout_constraintTop_toBottomOf="@+id/et_user_name_login"
+            android:hint="@string/user_pwd"
+            android:theme="@style/codeEdit"
+            android:inputType="textPassword"/>
+        <CheckBox
+            android:id="@+id/cb_remem_pwd_login"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="40dp"
+            android:textColorHint="@color/qq_blue"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_user_pwd_login"
+            android:hint="记住密码" />
 
-            <EditText
-                android:id="@+id/et_user_pwd_login"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:text="@={loginVm.passWordLiveData}"
-                android:inputType="textPassword"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_str_upwd_login"
-                app:layout_constraintEnd_toEndOf="@+id/et_user_name_login"
-                app:layout_constraintHorizontal_bias="0.1"
-                app:layout_constraintStart_toEndOf="@+id/tv_str_uname_login"
-                app:layout_constraintTop_toTopOf="@+id/tv_str_upwd_login" />
+        <Button
+            android:id="@+id/bt_login_activity"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            app:layout_constraintTop_toBottomOf="@+id/cb_remem_pwd_login"
+            android:background="@drawable/btn_login"
+            android:textSize="22dp"
+            android:textColor="#fff"
+            android:text="@string/user_login"/>
 
-            <TextView
-                android:id="@+id/tv_str_upwd_login"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/user_pwd"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/tv_str_uname_login"
-                app:layout_constraintHorizontal_bias="0.233"
-                app:layout_constraintStart_toStartOf="@+id/tv_str_uname_login"
-                app:layout_constraintTop_toBottomOf="@+id/tv_str_uname_login"
-                app:layout_constraintVertical_bias="0.145" />
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/user_find_pwd"
+            android:textSize="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/cb_remem_pwd_login"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.304"
+            app:layout_constraintStart_toEndOf="@+id/cb_remem_pwd_login"
+            app:layout_constraintTop_toTopOf="@+id/cb_remem_pwd_login" />
 
-            <Button
-                android:id="@+id/bt_login_activity"
-                android:layout_width="220dp"
-                android:layout_marginTop="30dp"
-                android:layout_height="wrap_content"
-                android:text="@string/user_login"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/et_user_pwd_login"
-                app:layout_constraintHorizontal_bias="0.588"
-                app:layout_constraintStart_toStartOf="@+id/tv_str_upwd_login"
-                app:layout_constraintTop_toBottomOf="@+id/cb_remem_pwd_login"
-                app:layout_constraintVertical_bias="0.403" />
+        <Space
+            app:layout_constraintTop_toBottomOf="@+id/bt_login_activity"
+            android:layout_weight="3"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"/>
 
-            <TextView
-                android:id="@+id/tv_str_uname_login"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/user_name"
-                android:textSize="16sp"
-                android:layout_marginTop="20dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iv_user_logo"
-                app:layout_constraintVertical_bias="0.146" />
 
-            <ImageView
-                android:id="@+id/iv_user_logo"
-                android:src="@mipmap/logo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+<!--    <FrameLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
+<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content">-->
 
-            <EditText
-                android:id="@+id/et_user_name_login"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:text="@={loginVm.userNameLiveData}"
-                android:inputType="text"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_str_uname_login"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/tv_str_uname_login"
-                app:layout_constraintTop_toTopOf="@+id/tv_str_uname_login" />
+<!--            <EditText-->
+<!--                android:id="@+id/et_user_pwd_login"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:ems="10"-->
+<!--                android:text="@={loginVm.passWordLiveData}"-->
+<!--                android:inputType="textPassword"-->
+<!--                app:layout_constraintBottom_toBottomOf="@+id/tv_str_upwd_login"-->
+<!--                app:layout_constraintEnd_toEndOf="@+id/et_user_name_login"-->
+<!--                app:layout_constraintHorizontal_bias="0.1"-->
+<!--                app:layout_constraintStart_toEndOf="@+id/tv_str_uname_login"-->
+<!--                app:layout_constraintTop_toTopOf="@+id/tv_str_upwd_login" />-->
 
-            <CheckBox
-                android:id="@+id/cb_remem_pwd_login"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="@string/user_remember_pwd"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.177"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_str_upwd_login"
-                app:layout_constraintVertical_bias="0.1" />
+<!--            <TextView-->
+<!--                android:id="@+id/tv_str_upwd_login"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="@string/user_pwd"-->
+<!--                android:textSize="16sp"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="@+id/tv_str_uname_login"-->
+<!--                app:layout_constraintHorizontal_bias="0.233"-->
+<!--                app:layout_constraintStart_toStartOf="@+id/tv_str_uname_login"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/tv_str_uname_login"-->
+<!--                app:layout_constraintVertical_bias="0.145" />-->
 
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/user_find_pwd"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="@+id/cb_remem_pwd_login"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.304"
-                app:layout_constraintStart_toEndOf="@+id/cb_remem_pwd_login"
-                app:layout_constraintTop_toTopOf="@+id/cb_remem_pwd_login" />
+<!--            <Button-->
+<!--                android:id="@+id/bt_login_activity"-->
+<!--                android:layout_width="220dp"-->
+<!--                android:layout_marginTop="30dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="@string/user_login"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="@+id/et_user_pwd_login"-->
+<!--                app:layout_constraintHorizontal_bias="0.588"-->
+<!--                app:layout_constraintStart_toStartOf="@+id/tv_str_upwd_login"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/cb_remem_pwd_login"-->
+<!--                app:layout_constraintVertical_bias="0.403" />-->
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </FrameLayout>
+<!--            <TextView-->
+<!--                android:id="@+id/tv_str_uname_login"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="@string/user_name"-->
+<!--                android:textSize="16sp"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintHorizontal_bias="0"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/iv_user_logo"-->
+<!--                app:layout_constraintVertical_bias="0.146" />-->
+
+<!--            <ImageView-->
+<!--                android:id="@+id/iv_user_logo"-->
+<!--                android:src="@mipmap/logo"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                app:layout_constraintVertical_bias="0" />-->
+
+<!--            <EditText-->
+<!--                android:id="@+id/et_user_name_login"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:ems="10"-->
+<!--                android:text="@={loginVm.userNameLiveData}"-->
+<!--                android:inputType="text"-->
+<!--                app:layout_constraintBottom_toBottomOf="@+id/tv_str_uname_login"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintHorizontal_bias="0.0"-->
+<!--                app:layout_constraintStart_toEndOf="@+id/tv_str_uname_login"-->
+<!--                app:layout_constraintTop_toTopOf="@+id/tv_str_uname_login" />-->
+
+<!--            <CheckBox-->
+<!--                android:id="@+id/cb_remem_pwd_login"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="15dp"-->
+<!--                android:text="@string/user_remember_pwd"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintHorizontal_bias="0.177"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/tv_str_upwd_login"-->
+<!--                app:layout_constraintVertical_bias="0.1" />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/textView3"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="@string/user_find_pwd"-->
+<!--                android:textSize="16sp"-->
+<!--                app:layout_constraintBottom_toBottomOf="@+id/cb_remem_pwd_login"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintHorizontal_bias="0.304"-->
+<!--                app:layout_constraintStart_toEndOf="@+id/cb_remem_pwd_login"-->
+<!--                app:layout_constraintTop_toTopOf="@+id/cb_remem_pwd_login" />-->
+
+<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
+<!--    </FrameLayout>-->
 
 </layout>
