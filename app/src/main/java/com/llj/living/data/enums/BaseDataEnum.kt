@@ -13,5 +13,9 @@ enum class ImageType{
 }
 
 enum class ActionType{
-    APPEND,REPLACE
+    APPEND,REPLACE,UPDATE
+}
+
+enum class ModifyFaceType{
+    Register,Update
 }

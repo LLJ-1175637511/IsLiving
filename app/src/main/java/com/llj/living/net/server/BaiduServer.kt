@@ -1,5 +1,6 @@
 package com.llj.living.net.server
 
+import com.llj.living.data.bean.DeleteFaceBean
 import com.llj.living.net.config.NetConfig
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -22,4 +23,24 @@ interface RegisterFaceServer {
         @Query(NetConfig.AccessToken) accessToken: String,
         @FieldMap map:Map<String,String>
     ): Call<ResponseBody>
+}
+
+interface UpdateFaceServer {
+    @FormUrlEncoded
+    @POST("rest/2.0/face/v3/faceset/user/update")
+    fun updateFace(
+        @Header(NetConfig.ContentType) contentType:String,
+        @Query(NetConfig.AccessToken) accessToken: String,
+        @FieldMap map:Map<String,String>
+    ): Call<ResponseBody>
+}
+
+interface DeleteFaceServer {
+    @FormUrlEncoded
+    @POST("rest/2.0/face/v3/faceset/user/delete")
+    fun deleteFace(
+        @Header(NetConfig.ContentType) contentType:String,
+        @Query(NetConfig.AccessToken) accessToken: String,
+        @FieldMap map:Map<String,String>
+    ): Call<DeleteFaceBean>
 }

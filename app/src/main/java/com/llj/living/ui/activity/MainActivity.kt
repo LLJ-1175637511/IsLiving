@@ -21,9 +21,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     private fun initListener() {
-        getDataBinding().btTakePhoto.setOnClickListener {
-            startCommonActivity<TakePhotoActivity>()
-        }
         getDataBinding().btStartToFaceAuth.setOnClickListener {
             startCommonActivity<FaceAuthenticActivity>()
         }

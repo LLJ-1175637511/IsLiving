@@ -4,6 +4,8 @@ import android.util.Base64
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import com.google.gson.Gson
+import java.lang.reflect.Type
 
 
 /**
@@ -18,3 +20,10 @@ fun <T> LiveData<T>.baseObserver(lifecycleOwner: LifecycleOwner, block: (T)->Uni
  * 建议子线程调用
  */
 fun ByteArray.toBase64():String = Base64.encodeToString(this,Base64.DEFAULT)
+
+fun stringToBean(body: String, type: Type): Any = try {
+    val gson = Gson()
+    gson.fromJson(body, type)
+} catch (e: Exception) {
+    throw e
+}

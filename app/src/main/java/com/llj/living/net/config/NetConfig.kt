@@ -22,10 +22,11 @@ object NetConfig {
     private const val GroupId = "group_id"
     private const val UserId = "user_id"
     private const val UserInfo = "user_info"
+    private const val FaceToken = "face_token"
     private const val ActionType = "action_type"
     //endregion
 
-    fun buildRegisterFaceMap(
+    fun buildRegisterOrUpdateFaceMap(
         image: String,
         imageType: ImageType,
         groupId: String,
@@ -39,7 +40,20 @@ object NetConfig {
         map[GroupId] = groupId
         map[UserId] = userId
         map[UserInfo] = userInfo
-        map[ActionType] = actionType.name
+//        map[ActionType] = actionType.name
         return map
     }
+
+    fun buildDeleteFaceMap(
+        groupId: String,
+        userId: String,
+        faceToken: String
+    ): Map<String, String> {
+        val map = mutableMapOf<String, String>()
+        map[GroupId] = groupId
+        map[UserId] = userId
+        map[FaceToken] = faceToken
+        return map
+    }
+
 }

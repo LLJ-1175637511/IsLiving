@@ -26,6 +26,7 @@ object Const {
 
     //region livedata FaceAuth
     const val FaceAuthPhoto = "face_auth_photo"
-
+    const val FaceAuthPhotoId = "face_auth_photo_id"
+    const val FaceAuthContent = "face_auth_content"
     //endregion
 }

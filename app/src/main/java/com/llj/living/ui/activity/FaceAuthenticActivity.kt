@@ -3,7 +3,6 @@ package com.llj.living.ui.activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Matrix
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
@@ -14,6 +13,7 @@ import com.llj.living.R
 import com.llj.living.data.bean.ToolbarConfig
 import com.llj.living.data.enums.ActionType
 import com.llj.living.data.enums.ImageType
+import com.llj.living.data.enums.ModifyFaceType
 import com.llj.living.databinding.ActivityFaceAuthBinding
 import com.llj.living.logic.vm.FaceAuthViewModel
 import com.llj.living.net.config.NetConfig
@@ -36,21 +36,24 @@ class FaceAuthenticActivity : BaseActivity<ActivityFaceAuthBinding>() {
 
     private val mLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(imageUri))
-            bitmap?.let {
-                val scaleValue = 800 //设置图片上限800kb
-                val newPhoto = getBitmapFromScale()
-                LogUtils.d(TAG, "newPhoto:${newPhoto == null}")
-                if (newPhoto == null) return@let
-                getDataBinding().ivFaceImgFaceAuth.setImageBitmap(newPhoto)
-                LogUtils.d(TAG, "set photo finish")
-                base64 = PhotoUtils.bitmapToBase64(newPhoto).toString()
-                LogUtils.d(TAG, "base64 size:${base64.length}")
-                // 用完了记得回收
-//                if (!newPhoto.isRecycled) newPhoto.recycle()
-                LogUtils.d(TAG, "all finished")
+            val ops = BitmapFactory.Options()
+            ops.apply {
+                inSampleSize = 4 //设置缩放比例（必须为2的倍数）
+                inPremultiplied = true //设置可回收
+                inPreferredConfig = Bitmap.Config.ARGB_8888 //设置编码方式 普通一像素2字节 默认为当前4字节
             }
-
+            try {
+                bitmap =
+                    BitmapFactory.decodeStream(contentResolver.openInputStream(imageUri), null, ops)
+            } catch (e: OutOfMemoryError) {
+                e.printStackTrace()
+                ToastUtils.toastShort("图片过大 内存溢出")
+            }
+            if (bitmap == null) return@registerForActivityResult
+            getDataBinding().ivFaceImgFaceAuth.setImageBitmap(bitmap)
+            base64 = PhotoUtils.bitmapToBase64(bitmap).toString()
+            LogUtils.d(TAG, "base64 size:${base64.length}")
+            viewMode.getContentLiveData().postValue("base64 获取成功")
         }
 
     private var base64 = ""
@@ -80,20 +83,47 @@ class FaceAuthenticActivity : BaseActivity<ActivityFaceAuthBinding>() {
             takePhoto()
         }
 
-        getDataBinding().btRegisterFace.setOnClickListener {
-            if (base64.isEmpty()) return@setOnClickListener
-            val map = NetConfig.buildRegisterFaceMap(
-                base64,
-                ImageType.BASE64,
-                "admin_llj",
-                "living_temp",
-                "tenp photo",
-                ActionType.APPEND
-            )
-            viewMode.registerFace(map)
-
+        getDataBinding().btUpdateFace.setOnClickListener {
+            setBaiduFace(ModifyFaceType.Update)
         }
 
+        getDataBinding().btRegisterFace.setOnClickListener {
+            setBaiduFace(ModifyFaceType.Register)
+        }
+
+        getDataBinding().btDeleteFace.setOnClickListener {
+            deleteBaiduFace()
+        }
+    }
+
+    /**
+     * 注册或更新人脸
+     */
+    private fun setBaiduFace(type: ModifyFaceType) {
+        if (base64.isEmpty()) return
+        val map = NetConfig.buildRegisterOrUpdateFaceMap(
+            base64,
+            ImageType.BASE64,
+            "admin_llj_2",
+            "living_temp",
+            "tenp photo",
+            ActionType.APPEND //暂时不需要此参数
+        )
+        viewMode.modifyFace(map,type)
+    }
+
+    /**
+     * 删除对应face_token的人脸
+     */
+    private fun deleteBaiduFace() {
+        val id = viewMode.getPhotoIdLiveData().value
+        if (id.isNullOrEmpty()) return
+        val map = NetConfig.buildDeleteFaceMap(
+            "admin_llj_2",
+            "living_temp",
+            id
+        )
+        viewMode.deleteFace(map)
     }
 
     private fun requestToken() = lifecycleScope.launch {
@@ -111,22 +141,7 @@ class FaceAuthenticActivity : BaseActivity<ActivityFaceAuthBinding>() {
 
     private fun initVM() {
         viewMode = initViewModel<FaceAuthViewModel>()
-    }
-
-    private fun dealwithPhoto() = lifecycleScope.launch(Dispatchers.IO) {
-        try {
-//            LogUtils.d(TAG, "imageUri:$imageUri")
-//            LogUtils.d(TAG, "imageUri authority:${imageUri.authority}")
-//            LogUtils.d(TAG, "imageUri path:${imageUri.path}")
-//            return@launch
-
-            // 将拍摄的照片显示出来
-            LogUtils.d(TAG, "set photo start")
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
+        getDataBinding().vmFaceAuth = viewMode //使用dataBinding和textView联动 切记初始化xml中的vm
     }
 
     private fun takePhoto() {
@@ -167,30 +182,5 @@ class FaceAuthenticActivity : BaseActivity<ActivityFaceAuthBinding>() {
                 bitmap = null
             }
         }
-    }
-
-    fun getBitmapFromScale(): Bitmap? {
-        bitmap?.let {
-//            val byteCount = it.byteCount / 1024
-//            LogUtils.d("FaceAuthenticActivity", "byteCount $byteCount")
-            //压缩倍数
-            var scaleWidth = 1f
-            var scaleHeight = 1f
-            val mWidth = it.width
-            val mHeight = it.height
-            if (mWidth <= mHeight) {
-                scaleWidth = (mWidth / 2).toFloat()
-                scaleHeight = (mHeight / 2).toFloat()
-            } else {
-                scaleWidth = (mWidth / 2).toFloat()
-                scaleHeight = (mHeight / 2).toFloat()
-            }
-            val matrix = Matrix()
-            // 按照固定宽高进行缩放
-            matrix.postScale(0.3f, 0.3f)
-            return Bitmap.createBitmap(it, 0, 0, mWidth, mHeight, matrix, true)
-        }
-        bitmap?.recycle()
-        return null
     }
 }

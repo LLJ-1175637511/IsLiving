@@ -18,8 +18,8 @@ class TokenBean {
     data class DataBean(val isSuc: Boolean, val data: String, val expiresIn: Int)
 }
 
-class RegisterFaceBean {
-    data class RegisterSuc(
+class RegisterOrUpdateFaceBean {
+    data class Success(
         val cached: Int,
         val error_code: Int,
         val error_msg: String,
@@ -41,7 +41,7 @@ class RegisterFaceBean {
         val width: Int
     )
 
-    data class RegisterErr(
+    data class Failed(
         val cached: Int,
         val error_code: Int,
         val error_msg: String,
@@ -50,5 +50,14 @@ class RegisterFaceBean {
         val timestamp: Int
     )
 }
+
+class DeleteFaceBean(
+    val cached: Int,
+    val error_code: Int,
+    val error_msg: String,
+    val log_id: Long,
+    val result:Any ?= null,
+    val timestamp: Int
+)
 
 data class CommonDataBean(val isSuc: Boolean, val data: String)

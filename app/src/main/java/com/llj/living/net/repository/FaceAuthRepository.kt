@@ -1,68 +1,84 @@
 package com.llj.living.net.repository
 
-import com.google.gson.Gson
-import com.llj.living.custom.exception.TypeConvertException
+import com.google.gson.reflect.TypeToken
+import com.llj.living.custom.ext.stringToBean
+import com.llj.living.data.bean.CommonDataBean
+import com.llj.living.data.bean.DeleteFaceBean
+import com.llj.living.data.bean.RegisterOrUpdateFaceBean
 import com.llj.living.data.bean.TokenBean
+import com.llj.living.data.enums.ModifyFaceType
 import com.llj.living.net.network.FaceAuthNetwork
 import com.llj.living.utils.LogUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.lang.Exception
-import kotlin.coroutines.CoroutineContext
 
 object FaceAuthRepository {
 
-    private const val ErrFlag = "error_description"
+    private const val TokenErrFlag = "error_description"
+    private const val registerOrUpdateSucFlag = """"error_msg":"SUCCESS""""
+
+    private val TAG = this.javaClass.simpleName
 
     suspend fun sendTokenRequest(): TokenBean.DataBean {
         val strResult = withContext(Dispatchers.IO) {//获取response
             FaceAuthNetwork.getToken().string()
         }
+        return convertTokenData(strResult)
+    }
 
-        return if (strResult.contains(ErrFlag)){ //请求错误 json转化错误的数据类
-            convertTokenData<TokenBean.TokenErr>{ strResult }
-        }else{ //请求错误 json转化正确请求的数据类
-            convertTokenData<TokenBean.TokenSuc>{ strResult }
+    suspend fun sendModifyFaceRequest(
+        token: String,
+        map: Map<String, String>,
+        type: ModifyFaceType
+    ): CommonDataBean {
+        val strResult = withContext(Dispatchers.IO) {//获取response
+            when (type) {
+                ModifyFaceType.Register -> FaceAuthNetwork.registerFace(token, map).string()
+                ModifyFaceType.Update -> FaceAuthNetwork.updateFace(token, map).string()
+            }
         }
+        LogUtils.d(TAG, strResult)
+        return convertRegisterOrUpdateData(strResult)
     }
 
-    suspend fun sendRegisterFaceRequest(token:String,map: Map<String,String>): String = withContext(Dispatchers.IO){
-        FaceAuthNetwork.registerFace(token, map).string()
-    }
+    suspend fun sendDeleteFaceRequest(
+        token: String,
+        map: Map<String, String>
+    ) = FaceAuthNetwork.deleteFace(token, map)
 
-    private suspend inline fun <reified T> convertTokenData(
-        context: CoroutineContext = Dispatchers.IO,
-        crossinline block: suspend () -> String
-    ): TokenBean.DataBean {
-        val gson = Gson()
-        try {
-            val result = withContext(context) { //在子线程获得转化后的string
-                gson.fromJson(block(), T::class.java)
-            }
-            if (result is TokenBean.TokenErr) { //失败
-                return TokenBean.DataBean (
-                    false,
-                    "error:${result.error} description:${result.error_description}",
-                    0
-                )
-            }
-            if (result is TokenBean.TokenSuc) {
-                return TokenBean.DataBean (
-                    true,
-                    result.access_token,
-                    result.expires_in
-                )
-            } else {
-                throw TypeConvertException()
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return  TokenBean.DataBean(
-                false,
-                e.message.toString(),
-                -1
-            )
+
+    /**
+     * 响应的string 转化 RegisterFace 对象
+     */
+    private fun convertRegisterOrUpdateData(result: String): CommonDataBean = try {
+        if (!result.contains(registerOrUpdateSucFlag)) { //请求错误 json转化错误的数据类
+            val type = object : TypeToken<RegisterOrUpdateFaceBean.Failed>() {}.type
+            val bean = stringToBean(result, type) as RegisterOrUpdateFaceBean.Failed
+            CommonDataBean(false, bean.error_msg)
+        } else { //请求错误 json转化正确请求的数据类
+            val type = object : TypeToken<RegisterOrUpdateFaceBean.Success>() {}.type
+            val bean = stringToBean(result, type) as RegisterOrUpdateFaceBean.Success
+            CommonDataBean(true, bean.result.face_token)
         }
+    } catch (e: Exception) {
+        CommonDataBean(false, e.message.toString())
     }
 
+    /**
+     * 响应的string转化token对象
+     */
+    private fun convertTokenData(result: String): TokenBean.DataBean = try {
+        if (result.contains(TokenErrFlag)) { //请求错误 json转化错误的数据类
+            val type = object : TypeToken<TokenBean.TokenErr>() {}.type
+            val bean = stringToBean(result, type) as TokenBean.TokenErr
+            val errInfo = "error:${bean.error} description:${bean.error_description}"
+            TokenBean.DataBean(false, errInfo, -1)
+        } else { //请求错误 json转化正确请求的数据类
+            val type = object : TypeToken<TokenBean.TokenSuc>() {}.type
+            val bean = stringToBean(result, type) as TokenBean.TokenSuc
+            TokenBean.DataBean(true, bean.access_token, bean.expires_in)
+        }
+    } catch (e: Exception) {
+        TokenBean.DataBean(false, e.message.toString(), -1)
+    }
 }

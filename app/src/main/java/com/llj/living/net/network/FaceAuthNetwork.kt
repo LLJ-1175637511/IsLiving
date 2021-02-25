@@ -3,8 +3,10 @@ package com.llj.living.net.network
 import com.llj.living.application.MyApplication
 import com.llj.living.data.enums.UrlType
 import com.llj.living.net.RetrofitCreator
+import com.llj.living.net.server.DeleteFaceServer
 import com.llj.living.net.server.RegisterFaceServer
 import com.llj.living.net.server.TokenServer
+import com.llj.living.net.server.UpdateFaceServer
 import retrofit2.await
 
 object FaceAuthNetwork {
@@ -16,9 +18,17 @@ object FaceAuthNetwork {
 
     private val addFaceServer by lazy { RetrofitCreator.create<RegisterFaceServer>(UrlType.Face) }
 
+    private val updateFaceServer by lazy { RetrofitCreator.create<UpdateFaceServer>(UrlType.Face) }
+
+    private val deleteFaceServer by lazy { RetrofitCreator.create<DeleteFaceServer>(UrlType.Face) }
+
     suspend fun getToken() =
         tokenServer.getToken(grantType,MyApplication.ApiKey,MyApplication.SecretKey).await()
 
     suspend fun registerFace(token:String,map: Map<String,String>) = addFaceServer.addFace(contentType,token,map).await()
+
+    suspend fun updateFace(token:String,map: Map<String,String>) = updateFaceServer.updateFace(contentType,token,map).await()
+
+    suspend fun deleteFace(token:String,map: Map<String,String>) = deleteFaceServer.deleteFace(contentType,token,map).await()
 
 }

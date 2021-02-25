@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import com.llj.living.custom.ext.save
 import com.llj.living.data.const.Const
 import com.llj.living.data.enums.BaseDataEnum
@@ -12,6 +13,7 @@ import com.llj.living.net.repository.FaceAuthRepository
 import com.llj.living.utils.LogUtils
 import com.llj.living.utils.ToastUtils
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 abstract class BaseViewModel(
@@ -32,6 +34,7 @@ abstract class BaseViewModel(
                     BaseDataEnum.Integer.name -> savedStateHandle.set(name, 0)
                     BaseDataEnum.Short.name -> savedStateHandle.set(name, 0)
                     BaseDataEnum.Long.name -> savedStateHandle.set(name, 0L)
+                    BaseDataEnum.String.name -> savedStateHandle.set(name, "")
                 }
             }
         } catch (e: Exception) {
@@ -49,7 +52,10 @@ abstract class BaseViewModel(
                 val currentTime = System.currentTimeMillis() / 1000
                 LogUtils.d(TAG, "periodTime:${periodTime} currentTime:${currentTime}")
                 if (periodTime - 60 * 60 * 24 * 2 > currentTime) {
-                    return@withContext getSP(Const.SPBaiduToken).getString(Const.SPBaiduTokenString,"").toString()//如果未过期 则不需要请求token
+                    return@withContext getSP(Const.SPBaiduToken).getString(
+                        Const.SPBaiduTokenString,
+                        ""
+                    ).toString()//如果未过期 则不需要请求token
                 }
             }
 
@@ -62,10 +68,11 @@ abstract class BaseViewModel(
                     putLong(Const.SPBaiduTokenPeriod, periodTime)
                 }
                 return@withContext if (savedSp) {
-                    ToastUtils.toastShort("token saved suc")
-                    return@withContext getSP(Const.SPBaiduToken).getString(Const.SPBaiduTokenString,"").toString()
+                    return@withContext getSP(Const.SPBaiduToken).getString(
+                        Const.SPBaiduTokenString,
+                        ""
+                    ).toString()
                 } else {
-                    ToastUtils.toastShort("token saved err")
                     false.toString()
                 }
             } else {
@@ -74,7 +81,21 @@ abstract class BaseViewModel(
             }
         }
 
-
+    suspend fun checkTokenAndSendRequest(
+        block: suspend (token:String) -> Unit
+    ) {
+        val token = withContext(Dispatchers.IO) {
+            getToken()
+        }
+        if (token == false.toString()) {
+            withContext(Dispatchers.Main) {
+                ToastUtils.toastShort("token get failed")
+            }
+            return
+        } else {
+            block(token)
+        }
+    }
 
     fun <T> getLiveDataListForKey(
         name: String,
