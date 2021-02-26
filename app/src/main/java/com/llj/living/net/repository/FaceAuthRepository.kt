@@ -1,11 +1,10 @@
 package com.llj.living.net.repository
 
 import com.google.gson.reflect.TypeToken
+import com.llj.living.custom.ext.isCodeSuc
+import com.llj.living.custom.ext.isMsgSuc
 import com.llj.living.custom.ext.stringToBean
-import com.llj.living.data.bean.CommonDataBean
-import com.llj.living.data.bean.DeleteFaceBean
-import com.llj.living.data.bean.RegisterOrUpdateFaceBean
-import com.llj.living.data.bean.TokenBean
+import com.llj.living.data.bean.*
 import com.llj.living.data.enums.ModifyFaceType
 import com.llj.living.net.network.FaceAuthNetwork
 import com.llj.living.utils.LogUtils
@@ -46,6 +45,18 @@ object FaceAuthRepository {
         map: Map<String, String>
     ) = FaceAuthNetwork.deleteFace(token, map)
 
+    suspend fun sendMatchRequest(
+        token: String,
+        mfbList: List<MatchFaceData>
+    ): CommonDataBean = withContext(Dispatchers.Default) {
+        val result = FaceAuthNetwork.matchFace(token, mfbList)//获取response
+        LogUtils.d(TAG, result.toString())
+        if (result.error_code.isCodeSuc() && result.error_msg.isMsgSuc()) {
+            val score = result.result.score.toInt()
+            if (score > 80) CommonDataBean(true, score.toString())
+            else CommonDataBean(false, score.toString())
+        } else CommonDataBean(false, result.error_msg)
+    }
 
     /**
      * 响应的string 转化 RegisterFace 对象

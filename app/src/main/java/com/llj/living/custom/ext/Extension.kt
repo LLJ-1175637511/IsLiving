@@ -27,3 +27,7 @@ fun stringToBean(body: String, type: Type): Any = try {
 } catch (e: Exception) {
     throw e
 }
+
+fun String.isMsgSuc():Boolean = this=="SUCCESS"
+
+fun Int.isCodeSuc():Boolean = this==0

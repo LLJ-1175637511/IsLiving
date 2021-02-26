@@ -1,6 +1,8 @@
 package com.llj.living.net.server
 
 import com.llj.living.data.bean.DeleteFaceBean
+import com.llj.living.data.bean.MatchFaceBean
+import com.llj.living.data.bean.MatchFaceData
 import com.llj.living.net.config.NetConfig
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -43,4 +45,13 @@ interface DeleteFaceServer {
         @Query(NetConfig.AccessToken) accessToken: String,
         @FieldMap map:Map<String,String>
     ): Call<DeleteFaceBean>
+}
+
+interface MatchFaceServer {
+    @POST("rest/2.0/face/v3/match")
+    fun matchFace(
+        @Header(NetConfig.ContentType) contentType:String,
+        @Query(NetConfig.AccessToken) accessToken: String,
+        @Body faceList:List<MatchFaceData>
+    ): Call<MatchFaceBean.MatchResult>
 }

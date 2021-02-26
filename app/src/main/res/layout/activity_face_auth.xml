@@ -13,7 +13,32 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <Button
+            android:id="@+id/bt_face_match_auth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="人脸对比"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/bt_update_face"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/bt_update_face"
+            app:layout_constraintTop_toBottomOf="@+id/bt_register_face"
+            app:layout_constraintVertical_bias="0.208" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@{vmFaceAuth.baseFaceIdLiveData}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bt_face_match_auth"
+            app:layout_constraintVertical_bias="0.157" />
 
         <Button
             android:id="@+id/bt_delete_face"
@@ -53,6 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="请求token"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/iv_face_img_face_auth"
             app:layout_constraintHorizontal_bias="0.51"
@@ -77,11 +103,11 @@
             android:layout_height="wrap_content"
             android:text="注册人脸"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/bt_request_token_face_auth"
-            app:layout_constraintHorizontal_bias="0.857"
+            app:layout_constraintEnd_toStartOf="@+id/bt_take_photo_face_auth"
+            app:layout_constraintHorizontal_bias="0.878"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bt_request_token_face_auth"
-            app:layout_constraintVertical_bias="0.183" />
+            app:layout_constraintTop_toTopOf="@+id/bt_request_token_face_auth"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/tv_content_face_auth"

@@ -51,13 +51,33 @@ class RegisterOrUpdateFaceBean {
     )
 }
 
-class DeleteFaceBean(
+data class DeleteFaceBean(
     val cached: Int,
     val error_code: Int,
     val error_msg: String,
     val log_id: Long,
-    val result:Any ?= null,
+    val result: Any? = null,
     val timestamp: Int
 )
+
+class MatchFaceBean {
+    data class MatchResult(
+        val cached: Int,
+        val error_code: Int,
+        val error_msg: String,
+        val log_id: Long,
+        val result: Result,
+        val timestamp: Int
+    )
+
+    data class Result(
+        val face_list: List<Face>,
+        val score: Number
+    )
+
+    data class Face(
+        val face_token: String
+    )
+}
 
 data class CommonDataBean(val isSuc: Boolean, val data: String)

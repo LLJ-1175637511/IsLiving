@@ -10,6 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import com.llj.living.R
+import com.llj.living.data.bean.MatchFaceData
 import com.llj.living.data.bean.ToolbarConfig
 import com.llj.living.data.enums.ActionType
 import com.llj.living.data.enums.ImageType
@@ -94,6 +95,10 @@ class FaceAuthenticActivity : BaseActivity<ActivityFaceAuthBinding>() {
         getDataBinding().btDeleteFace.setOnClickListener {
             deleteBaiduFace()
         }
+
+        getDataBinding().btFaceMatchAuth.setOnClickListener {
+            matchFace()
+        }
     }
 
     /**
@@ -110,6 +115,17 @@ class FaceAuthenticActivity : BaseActivity<ActivityFaceAuthBinding>() {
             ActionType.APPEND //暂时不需要此参数
         )
         viewMode.modifyFace(map,type)
+    }
+
+    private fun matchFace(){
+        val baseId = viewMode.getBaseFaceIdLiveData().value
+        if (baseId.isNullOrEmpty()||base64.isEmpty()) return
+        val list = mutableListOf<MatchFaceData>()
+        val baseBean = MatchFaceData(baseId,ImageType.FACE_TOKEN)
+        list.add(baseBean)
+        val needAuthBean = MatchFaceData(base64,ImageType.BASE64)
+        list.add(needAuthBean)
+        viewMode.matchFace(list)
     }
 
     /**
@@ -142,6 +158,7 @@ class FaceAuthenticActivity : BaseActivity<ActivityFaceAuthBinding>() {
     private fun initVM() {
         viewMode = initViewModel<FaceAuthViewModel>()
         getDataBinding().vmFaceAuth = viewMode //使用dataBinding和textView联动 切记初始化xml中的vm
+        viewMode.getBaseFaceIdLiveData().value = "043bb81e9edb4457475d354a312a37f7"
     }
 
     private fun takePhoto() {

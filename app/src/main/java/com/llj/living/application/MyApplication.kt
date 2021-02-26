@@ -11,7 +11,7 @@ class MyApplication:Application() {
     }
 
     companion object{
-        const val ApiKey = ""
-        const val SecretKey = ""
+        const val ApiKey = "f05CbSUbz4fpk5EFMfwNzgdh"
+        const val SecretKey = "jFRKm4I4RAZ7YS7svK3xOQkuhfTcrf4e"
     }
 }
