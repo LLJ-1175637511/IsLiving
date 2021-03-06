@@ -32,6 +32,7 @@ class CheckDoingDataSource private constructor(): ItemKeyedDataSource<Int, Check
 
     companion object{
         private var instance:CheckDoingDataSource?=null
+        @Synchronized
         fun getInstance() = instance?:CheckDoingDataSource().apply {
             instance = this
         }
