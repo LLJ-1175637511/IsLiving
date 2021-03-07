@@ -1,14 +1,11 @@
 package com.llj.living.utils
 
 import android.graphics.Bitmap
-
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
-import android.graphics.Rect
 import android.util.Base64
 import java.io.ByteArrayOutputStream
 import java.io.IOException
-import java.io.InputStream
 
 
 object PhotoUtils {

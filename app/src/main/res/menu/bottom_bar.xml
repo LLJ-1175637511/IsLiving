@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_supplement"
+        android:icon="@drawable/ic_baseline_art_track_24"
+        android:title="@string/supplement" />
+    <item
+        android:id="@+id/navigation_about"
+        android:title="@string/about"
+        android:icon="@drawable/ic_baseline_description_24" />
+    <item
+        android:id="@+id/navigation_check"
+        android:icon="@drawable/ic_baseline_ballot_24"
+        android:title="@string/check" />
+
+</menu>

@@ -18,13 +18,8 @@
         <activity android:name=".ui.activity.LoginActivity">
 
         </activity>
-        <activity android:name=".ui.activity.MainActivity" />
-        <activity android:name=".ui.activity.FaceAuthenticActivity" >
 
-        </activity>
-
-        <activity android:name=".ui.activity.SplashActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".ui.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"
                     android:screenOrientation="portrait"/>
@@ -32,6 +27,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".ui.activity.FaceAuthenticActivity" >
+
+        </activity>
+
+        <activity android:name=".ui.activity.SplashActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
+        </activity>
+        <activity android:name=".ui.activity.NavigationActivity" />
 
         <provider
             android:authorities="com.llj.living.fileprovider"

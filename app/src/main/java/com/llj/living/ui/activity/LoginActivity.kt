@@ -24,7 +24,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
         viewModel = initViewModel<LoginViewModel>()
 
         viewModel.getRememberPwdLiveData().baseObserver(this) {
-            getDataBinding().cbRememPwdLogin.isChecked = it
+            getDataBinding().cbRemembPwdLogin.isChecked = it
         }
 
         getDataBinding().loginVm = viewModel
@@ -36,7 +36,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
         getDataBinding().btLoginActivity.setOnClickListener {
             viewModel.getPassWordLiveData().postValue((0..5).random().toString())
         }
-        getDataBinding().cbRememPwdLogin.apply {
+        getDataBinding().cbRemembPwdLogin.apply {
             setOnClickListener {
                 viewModel.getRememberPwdLiveData().postValue(this.isChecked)
             }

@@ -3,8 +3,7 @@ package com.llj.living.data.datasource
 import androidx.paging.PageKeyedDataSource
 import com.llj.living.data.bean.CheckFinishedBean
 
-class CheckFinishedDataSource private constructor() :
-    PageKeyedDataSource<Int, CheckFinishedBean>() {
+class CheckFinishedDataSource : PageKeyedDataSource<Int, CheckFinishedBean>() {
 
     override fun loadInitial(
         params: LoadInitialParams<Int>,
@@ -41,8 +40,7 @@ class CheckFinishedDataSource private constructor() :
                 )
             )
         }
-        val newPage = params.key + 1
-        callback.onResult(firstList, newPage)
+        callback.onResult(firstList, params.key + 1)
     }
 
     override fun loadBefore(
@@ -52,12 +50,12 @@ class CheckFinishedDataSource private constructor() :
 
     }
 
-    companion object {
+ /*   companion object {
         private var instance: CheckFinishedDataSource? = null
 
         @Synchronized
         fun getInstance() = instance ?: CheckFinishedDataSource().apply {
             instance = this
         }
-    }
+    }*/
 }

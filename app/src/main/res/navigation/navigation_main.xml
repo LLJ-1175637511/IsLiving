@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_main"
+    app:startDestination="@id/navigation_about">
+    <fragment
+        android:id="@+id/navigation_about"
+        android:name="com.llj.living.ui.fragment.MainFragment"
+        tools:layout="@layout/fragment_main"
+        android:label="关于主页" />
+    <fragment
+        android:id="@+id/navigation_check"
+        android:name="com.llj.living.ui.fragment.CheckFragment"
+        tools:layout="@layout/fragment_check"
+        android:label="核查" />
+    <fragment
+        android:id="@+id/navigation_supplement"
+        tools:layout="@layout/fragment_supplement"
+        android:name="com.llj.living.ui.fragment.SupplementFragment"
+        android:label="补录" />
+</navigation>

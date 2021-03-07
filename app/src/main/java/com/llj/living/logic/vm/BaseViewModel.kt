@@ -5,7 +5,6 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
 import com.llj.living.custom.ext.save
 import com.llj.living.data.const.Const
 import com.llj.living.data.enums.BaseDataEnum
@@ -13,7 +12,6 @@ import com.llj.living.net.repository.FaceAuthRepository
 import com.llj.living.utils.LogUtils
 import com.llj.living.utils.ToastUtils
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 abstract class BaseViewModel(

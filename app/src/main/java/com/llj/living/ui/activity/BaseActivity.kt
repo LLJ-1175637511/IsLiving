@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
@@ -81,7 +82,10 @@ abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity() {
             R.layout.activity_base_view
         )
         baseView.root.apply {
-            if (showToolbar()) mToolbar = findViewById<Toolbar>(R.id.toolbar_base) //是否初始化toolbar
+            if (showToolbar()){
+                mToolbar = findViewById<Toolbar>(R.id.toolbar_base)
+                mToolbar?.visibility = View.VISIBLE
+            } //是否初始化toolbar
             val baseUi = findViewById<FrameLayout>(R.id.activity_base_content)
             mDataBinding = DataBindingUtil.inflate<DB>(
                 layoutInflater,
