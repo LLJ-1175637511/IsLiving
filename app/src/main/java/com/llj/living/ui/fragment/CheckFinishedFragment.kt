@@ -1,16 +1,13 @@
-import androidx.lifecycle.LiveData
+package com.llj.living.ui.fragment
+
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.PagedList
-import androidx.paging.toLiveData
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.llj.living.R
-import com.llj.living.data.bean.CheckFinishedBean
-import com.llj.living.data.factory.CheckFinishedDSFactory
 import com.llj.living.databinding.FragmentCheckFinishedBinding
+import com.llj.living.logic.vm.CheckViewModel
 import com.llj.living.ui.adapter.CheckFinishedAdapter
-import com.llj.living.ui.fragment.NavBaseFragment
+import com.llj.living.utils.LogUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -19,23 +16,23 @@ class CheckFinishedFragment : NavBaseFragment<FragmentCheckFinishedBinding>() {
 
     override fun getLayoutId() = R.layout.fragment_check_finished
 
-    lateinit var recyclerView: RecyclerView
-    private val adapter by lazy { CheckFinishedAdapter() }
-    private val factory = CheckFinishedDSFactory()
-    private lateinit var refreshLayout:SwipeRefreshLayout
-    private val liveData:LiveData<PagedList<CheckFinishedBean>> = factory.toLiveData(
-        20,null
-    )
+    private val viewModel by activityViewModels<CheckViewModel>()
+    private val adapter by lazy { CheckFinishedAdapter(viewModel) }
 
     override fun init() {
-        recyclerView = getBinding().recyclerviewCheckFinished
-        recyclerView.adapter = adapter
-        liveData.observe(this, Observer {
+        getBinding().recyclerviewCheckFinished.adapter = adapter
+
+        viewModel.finishedLiveData.observe(this, Observer {
             adapter.submitList(it)
-            refreshLayout.isRefreshing = false
+            getBinding().refreshCheckFinished.isRefreshing = false
         })
-        refreshLayout = getBinding().refreshCheckFinished
-        refreshLayout.apply {
+
+        viewModel.getFinishedNS().observe(viewLifecycleOwner, Observer {
+            adapter.updateLoadingUi(it)
+            LogUtils.d("status", it.name)
+        })
+
+        getBinding().refreshCheckFinished.apply {
             setColorSchemeResources(R.color.qq_blue) //设置显示颜色
             setOnRefreshListener {
                 isRefreshing = true
@@ -46,10 +43,11 @@ class CheckFinishedFragment : NavBaseFragment<FragmentCheckFinishedBinding>() {
                 }
             }
         }
+
     }
 
-    private fun refreshData(){
-        liveData.value?.dataSource?.invalidate()
+    private fun refreshData() {
+        viewModel.finishedLiveData.value?.dataSource?.invalidate()
     }
 
 }

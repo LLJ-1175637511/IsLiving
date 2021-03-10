@@ -27,12 +27,14 @@ class CheckViewModel(application: Application, savedStateHandle: SavedStateHandl
         20,null
     )
 
+    //获取 进行中 netStatusLiveData
     fun getDoingNS() = getNSLiveData(UpdateStatusType.CHECK_DOING)
 
     fun updateDoingNetStatus(netStatus: NetStatus){
         updateNetStatus(netStatus,UpdateStatusType.CHECK_DOING)
     }
 
+    //获取 已完成 netStatusLiveData
     fun getFinishedNS() = getNSLiveData(UpdateStatusType.CHECK_FINISHED)
 
     fun updateFinishedNetStatus(netStatus: NetStatus){

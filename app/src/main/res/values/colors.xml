@@ -32,4 +32,5 @@
     <color name="tab_ripple">#B7DAF6</color>
     <color name="grey_dark">#333232</color>
     <color name="grey">#272626</color>
+    <color name="half_white">#80FFFFFF</color>
 </resources>

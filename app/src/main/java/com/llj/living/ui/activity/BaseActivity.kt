@@ -113,8 +113,8 @@ abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity() {
                             R.id.remo_item -> {
                                 ToastUtils.toastShort("remo_item")
                             }
-                            R.id.more_item -> {
-                                ToastUtils.toastShort("more_item")
+                            R.id.more_takePhoto -> {
+                                startActivity(Intent(this@BaseActivity,FaceAuthenticActivity::class.java))
                             }
                         }
                         false
@@ -124,7 +124,7 @@ abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity() {
                 navigationIcon = if (!it.isShowBack) null // 是否显示back
                 else {
                     setNavigationOnClickListener {
-                        ToastUtils.toastShort("back")
+                        finish()
                     }
                     ContextCompat.getDrawable(
                         this@BaseActivity,

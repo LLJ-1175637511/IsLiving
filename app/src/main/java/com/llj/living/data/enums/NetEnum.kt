@@ -38,3 +38,7 @@ enum class ModifyFaceType{
 enum class FaceType{
     LIVE,IDCARD,WATERMARK,CERT,INFRARED
 }
+
+enum class NetStatus{
+    LOADING,FAILED,SUCCESS,LOAD_ALL,INIT
+}

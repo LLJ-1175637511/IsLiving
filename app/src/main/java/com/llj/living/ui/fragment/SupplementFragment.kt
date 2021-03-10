@@ -33,4 +33,6 @@ class SupplementFragment : BaseFragment() {
         }.attach() //沙雕 不加attach()是不会显示顶部文字的
 
     }
+
+
 }

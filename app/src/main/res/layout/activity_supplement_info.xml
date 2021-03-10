@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_oldman_name_supple_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="人名：赵某某"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_id_card_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="身份证：135135456864514656"
+            android:textSize="16sp" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:padding="20dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/iv_face_supple_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="180dp"
+                    android:src="@drawable/ic_baseline_image_24"
+                    app:layout_constraintBottom_toTopOf="@+id/iv_id_card_a_supple_info"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_take_photo_face"
+                    style="@style/SuppleInfoImgText"
+                    android:text="@string/click_take_photo"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_face_supple_info"
+                    app:layout_constraintEnd_toEndOf="@+id/iv_face_supple_info"
+                    app:layout_constraintStart_toStartOf="@+id/iv_face_supple_info"
+                    app:layout_constraintTop_toTopOf="@+id/iv_face_supple_info" />
+
+                <ImageView
+                    android:id="@+id/iv_id_card_a_supple_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="180dp"
+                    android:src="@drawable/ic_baseline_image_24"
+                    app:layout_constraintBottom_toTopOf="@+id/iv_id_card_b_supple_info"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/iv_face_supple_info" />
+
+                <TextView
+                    android:id="@+id/tv_take_photo_id_a"
+                    style="@style/SuppleInfoImgText"
+                    android:text="@string/click_take_photo"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_id_card_a_supple_info"
+                    app:layout_constraintEnd_toEndOf="@+id/iv_id_card_a_supple_info"
+                    app:layout_constraintStart_toStartOf="@+id/iv_id_card_a_supple_info"
+                    app:layout_constraintTop_toTopOf="@+id/iv_id_card_a_supple_info" />
+
+                <ImageView
+                    android:id="@+id/iv_id_card_b_supple_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="180dp"
+                    android:src="@drawable/ic_baseline_image_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/iv_id_card_a_supple_info" />
+
+                <TextView
+                    android:id="@+id/tv_take_photo_id_b"
+                    style="@style/SuppleInfoImgText"
+                    android:text="@string/click_take_photo"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_id_card_b_supple_info"
+                    app:layout_constraintEnd_toEndOf="@+id/iv_id_card_b_supple_info"
+                    app:layout_constraintStart_toStartOf="@+id/iv_id_card_b_supple_info"
+                    app:layout_constraintTop_toTopOf="@+id/iv_id_card_b_supple_info" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+        <Button
+            android:id="@+id/bt_finish_supple_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/btn_login"
+            android:text="@string/make_sure"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
+</layout>

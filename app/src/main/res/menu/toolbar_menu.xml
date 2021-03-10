@@ -14,9 +14,9 @@
         app:showAsAction="never"
         />
     <item
-        android:id="@+id/more_item"
+        android:id="@+id/more_takePhoto"
         android:icon="@drawable/ic_launcher_foreground"
-        android:title="more"
+        android:title="takePhoto"
         app:showAsAction="never"
         />
 </menu>

@@ -1,6 +1,5 @@
 package com.llj.living.ui.fragment
 
-import CheckFinishedFragment
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
@@ -8,7 +7,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.llj.living.R
 
-class CheckFragment:BaseFragment() {
+class CheckFragment :BaseFragment() {
 
     override fun getLayoutId(): Int = R.layout.fragment_check
 

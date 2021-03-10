@@ -36,4 +36,16 @@
     <style name="TabLayoutTextStyle">
         <item name="android:textSize" tools:ignore="SpUsage">16dp</item>
     </style>
+
+    <style name="SuppleInfoImgText">
+         <item name="android:textSize">25sp</item>
+        <item name="android:background">@color/half_white</item>
+        <item name="android:textColor">@color/blue</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="SuppleInfoImg">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:src">@drawable/ic_baseline_image_24</item>
+    </style>
 </resources>

@@ -19,7 +19,8 @@
 
         </activity>
 
-        <activity android:name=".ui.activity.MainActivity">
+        <activity android:name=".ui.activity.MainActivity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"
                     android:screenOrientation="portrait"/>
@@ -36,7 +37,8 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
         </activity>
-        <activity android:name=".ui.activity.NavigationActivity" />
+        <activity android:name=".ui.activity.ActivitySuppleInfo" />
+        <activity android:name=".ui.activity.ActivityCheckDetail" />
 
         <provider
             android:authorities="com.llj.living.fileprovider"

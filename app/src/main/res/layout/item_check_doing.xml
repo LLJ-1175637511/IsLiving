@@ -18,12 +18,12 @@
 
             <ImageView
                 android:id="@+id/iv_img_check_doing"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="60dp"
+                android:layout_height="0dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:src="@mipmap/logo"
+                android:src="@drawable/ic_baseline_help_24"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -48,7 +48,7 @@
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/btn_login"
                 android:padding="8dp"
-                android:text="@string/supplementing"
+                android:text="@string/checking"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_img_check_doing"
