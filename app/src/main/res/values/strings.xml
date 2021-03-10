@@ -26,6 +26,7 @@
     <string name="inyard_time">入院时间</string>
     <string name="user_num">用户时间</string>
     <string name="supplementing">进行\n补录</string>
+    <string name="reenter">重新\n录入</string>
     <string name="checking">进行\n核查</string>
     <string name="click_reload">点击重试</string>
     <string name="make_sure">确\t认</string>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,14 +26,15 @@
 
         <ScrollView
             android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:padding="20dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:padding="20dp">
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/iv_face_supple_info"
@@ -50,6 +50,8 @@
                 <TextView
                     android:id="@+id/tv_take_photo_face"
                     style="@style/SuppleInfoImgText"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     android:text="@string/click_take_photo"
                     app:layout_constraintBottom_toBottomOf="@+id/iv_face_supple_info"
                     app:layout_constraintEnd_toEndOf="@+id/iv_face_supple_info"
@@ -69,6 +71,8 @@
 
                 <TextView
                     android:id="@+id/tv_take_photo_id_a"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     style="@style/SuppleInfoImgText"
                     android:text="@string/click_take_photo"
                     app:layout_constraintBottom_toBottomOf="@+id/iv_id_card_a_supple_info"
@@ -90,6 +94,8 @@
                 <TextView
                     android:id="@+id/tv_take_photo_id_b"
                     style="@style/SuppleInfoImgText"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     android:text="@string/click_take_photo"
                     app:layout_constraintBottom_toBottomOf="@+id/iv_id_card_b_supple_info"
                     app:layout_constraintEnd_toEndOf="@+id/iv_id_card_b_supple_info"

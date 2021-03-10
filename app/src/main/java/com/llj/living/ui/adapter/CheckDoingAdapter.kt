@@ -39,15 +39,14 @@ class CheckDoingAdapter(private val vm: CheckViewModel) :
             getItem(
                 position
             )
-        )
-        else (holder as BaseReloadAdapter<*>.FooterViewHolder).bindData().also {
+        ) else (holder as BaseReloadAdapter<*>.FooterViewHolder).bindData().also {
             holder.itemView.setOnClickListener {
                 vm.doingFactory.retryLoadData()
             }
         }
     }
 
-    inner class CheckDoingViewHolder(val binding: ItemCheckDoingBinding) :
+    inner class CheckDoingViewHolder(private val binding: ItemCheckDoingBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bindData(bean: CheckDoingBean?) {

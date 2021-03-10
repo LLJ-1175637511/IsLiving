@@ -25,3 +25,19 @@ data class CheckFinishedBean(
     val num: Int
 )
 //endregion
+
+//region Supplement界面数据类
+data class SuppleDoingBean(
+    val title: String,
+    val name: String,
+    val idCard: String,
+    val id: Int
+)
+
+data class SuppleFinishedBean(
+    val uName: String,
+    val idCard: String,
+    val id: Int,
+    val time: String
+)
+//endregion
