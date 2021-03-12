@@ -11,7 +11,7 @@ import com.llj.living.data.bean.CheckDoingBean
 import com.llj.living.databinding.ItemCheckDoingBinding
 import com.llj.living.databinding.ItemReloadBinding
 import com.llj.living.logic.vm.CheckViewModel
-import com.llj.living.ui.activity.ActivityCheckDetail
+import com.llj.living.ui.activity.ActivityCheck
 
 class CheckDoingAdapter(private val vm: CheckViewModel) :
     BaseReloadAdapter<CheckDoingBean>(DIFF_CALLBACK) {
@@ -71,12 +71,11 @@ class CheckDoingAdapter(private val vm: CheckViewModel) :
                 }
                 binding.btChecking.setOnClickListener { view ->
                     view.context.also {
-                        it.startActivity(Intent(it,ActivityCheckDetail::class.java))
+                        it.startActivity(Intent(it,ActivityCheck::class.java))
                     }
                 }
             }
 //            binding.ivImgCheckDoing.setImageResource(R.mipmap.logo)
-
         }
     }
 
@@ -85,13 +84,12 @@ class CheckDoingAdapter(private val vm: CheckViewModel) :
             override fun areItemsTheSame(
                 oldItem: CheckDoingBean,
                 newItem: CheckDoingBean
-            ): Boolean = oldItem.title == newItem.title
+            ): Boolean = oldItem.id == newItem.id
 
             override fun areContentsTheSame(
                 oldItem: CheckDoingBean,
                 newItem: CheckDoingBean
-            ): Boolean = oldItem.id == newItem.id
-
+            ): Boolean = false
         }
     }
 }
