@@ -10,6 +10,7 @@ import com.llj.living.R
 import com.llj.living.data.bean.SuppleDoingBean
 import com.llj.living.databinding.ItemReloadBinding
 import com.llj.living.databinding.ItemSuppleDoingBinding
+import com.llj.living.databinding.ItemWaitSuppleBinding
 import com.llj.living.logic.vm.SupplementViewModel
 import com.llj.living.ui.activity.ActivitySuppleInfo
 
@@ -30,11 +31,11 @@ class SuppleDoingAdapter(private val vm:SupplementViewModel):BaseReloadAdapter<S
         }
     }
 
-    override fun layoutId(): Int = R.layout.item_supple_doing
+    override fun layoutId(): Int = R.layout.item_wait_supple
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == layoutId()) {
-            val binding = DataBindingUtil.inflate<ItemSuppleDoingBinding>(
+            val binding = DataBindingUtil.inflate<ItemWaitSuppleBinding>(
                 LayoutInflater.from(parent.context),
                 viewType, parent, false
             )
@@ -67,6 +68,7 @@ class SuppleDoingAdapter(private val vm:SupplementViewModel):BaseReloadAdapter<S
                 tvIdNumSuppleDoing.text = bean.idCard
                 tvNameSuppleDoing.text = bean.name
             }
+
             binding.btSupplementing.setOnClickListener { view ->
                 view.context.also {
                     it.startActivity(Intent(it, ActivitySuppleInfo::class.java))
