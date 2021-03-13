@@ -7,35 +7,19 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.llj.living.R
-import com.llj.living.data.bean.SuppleDoingBean
+import com.llj.living.data.bean.MainFragmentBean
+import com.llj.living.databinding.ItemMainDoingBinding
 import com.llj.living.databinding.ItemReloadBinding
-import com.llj.living.databinding.ItemSuppleDoingBinding
-import com.llj.living.databinding.ItemWaitSuppleBinding
 import com.llj.living.logic.vm.SupplementViewModel
-import com.llj.living.ui.activity.ActivitySuppleInfo
+import com.llj.living.ui.activity.ActivitySupplement
 
-class SuppleDoingAdapter(private val vm:SupplementViewModel):BaseReloadAdapter<SuppleDoingBean>(DIFF_ITEM_CALLBACK) {
+class SuppleDoingAdapter(private val vm:SupplementViewModel):BaseReloadAdapter<MainFragmentBean>(DIFF_ITEM_CALLBACK) {
 
-    companion object{
-        private val DIFF_ITEM_CALLBACK= object :DiffUtil.ItemCallback<SuppleDoingBean>(){
-            override fun areItemsTheSame(
-                oldItem: SuppleDoingBean,
-                newItem: SuppleDoingBean
-            ): Boolean = oldItem.title == newItem.title
-
-            override fun areContentsTheSame(
-                oldItem: SuppleDoingBean,
-                newItem: SuppleDoingBean
-            ): Boolean = oldItem.id== newItem.id
-
-        }
-    }
-
-    override fun layoutId(): Int = R.layout.item_wait_supple
+    override fun layoutId(): Int = R.layout.item_main_doing
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == layoutId()) {
-            val binding = DataBindingUtil.inflate<ItemWaitSuppleBinding>(
+            val binding = DataBindingUtil.inflate<ItemMainDoingBinding>(
                 LayoutInflater.from(parent.context),
                 viewType, parent, false
             )
@@ -59,22 +43,39 @@ class SuppleDoingAdapter(private val vm:SupplementViewModel):BaseReloadAdapter<S
         }
     }
 
-    inner class SuppleDoingViewHolder(private val binding:ItemSuppleDoingBinding):RecyclerView.ViewHolder(binding.root){
+    inner class SuppleDoingViewHolder(private val binding:ItemMainDoingBinding):RecyclerView.ViewHolder(binding.root){
 
-        fun bindData(bean:SuppleDoingBean?){
+        fun bindData(bean:MainFragmentBean?){
             if (bean==null) return
             binding.apply {
-                itemTittleSuppleDoing.text = bean.title
-                tvIdNumSuppleDoing.text = bean.idCard
-                tvNameSuppleDoing.text = bean.name
+                tvTittle.text = bean.title
+                itemView.context.resources.let {
+                    tvHadTypeStr.text = it.getString(R.string.had_supple_str)
+                    tvWaitTypeStr.text = it.getString(R.string.wait_supple_str)
+                    btOperas.text = it.getString(R.string.supplementing)
+                }
             }
-
-            binding.btSupplementing.setOnClickListener { view ->
+            binding.btOperas.setOnClickListener { view ->
                 view.context.also {
-                    it.startActivity(Intent(it, ActivitySuppleInfo::class.java))
+                    it.startActivity(Intent(it, ActivitySupplement::class.java))
                 }
             }
         }
 
+    }
+
+    companion object{
+        private val DIFF_ITEM_CALLBACK= object :DiffUtil.ItemCallback<MainFragmentBean>(){
+            override fun areItemsTheSame(
+                oldItem: MainFragmentBean,
+                newItem: MainFragmentBean
+            ): Boolean = oldItem.title == newItem.title
+
+            override fun areContentsTheSame(
+                oldItem: MainFragmentBean,
+                newItem: MainFragmentBean
+            ): Boolean = oldItem.id== newItem.id
+
+        }
     }
 }

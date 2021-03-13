@@ -14,9 +14,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.SavedStateViewModelFactory
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import com.llj.living.R
 import com.llj.living.data.bean.ToolbarConfig
 import com.llj.living.databinding.ActivityBaseViewBinding
@@ -46,9 +44,9 @@ abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity() {
         initToolbar()
     }
 
-    fun getToolbar() = mToolbar
+    protected fun getToolbar() = mToolbar
 
-    fun getDataBinding() = mDataBinding
+    protected fun getDataBinding() = mDataBinding
 
     /**
      * 初始化toolbar参数
@@ -76,6 +74,12 @@ abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity() {
         startCommonActivity(T::class.java)
     }
 
+    protected fun <T:Any> LiveData<T>.observeKt(block:(T?)->Unit){
+        this.observe(this@BaseActivity, Observer { data->
+            block(data)
+        })
+    }
+
     private fun initView() {
         val baseView = DataBindingUtil.setContentView<ActivityBaseViewBinding>(
             this,
@@ -94,7 +98,7 @@ abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity() {
                 false
             )
             baseUi.addView(mDataBinding.root)
-            mDataBinding.lifecycleOwner = this@BaseActivity //初始化生命周期
+//            mDataBinding.lifecycleOwner = this@BaseActivity //初始化生命周期
         }
     }
 
@@ -133,6 +137,12 @@ abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        //界面销毁后 解绑dataBinding
+        if (this::mDataBinding.isInitialized) mDataBinding.unbind()
     }
 
 }

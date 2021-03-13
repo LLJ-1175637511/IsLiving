@@ -8,6 +8,7 @@
         android:layout_height="match_parent">
 
         <ImageView
+            android:id="@+id/ivOldManPhoto"
             android:layout_gravity="center_horizontal"
             android:layout_margin="20dp"
             android:src="@drawable/ic_baseline_image_24"
@@ -17,28 +18,122 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp">
+            android:background="@color/white"
+            android:layout_height="120dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp">
 
             <TextView
+                android:id="@+id/textView25"
+                style="@style/ItemDataCommonText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1351343546851"
+                app:layout_constraintBottom_toBottomOf="@+id/textView16"
+                app:layout_constraintStart_toEndOf="@+id/textView16"
+                app:layout_constraintTop_toTopOf="@+id/textView16" />
+
+            <TextView
+                android:id="@+id/textView24"
+                style="@style/ItemDataCommonText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2021-03-10"
+                app:layout_constraintBottom_toBottomOf="@+id/textView12"
+                app:layout_constraintStart_toEndOf="@+id/textView12"
+                app:layout_constraintTop_toTopOf="@+id/textView12" />
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/full_name"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/textView12"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvFullName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="褚某某"
+                android:textColor="@color/black_1"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/textView10"
+                app:layout_constraintStart_toEndOf="@+id/textView10"
+                app:layout_constraintTop_toTopOf="@+id/textView10" />
+
+            <TextView
+                android:id="@+id/textView12"
+                style="@style/ItemDataCommonText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/time"
+                app:layout_constraintBottom_toTopOf="@+id/textView16"
+                app:layout_constraintStart_toStartOf="@+id/textView10"
+                app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+            <TextView
+                android:id="@+id/textView16"
+                style="@style/ItemDataCommonText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/id_card"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/textView12"
+                app:layout_constraintTop_toBottomOf="@+id/textView12" />
+
+            <TextView
+                android:id="@+id/textView21"
+                style="@style/ItemDataCommonText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:text="@string/sex"
+                app:layout_constraintBottom_toBottomOf="@+id/textView10"
+                app:layout_constraintStart_toEndOf="@+id/tvFullName"
+                app:layout_constraintTop_toTopOf="@+id/textView10"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/tvSex"
+                style="@style/ItemDataCommonText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="男"
+                app:layout_constraintBottom_toBottomOf="@+id/textView21"
+                app:layout_constraintStart_toEndOf="@+id/textView21"
+                app:layout_constraintTop_toTopOf="@+id/textView21" />
+
+            <TextView
+                android:id="@+id/tvTipsTakePhoto"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
+                android:background="@color/white"
                 android:gravity="center"
-                android:text="详情信息"
+                android:textSize="18sp"
+                android:textColor="@color/qq_red_dark"
+                android:text="拍照获取信息"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
+            android:id="@+id/btCompleted"
+            android:visibility="invisible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="30dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="28dp"
             android:background="@drawable/btn_login"
             android:text="@string/completed"
             android:textColor="@color/white"

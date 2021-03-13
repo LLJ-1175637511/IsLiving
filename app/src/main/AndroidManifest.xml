@@ -21,7 +21,12 @@
 
         <activity android:name=".ui.activity.MainActivity"
             android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"
+                    android:screenOrientation="portrait"/>
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <activity android:name=".ui.activity.FaceAuthenticActivity" >
@@ -30,17 +35,15 @@
 
         <activity android:name=".ui.activity.SplashActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"
-                    android:screenOrientation="portrait"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".ui.activity.ActivitySuppleInfo" >
 
         </activity>
         <activity android:name=".ui.activity.ActivityCheckDetail" />
+        <activity android:name=".ui.activity.ActivityCheck" />
+        <activity android:name=".ui.activity.ActivityVideotape" />
+        <activity android:name=".ui.activity.ActivitySupplement" />
 
         <provider
             android:authorities="com.llj.living.fileprovider"

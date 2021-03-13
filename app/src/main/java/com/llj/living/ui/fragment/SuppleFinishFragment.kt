@@ -12,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class SuppleFinishFragment:NavBaseFragment<FragmentSuppleFinishedBinding>() {
+class SuppleFinishFragment private constructor():NavBaseFragment<FragmentSuppleFinishedBinding>() {
 
     override fun getLayoutId() = R.layout.fragment_supple_finished
 
@@ -47,5 +47,10 @@ class SuppleFinishFragment:NavBaseFragment<FragmentSuppleFinishedBinding>() {
 
     private fun refreshData() {
         viewModel.finishedLiveData.value?.dataSource?.invalidate()
+    }
+
+    companion object{
+        private var instance:SuppleFinishFragment ?= null
+        fun getInstance() = instance?:SuppleFinishFragment()
     }
 }

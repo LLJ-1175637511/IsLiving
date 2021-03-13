@@ -6,16 +6,17 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.llj.living.R
-import com.llj.living.data.bean.CheckFinishedBean
-import com.llj.living.databinding.ItemCheckFinishedBinding
+import com.llj.living.data.bean.MainFragmentBean
+import com.llj.living.databinding.ItemMainFinishedBinding
 import com.llj.living.databinding.ItemReloadBinding
 import com.llj.living.logic.vm.CheckViewModel
 
-class CheckFinishedAdapter(private val vm: CheckViewModel):BaseReloadAdapter<CheckFinishedBean>(DIFF_CALLBACK) {
+class CheckFinishedAdapter(private val vm: CheckViewModel) :
+    BaseReloadAdapter<MainFragmentBean>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         if (viewType == layoutId()) {
-            val binding = DataBindingUtil.inflate<ItemCheckFinishedBinding>(
+            val binding = DataBindingUtil.inflate<ItemMainFinishedBinding>(
                 LayoutInflater.from(parent.context),
                 viewType, parent, false
             )
@@ -38,51 +39,31 @@ class CheckFinishedAdapter(private val vm: CheckViewModel):BaseReloadAdapter<Che
         }
     }
 
-    override fun layoutId(): Int = R.layout.item_check_finished
+    override fun layoutId(): Int = R.layout.item_main_finished
 
-    inner class CheckFinishedViewHolder(private val binding: ItemCheckFinishedBinding) :
+    inner class CheckFinishedViewHolder(private val binding: ItemMainFinishedBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindData(data: CheckFinishedBean?) {
-            if (data == null) {
-                binding.apply {
-                    tvNameCheckFinished.text =
-                        itemView.context.resources.getString(R.string.default_name)
-                    itemView.context.resources.apply {
-                        val inyardTime =
-                            "${getString(R.string.inyard_time)}${getString(R.string.default_name)}"
-                        tvInyardTimeCheckFinished.text = inyardTime
-                        val uNum =
-                            "${getString(R.string.user_num)}${getString(R.string.default_name)}"
-                        tvNumCheckFinished.text = uNum
-                        tvAgeCheckFinished.text = "00"
-                    }
-                }
-            } else {
-                binding.apply {
-                    val num = "编号：${data.num}"
-                    val age = "年龄：${data.age}"
-                    tvNameCheckFinished.text = data.uName
-                    tvInyardTimeCheckFinished.text = data.inyardTime
-                    tvNumCheckFinished.text = num
-                    tvAgeCheckFinished.text = age
-                }
+        fun bindData(data: MainFragmentBean?) {
+            if (data == null) return
+            binding.apply {
+                tvTittle.text = data.title
             }
 //            binding.ivImgCheckFinished.setImageResource(R.mipmap.logo)
         }
     }
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<CheckFinishedBean>() {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<MainFragmentBean>() {
             override fun areItemsTheSame(
-                oldItem: CheckFinishedBean,
-                newItem: CheckFinishedBean
-            ): Boolean = oldItem.id == newItem.id
+                oldItem: MainFragmentBean,
+                newItem: MainFragmentBean
+            ): Boolean = oldItem.title == newItem.title
 
             override fun areContentsTheSame(
-                oldItem: CheckFinishedBean,
-                newItem: CheckFinishedBean
+                oldItem: MainFragmentBean,
+                newItem: MainFragmentBean
             ): Boolean {
-                return oldItem.age == newItem.age
+                return oldItem.id == newItem.id
             }
 
         }

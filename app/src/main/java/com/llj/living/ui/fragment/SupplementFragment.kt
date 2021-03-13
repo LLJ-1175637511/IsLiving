@@ -22,14 +22,14 @@ class SupplementFragment : BaseFragment() {
             override fun getItemCount(): Int = 2
 
             override fun createFragment(position: Int): Fragment {
-                return if (position == 0) SuppleDoingFragment()
-                else SuppleFinishFragment()
+                return if (position == 0) SuppleDoingFragment.getInstance()
+                else SuppleFinishFragment.getInstance()
             }
         }
 
         TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
-            if (position == 0) tab.text = resources.getString(R.string.wait_supple)
-            else tab.text = resources.getString(R.string.had_supple)
+            if (position == 0) tab.text = resources.getString(R.string.doing)
+            else tab.text = resources.getString(R.string.finished)
         }.attach() //沙雕 不加attach()是不会显示顶部文字的
 
     }

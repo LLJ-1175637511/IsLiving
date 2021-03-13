@@ -1,8 +1,12 @@
 package com.llj.living.ui.activity
 
+import android.view.View
+import androidx.lifecycle.lifecycleScope
 import com.llj.living.R
 import com.llj.living.data.bean.ToolbarConfig
 import com.llj.living.databinding.ActivityCheckDetailBinding
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class ActivityCheckDetail:BaseActivity<ActivityCheckDetailBinding>() {
 
@@ -10,6 +14,23 @@ class ActivityCheckDetail:BaseActivity<ActivityCheckDetailBinding>() {
 
     override fun init() {
         setToolbar(ToolbarConfig(getString(R.string.check_detail),isShowBack = true,isShowMenu = true))
+        getDataBinding().apply {
+            ivOldManPhoto.setOnClickListener {
+                getFacePhoto()
+            }
+        }
+    }
+
+    private fun getFacePhoto() {
+        lifecycleScope.launch {
+            delay(500)
+            getDataBinding().apply{
+                btCompleted.visibility = View.VISIBLE
+                tvTipsTakePhoto.visibility = View.INVISIBLE
+                ivOldManPhoto.setImageResource(R.mipmap.logo)
+            }
+        }
+
     }
 
 }

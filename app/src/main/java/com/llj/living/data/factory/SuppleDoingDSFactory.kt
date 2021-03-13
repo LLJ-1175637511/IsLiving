@@ -1,12 +1,12 @@
 package com.llj.living.data.factory
 
 import androidx.paging.DataSource
-import com.llj.living.data.bean.SuppleDoingBean
+import com.llj.living.data.bean.MainFragmentBean
 import com.llj.living.data.datasource.SuppleDoingDataSource
 import com.llj.living.logic.vm.SupplementViewModel
 
 class SuppleDoingDSFactory private constructor(private val viewModel: SupplementViewModel) :
-    DataSource.Factory<Int, SuppleDoingBean>() {
+    DataSource.Factory<Int, MainFragmentBean>() {
 
     private var ds: SuppleDoingDataSource? = null
 
@@ -14,7 +14,7 @@ class SuppleDoingDSFactory private constructor(private val viewModel: Supplement
         ds?.retryLoadData()
     }
 
-    override fun create(): DataSource<Int, SuppleDoingBean> {
+    override fun create(): DataSource<Int, MainFragmentBean> {
         return SuppleDoingDataSource(viewModel).also {
             ds = it
         }

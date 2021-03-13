@@ -50,4 +50,9 @@ abstract class NavBaseFragment<DB : ViewDataBinding> : Fragment() {
 
     open fun setLifeOwnerIsActivity() = false
 
+    override fun onDestroy() {
+        super.onDestroy()
+        if (this::mDataBinding.isInitialized) mDataBinding.unbind()
+    }
+
 }

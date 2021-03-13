@@ -1,13 +1,13 @@
 package com.llj.living.data.datasource
 
 import androidx.paging.PageKeyedDataSource
-import com.llj.living.data.bean.CheckDoingBean
+import com.llj.living.data.bean.MainFragmentBean
 import com.llj.living.data.enums.NetStatus
 import com.llj.living.logic.vm.CheckViewModel
 import com.llj.living.utils.LogUtils
 
 class CheckDoingDataSource(private val viewModel: CheckViewModel) :
-    PageKeyedDataSource<Int, CheckDoingBean>() {
+    PageKeyedDataSource<Int, MainFragmentBean>() {
 
     private var retry: (() -> Any)? = null
     private var count = 0
@@ -18,14 +18,22 @@ class CheckDoingDataSource(private val viewModel: CheckViewModel) :
 
     override fun loadInitial(
         params: LoadInitialParams<Int>,
-        callback: LoadInitialCallback<Int, CheckDoingBean>
+        callback: LoadInitialCallback<Int, MainFragmentBean>
     ) {
         retry = null
         viewModel.updateDoingNetStatus(NetStatus.LOADING)
-        val list = mutableListOf<CheckDoingBean>()
+        val list = mutableListOf<MainFragmentBean>()
         repeat(20) {
-            val random = (0..1000).random()
-            list.add(CheckDoingBean("标题${it}", "发布时间：2020-03-08", "开始时间：2020-03-08", random))
+            list.add(
+                MainFragmentBean(
+                    title = "标题${it}",
+                    startTime = "2021-03-08",
+                    id = (0..6000).random(),
+                    endTime = "2021-03-10",
+                    waitDealWith = 56,
+                    hadDealWith = 256
+                )
+            )
         }
         callback.onResult(list, 0, 1)
         viewModel.updateDoingNetStatus(NetStatus.SUCCESS)
@@ -33,7 +41,7 @@ class CheckDoingDataSource(private val viewModel: CheckViewModel) :
 
     override fun loadAfter(
         params: LoadParams<Int>,
-        callback: LoadCallback<Int, CheckDoingBean>
+        callback: LoadCallback<Int, MainFragmentBean>
     ) {
         retry = null
         viewModel.updateDoingNetStatus(NetStatus.LOADING)
@@ -41,11 +49,19 @@ class CheckDoingDataSource(private val viewModel: CheckViewModel) :
             "CheckFinishedDataSource",
             "loadAfter key:${params.key} request:${params.requestedLoadSize}"
         )
-        val list = mutableListOf<CheckDoingBean>()
+        val list = mutableListOf<MainFragmentBean>()
         repeat(20) {
             val num = 20 * params.key + it
-            val random = (0..1000).random()
-            list.add(CheckDoingBean("标题${num}", "发布时间：2020-03-08", "开始时间：2020-03-08", random))
+            list.add(
+                MainFragmentBean(
+                    title = "标题${num}",
+                    startTime = "2021-03-08",
+                    id = (0..6000).random(),
+                    endTime = "2021-03-10",
+                    waitDealWith = 56,
+                    hadDealWith = 256
+                )
+            )
         }
         if (count < 3) {
             count++
@@ -60,7 +76,7 @@ class CheckDoingDataSource(private val viewModel: CheckViewModel) :
 
     override fun loadBefore(
         params: LoadParams<Int>,
-        callback: LoadCallback<Int, CheckDoingBean>
+        callback: LoadCallback<Int, MainFragmentBean>
     ) {
     }
 

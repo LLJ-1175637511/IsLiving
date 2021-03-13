@@ -12,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class SuppleDoingFragment:NavBaseFragment<FragmentSuppleDoingBinding>() {
+class SuppleDoingFragment private constructor():NavBaseFragment<FragmentSuppleDoingBinding>() {
 
     override fun getLayoutId() = R.layout.fragment_supple_doing
 
@@ -49,5 +49,8 @@ class SuppleDoingFragment:NavBaseFragment<FragmentSuppleDoingBinding>() {
         viewModel.doingLiveData.value?.dataSource?.invalidate()
     }
 
-
+    companion object{
+        private var instance:SuppleDoingFragment ?= null
+        fun getInstance() = instance?:SuppleDoingFragment()
+    }
 }

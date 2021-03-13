@@ -1,23 +1,23 @@
 package com.llj.living.ui.adapter
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.llj.living.R
-import com.llj.living.data.bean.SuppleFinishedBean
+import com.llj.living.data.bean.MainFragmentBean
+import com.llj.living.databinding.ItemMainFinishedBinding
 import com.llj.living.databinding.ItemReloadBinding
-import com.llj.living.databinding.ItemSuppleFinishedBinding
 import com.llj.living.logic.vm.SupplementViewModel
-import com.llj.living.ui.activity.ActivitySuppleInfo
 
-class SuppleFinishedAdapter(private val vm: SupplementViewModel):BaseReloadAdapter<SuppleFinishedBean>(DIFF_CALLBACK) {
+class SuppleFinishedAdapter(private val vm: SupplementViewModel):BaseReloadAdapter<MainFragmentBean>(DIFF_CALLBACK) {
+
+    override fun layoutId(): Int = R.layout.item_main_finished
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         if (viewType == layoutId()) {
-            val binding = DataBindingUtil.inflate<ItemSuppleFinishedBinding>(
+            val binding = DataBindingUtil.inflate<ItemMainFinishedBinding>(
                 LayoutInflater.from(parent.context),
                 viewType, parent, false
             )
@@ -40,38 +40,32 @@ class SuppleFinishedAdapter(private val vm: SupplementViewModel):BaseReloadAdapt
         }
     }
 
-    override fun layoutId(): Int = R.layout.item_supple_finished
-
-    inner class SuppleFinishedViewHolder(private val binding: ItemSuppleFinishedBinding) :
+    inner class SuppleFinishedViewHolder(private val binding: ItemMainFinishedBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindData(data: SuppleFinishedBean?) {
-            if (data == null) return
-                binding.apply {
-                    tvNameSuppleFinished.text = data.uName
-                    tvIdNumSuppleFinished.text = data.idCard
-                    tvTimeSuppleFinished.text = data.time
-                }
-            binding.btSupplementing.setOnClickListener { view ->
-                view.context.also {
-                    it.startActivity(Intent(it, ActivitySuppleInfo::class.java))
+        fun bindData(data: MainFragmentBean?) {
+            if (data==null) return
+            binding.apply {
+                tvTittle.text = data.title
+                itemView.context.resources.let {
+                    tvHadTypeStr.text = it.getString(R.string.had_supple_str)
+                    tvWaitTypeStr.text = it.getString(R.string.wait_supple_str)
                 }
             }
-//            binding.ivImgCheckFinished.setImageResource(R.mipmap.logo)
         }
     }
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<SuppleFinishedBean>() {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<MainFragmentBean>() {
             override fun areItemsTheSame(
-                oldItem: SuppleFinishedBean,
-                newItem: SuppleFinishedBean
-            ): Boolean = oldItem.id == newItem.id
+                oldItem: MainFragmentBean,
+                newItem: MainFragmentBean
+            ): Boolean = oldItem.title == newItem.title
 
             override fun areContentsTheSame(
-                oldItem: SuppleFinishedBean,
-                newItem: SuppleFinishedBean
+                oldItem: MainFragmentBean,
+                newItem: MainFragmentBean
             ): Boolean {
-                return oldItem.idCard == newItem.idCard
+                return oldItem.id == newItem.id
             }
 
         }

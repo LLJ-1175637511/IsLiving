@@ -1,12 +1,12 @@
 package com.llj.living.data.factory
 
 import androidx.paging.DataSource
-import com.llj.living.data.bean.CheckFinishedBean
+import com.llj.living.data.bean.MainFragmentBean
 import com.llj.living.data.datasource.CheckFinishedDataSource
 import com.llj.living.logic.vm.CheckViewModel
 
 class CheckFinishedDSFactory private constructor(private val viewModel: CheckViewModel) :
-    DataSource.Factory<Int, CheckFinishedBean>() {
+    DataSource.Factory<Int, MainFragmentBean>() {
 
     private var ds: CheckFinishedDataSource? = null
 
@@ -14,7 +14,7 @@ class CheckFinishedDSFactory private constructor(private val viewModel: CheckVie
         ds?.retryLoadData()
     }
 
-    override fun create(): DataSource<Int, CheckFinishedBean> {
+    override fun create(): DataSource<Int, MainFragmentBean> {
         return CheckFinishedDataSource(viewModel).also {
             ds = it
         }

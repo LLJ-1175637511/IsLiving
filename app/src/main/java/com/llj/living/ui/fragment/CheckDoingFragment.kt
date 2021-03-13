@@ -22,7 +22,7 @@ class CheckDoingFragment : NavBaseFragment<FragmentCheckDoingBinding>() {
     override fun init() {
         getBinding().recyclerviewCheckDoing.adapter = adapter
 
-        viewModel.doingLiveData.observe(this, Observer {
+        viewModel.fragmentLiveData.observe(this, Observer {
             adapter.submitList(it)
             getBinding().refreshCheckDoing.isRefreshing = false
         })
@@ -46,7 +46,7 @@ class CheckDoingFragment : NavBaseFragment<FragmentCheckDoingBinding>() {
     }
 
     private fun refreshData() {
-        viewModel.doingLiveData.value?.dataSource?.invalidate()
+        viewModel.fragmentLiveData.value?.dataSource?.invalidate()
     }
 
 }

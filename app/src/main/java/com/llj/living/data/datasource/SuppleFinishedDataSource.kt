@@ -2,15 +2,13 @@ package com.llj.living.data.datasource
 
 import android.annotation.SuppressLint
 import androidx.paging.PageKeyedDataSource
-import com.llj.living.data.bean.SuppleFinishedBean
+import com.llj.living.data.bean.MainFragmentBean
 import com.llj.living.data.enums.NetStatus
 import com.llj.living.logic.vm.SupplementViewModel
 import com.llj.living.utils.LogUtils
-import java.text.SimpleDateFormat
-import java.util.*
 
 @SuppressLint("SimpleDateFormat")
-class SuppleFinishedDataSource(private val viewModel: SupplementViewModel) : PageKeyedDataSource<Int, SuppleFinishedBean>() {
+class SuppleFinishedDataSource(private val viewModel: SupplementViewModel) : PageKeyedDataSource<Int, MainFragmentBean>() {
 
     private val TAG = this.javaClass.simpleName
 
@@ -23,19 +21,21 @@ class SuppleFinishedDataSource(private val viewModel: SupplementViewModel) : Pag
 
     override fun loadInitial(
         params: LoadInitialParams<Int>,
-        callback: LoadInitialCallback<Int, SuppleFinishedBean>
+        callback: LoadInitialCallback<Int, MainFragmentBean>
     ) {
         retry = null
         viewModel.updateFinishedNetStatus(NetStatus.LOADING)
         LogUtils.d(TAG,"loadInitial key:${params.requestedLoadSize}")
-        val firstList = mutableListOf<SuppleFinishedBean>()
+        val firstList = mutableListOf<MainFragmentBean>()
         repeat(20) { num ->
             firstList.add(
-                SuppleFinishedBean(
-                    uName = "褚某某${num}",
-                    idCard = "身份证：${(0..1000000000).random()}",
-                    id = num,
-                    time = "时间：${SimpleDateFormat("yyyy-mm-dd").format(Date())}"
+                MainFragmentBean(
+                    title = "标题${num}",
+                    startTime = "2021-03-08",
+                    id = (0..6000).random(),
+                    endTime = "2021-03-10",
+                    waitDealWith = 56,
+                    hadDealWith = 256
                 )
             )
         }
@@ -45,19 +45,21 @@ class SuppleFinishedDataSource(private val viewModel: SupplementViewModel) : Pag
 
     override fun loadAfter(
         params: LoadParams<Int>,
-        callback: LoadCallback<Int, SuppleFinishedBean>
+        callback: LoadCallback<Int, MainFragmentBean>
     ) {
         retry = null
         viewModel.updateFinishedNetStatus(NetStatus.LOADING)
         LogUtils.d(TAG,"loadAfter key:${params.key} request:${params.requestedLoadSize}")
-        val firstList = mutableListOf<SuppleFinishedBean>()
+        val firstList = mutableListOf<MainFragmentBean>()
         repeat(20) { num ->
             firstList.add(
-                SuppleFinishedBean(
-                    uName = "褚某某${num}",
-                    idCard = "身份证：${(0..1000000000).random()}",
-                    id = 20*params.key+num,
-                    time = "时间：${SimpleDateFormat("yyyy-mm-dd").format(Date())}"
+                MainFragmentBean(
+                    title = "标题${num + params.key * 20}",
+                    startTime = "2021-03-08",
+                    id = (0..6000).random(),
+                    endTime = "2021-03-10",
+                    waitDealWith = 56,
+                    hadDealWith = 256
                 )
             )
         }
@@ -75,7 +77,7 @@ class SuppleFinishedDataSource(private val viewModel: SupplementViewModel) : Pag
 
     override fun loadBefore(
         params: LoadParams<Int>,
-        callback: LoadCallback<Int, SuppleFinishedBean>
+        callback: LoadCallback<Int, MainFragmentBean>
     ) {
 
     }

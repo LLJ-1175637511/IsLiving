@@ -5,8 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.paging.PagedList
 import androidx.paging.toLiveData
-import com.llj.living.data.bean.CheckDoingBean
-import com.llj.living.data.bean.CheckFinishedBean
+import com.llj.living.data.bean.MainFragmentBean
 import com.llj.living.data.enums.NetStatus
 import com.llj.living.data.enums.UpdateStatusType
 import com.llj.living.data.factory.CheckDoingDSFactory
@@ -17,13 +16,13 @@ class CheckViewModel(application: Application, savedStateHandle: SavedStateHandl
 
     val finishedFactory = CheckFinishedDSFactory.getInstance(this)
 
-    val finishedLiveData:LiveData<PagedList<CheckFinishedBean>> = finishedFactory.toLiveData(
+    val finishedLiveData:LiveData<PagedList<MainFragmentBean>> = finishedFactory.toLiveData(
         20,null
     )
 
     val doingFactory = CheckDoingDSFactory.getInstance(this)
 
-    val doingLiveData:LiveData<PagedList<CheckDoingBean>> = doingFactory.toLiveData(
+    val fragmentLiveData:LiveData<PagedList<MainFragmentBean>> = doingFactory.toLiveData(
         20,null
     )
 

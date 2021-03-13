@@ -7,20 +7,20 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.llj.living.R
-import com.llj.living.data.bean.CheckDoingBean
-import com.llj.living.databinding.ItemCheckDoingBinding
+import com.llj.living.data.bean.MainFragmentBean
+import com.llj.living.databinding.ItemMainDoingBinding
 import com.llj.living.databinding.ItemReloadBinding
 import com.llj.living.logic.vm.CheckViewModel
 import com.llj.living.ui.activity.ActivityCheck
 
 class CheckDoingAdapter(private val vm: CheckViewModel) :
-    BaseReloadAdapter<CheckDoingBean>(DIFF_CALLBACK) {
+    BaseReloadAdapter<MainFragmentBean>(DIFF_CALLBACK) {
 
-    override fun layoutId() = R.layout.item_check_doing
+    override fun layoutId() = R.layout.item_main_doing
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == layoutId()) {
-            val binding = DataBindingUtil.inflate<ItemCheckDoingBinding>(
+            val binding = DataBindingUtil.inflate<ItemMainDoingBinding>(
                 LayoutInflater.from(parent.context),
                 viewType, parent, false
             )
@@ -46,50 +46,33 @@ class CheckDoingAdapter(private val vm: CheckViewModel) :
         }
     }
 
-    inner class CheckDoingViewHolder(private val binding: ItemCheckDoingBinding) :
+    inner class CheckDoingViewHolder(private val binding: ItemMainDoingBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bindData(bean: CheckDoingBean?) {
-            if (bean == null) {
-                binding.apply {
-                    itemTittleCheckDoing.text =
-                        itemView.context.resources.getString(R.string.default_name)
-                    itemView.context.resources.apply {
-                        val startText =
-                            "${getString(R.string.start_time)}${getString(R.string.default_name)}"
-                        tvStartTimeCheckDoing.text = startText
-                        val releaseText =
-                            "${getString(R.string.release_time)}${getString(R.string.default_name)}"
-                        tvReleaseTimeCheckDoing.text = releaseText
-                    }
-                }
-            } else {
-                binding.apply {
-                    itemTittleCheckDoing.text = bean.title
-                    tvStartTimeCheckDoing.text = bean.startTime
-                    tvReleaseTimeCheckDoing.text = bean.releaseTime
-                }
-                binding.btChecking.setOnClickListener { view ->
+        fun bindData(bean: MainFragmentBean?) {
+            if (bean == null) return
+            binding.apply {
+                tvTittle.text = bean.title
+                btOperas.setOnClickListener { view ->
                     view.context.also {
-                        it.startActivity(Intent(it,ActivityCheck::class.java))
+                        it.startActivity(Intent(it, ActivityCheck::class.java))
                     }
                 }
             }
-//            binding.ivImgCheckDoing.setImageResource(R.mipmap.logo)
         }
     }
 
     companion object {
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<CheckDoingBean>() {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<MainFragmentBean>() {
             override fun areItemsTheSame(
-                oldItem: CheckDoingBean,
-                newItem: CheckDoingBean
-            ): Boolean = oldItem.id == newItem.id
+                oldItem: MainFragmentBean,
+                newItem: MainFragmentBean
+            ): Boolean = oldItem.title == newItem.title
 
             override fun areContentsTheSame(
-                oldItem: CheckDoingBean,
-                newItem: CheckDoingBean
-            ): Boolean = false
+                oldItem: MainFragmentBean,
+                newItem: MainFragmentBean
+            ): Boolean = oldItem.id == newItem.id
         }
     }
 }
