@@ -33,6 +33,15 @@ class WaitCheckDataSource(private val viewModel: ActCheckViewModel) : PageKeyedD
                 )
             )
         }
+
+//        val bean1 = SecondFragmentBean(
+//            uName = "褚某某${num}",
+//            sex = "男",
+//            id = num,
+//            idCard = (10000000 + (0..88888).random()).toString()
+//        )
+//        firstList.add(bean1)
+        
         callback.onResult(firstList, 0, 1)
         viewModel.updateWaitCheckNetStatus(NetStatus.SUCCESS)
     }
