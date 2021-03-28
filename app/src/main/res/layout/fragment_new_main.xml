@@ -26,7 +26,6 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_marginBottom="8dp"
-            android:background="#1A07B7C6"
             android:gravity="center"
             android:src="@mipmap/ad_picture" />
 
