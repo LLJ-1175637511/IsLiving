@@ -1,28 +1,36 @@
 package com.llj.living.ui.fragment
 
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.llj.living.R
+import com.llj.living.data.database.OldManInfoCheckHad
 import com.llj.living.databinding.FragmentHadCheckBinding
-import com.llj.living.logic.vm.ActCheckViewModel
+import com.llj.living.logic.vm.DatabaseVM
 import com.llj.living.ui.adapter.HadCheckAdapter
-import com.llj.living.utils.LogUtils
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class HadCheckFragment : NavBaseFragment<FragmentHadCheckBinding>() {
 
     override fun getLayoutId() = R.layout.fragment_had_check
 
-    private val viewModel by activityViewModels<ActCheckViewModel>()
-    private val adapter by lazy { HadCheckAdapter(viewModel) }
-
+//    private val viewModel by activityViewModels<ActCheckViewModel>()
+    private val adapter by lazy { HadCheckAdapter() }
+    private lateinit var pagedListLives: LiveData<PagedList<OldManInfoCheckHad>>
+    private val dbViewModel by activityViewModels<DatabaseVM>()
     override fun init() {
         getBinding().recyclerviewHadCheck.adapter = adapter
 
-        viewModel.hadCheckLiveData.observe(this, Observer {
+        pagedListLives = LivePagedListBuilder(dbViewModel.getCheckFinishedLD(),5).build()
+
+        pagedListLives.observe(requireActivity(), Observer { data->
+            data?.let {
+                adapter.submitList(it)
+            }
+        })
+
+        /*viewModel.hadCheckLiveData.observe(this, Observer {
             adapter.submitList(it)
             getBinding().refreshHadCheck.isRefreshing = false
         })
@@ -42,12 +50,12 @@ class HadCheckFragment : NavBaseFragment<FragmentHadCheckBinding>() {
                     refreshData()
                 }
             }
-        }
+        }*/
     }
 
-    private fun refreshData() {
+  /*  private fun refreshData() {
         viewModel.hadCheckLiveData.value?.dataSource?.invalidate()
-    }
+    }*/
 
     companion object{
         private var instance:HadCheckFragment ?= null

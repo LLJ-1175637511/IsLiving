@@ -16,6 +16,7 @@ class MainAdAdapter : ListAdapter<AdBean, MainAdAdapter.AdViewHolder>(DIFF_CALLB
         RecyclerView.ViewHolder(binding.root) {
         fun bindData(item: AdBean) {
             binding.tvTitleAd.text = item.titleName
+            binding.tvMainAddr.text = item.addr
         }
     }
 

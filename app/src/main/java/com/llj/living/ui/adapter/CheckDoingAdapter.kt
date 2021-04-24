@@ -7,14 +7,15 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.llj.living.R
-import com.llj.living.data.bean.MainFragmentBean
+import com.llj.living.data.database.CheckDoing
 import com.llj.living.databinding.ItemMainDoingBinding
 import com.llj.living.databinding.ItemReloadBinding
-import com.llj.living.logic.vm.CheckViewModel
+import com.llj.living.logic.vm.DatabaseVM
 import com.llj.living.ui.activity.ActivityCheck
+import com.llj.living.utils.LogUtils
 
-class CheckDoingAdapter(private val vm: CheckViewModel) :
-    BaseReloadAdapter<MainFragmentBean>(DIFF_CALLBACK) {
+class CheckDoingAdapter(private val vm: DatabaseVM) :
+    BaseReloadAdapter<CheckDoing>(DIFF_CALLBACK) {
 
     override fun layoutId() = R.layout.item_main_doing
 
@@ -24,6 +25,7 @@ class CheckDoingAdapter(private val vm: CheckViewModel) :
                 LayoutInflater.from(parent.context),
                 viewType, parent, false
             )
+            binding.ivImg.setImageResource(R.drawable.ic_baseline_how_to_reg_24)
             CheckDoingViewHolder(binding)
         } else {
             val binding = DataBindingUtil.inflate<ItemReloadBinding>(
@@ -36,12 +38,10 @@ class CheckDoingAdapter(private val vm: CheckViewModel) :
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder.itemViewType == layoutId()) (holder as CheckDoingViewHolder).bindData(
-            getItem(
-                position
-            )
+            getItem(position)
         ) else (holder as BaseReloadAdapter<*>.FooterViewHolder).bindData().also {
             holder.itemView.setOnClickListener {
-                vm.doingFactory.retryLoadData()
+//                vm.doingFactory.retryLoadData()
             }
         }
     }
@@ -49,12 +49,18 @@ class CheckDoingAdapter(private val vm: CheckViewModel) :
     inner class CheckDoingViewHolder(private val binding: ItemMainDoingBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bindData(bean: MainFragmentBean?) {
+        fun bindData(bean: CheckDoing?) {
             if (bean == null) return
             binding.apply {
                 tvTittle.text = bean.title
+                tvStartTime.text = bean.startTime
+                tvEndTime.text = bean.endTime
+                tvItemWait.text = bean.waitDealWith.toString()
+                tvItemHad.text = bean.hadDealWith.toString()
                 btOperas.setOnClickListener { view ->
-                    view.context.also {
+                    view.context.let {
+                        id = bean.id
+                        LogUtils.d("CheckDoingAdapter","id:${bean.id}")
                         it.startActivity(Intent(it, ActivityCheck::class.java))
                     }
                 }
@@ -63,16 +69,17 @@ class CheckDoingAdapter(private val vm: CheckViewModel) :
     }
 
     companion object {
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<MainFragmentBean>() {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<CheckDoing>() {
             override fun areItemsTheSame(
-                oldItem: MainFragmentBean,
-                newItem: MainFragmentBean
-            ): Boolean = oldItem.title == newItem.title
+                oldItem: CheckDoing,
+                newItem: CheckDoing
+            ): Boolean = oldItem.id == newItem.id
 
             override fun areContentsTheSame(
-                oldItem: MainFragmentBean,
-                newItem: MainFragmentBean
-            ): Boolean = oldItem.id == newItem.id
+                oldItem: CheckDoing,
+                newItem: CheckDoing
+            ): Boolean = oldItem == newItem
         }
+        var id = -1
     }
 }

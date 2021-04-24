@@ -63,7 +63,16 @@
         <item name="android:textColor">@color/grey</item>
         <item name="android:textSize">14sp</item>
     </style>
+
     <style name="ItemDataDarkText">
         <item name="android:textSize">14sp</item>
+    </style>
+    <style name="TakePhotoFloatButtonStyle">
+        <item name="android:src">@drawable/ic_baseline_add_a_photo_24</item>
+        <item name="fabSize">mini</item>
+        <item name="borderWidth">0dp</item>
+        <item name="rippleColor">@color/half_white</item>
+        <item name="backgroundTint">@color/white</item>
+        <item name="android:layout_margin">20dp</item>
     </style>
 </resources>

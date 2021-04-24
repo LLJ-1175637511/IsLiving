@@ -7,13 +7,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.llj.living.R
-import com.llj.living.data.bean.SecondFragmentBean
+import com.llj.living.data.database.OldManInfoCheckHad
 import com.llj.living.databinding.ItemMainHadBinding
 import com.llj.living.databinding.ItemReloadBinding
-import com.llj.living.logic.vm.ActCheckViewModel
 import com.llj.living.ui.activity.ActivityCheckDetail
 
-class HadCheckAdapter(private val vm: ActCheckViewModel):BaseReloadAdapter<SecondFragmentBean>(DIFF_CALLBACK) {
+class HadCheckAdapter():BaseReloadAdapter<OldManInfoCheckHad>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         if (viewType == layoutId()) {
@@ -35,7 +34,7 @@ class HadCheckAdapter(private val vm: ActCheckViewModel):BaseReloadAdapter<Secon
             getItem(position)
         ) else (holder as BaseReloadAdapter<*>.FooterViewHolder).bindData().also {
             holder.itemView.setOnClickListener {
-                vm.hadCheckFactory.retryLoadData()
+//                vm.hadCheckFactory.retryLoadData()
             }
         }
     }
@@ -44,10 +43,10 @@ class HadCheckAdapter(private val vm: ActCheckViewModel):BaseReloadAdapter<Secon
 
     inner class HadCheckViewHolder(private val binding: ItemMainHadBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindData(data: SecondFragmentBean?) {
+        fun bindData(data: OldManInfoCheckHad?) {
             if (data == null) return
             binding.apply {
-                tvName.text = data.uName
+                tvName.text = data.name
                 tvIdNum.text = data.idCard
                 tvSex.text = data.sex
                 btOperas.text = itemView.context.resources.getString(R.string.re_check)
@@ -59,17 +58,17 @@ class HadCheckAdapter(private val vm: ActCheckViewModel):BaseReloadAdapter<Secon
     }
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<SecondFragmentBean>() {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<OldManInfoCheckHad>() {
             override fun areItemsTheSame(
-                oldItem: SecondFragmentBean,
-                newItem: SecondFragmentBean
-            ): Boolean = oldItem.uName == newItem.uName
+                oldItem: OldManInfoCheckHad,
+                newItem: OldManInfoCheckHad
+            ): Boolean = oldItem.id == newItem.id
 
             override fun areContentsTheSame(
-                oldItem: SecondFragmentBean,
-                newItem: SecondFragmentBean
+                oldItem: OldManInfoCheckHad,
+                newItem: OldManInfoCheckHad
             ): Boolean {
-                return oldItem.id == newItem.id
+                return oldItem == newItem
             }
 
         }

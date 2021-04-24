@@ -1,30 +1,44 @@
 package com.llj.living.net
 
-import com.llj.living.data.enums.UrlType
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitCreator {
 
-    private const val tokenUrl = "https://aip.baidubce.com/"
     private const val faceUrl = "https://aip.baidubce.com/"
-    private const val mysqlUrl = "https://aip.baidubce.com/"
+    private const val baiduLLUrl = "http://api.map.baidu.com/"
+    private const val mysqlUrl = "https://p.zhuohang.tech/pi.php/"
 
-    fun <T> create(serviceClass: Class<T>, urlType: UrlType): T =
-        buildRetrofit(urlType).create(serviceClass)
-
-    private fun buildRetrofit(urlType: UrlType): Retrofit {
-        val url = when (urlType) {
-            UrlType.Face -> faceUrl
-            UrlType.Token -> tokenUrl
-            else -> mysqlUrl
-        }
-        return Retrofit.Builder()
-            .baseUrl(url)
+    private val retrofit by lazy {
+        Retrofit.Builder()
+            .baseUrl(mysqlUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+    private val llRetrofit by lazy {
+        Retrofit.Builder()
+            .baseUrl(baiduLLUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+    private val baiduRetrofit by lazy {
+        Retrofit.Builder()
+            .baseUrl(faceUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
-    inline fun <reified T> create(urlType: UrlType): T = create(T::class.java, urlType)
+    fun <T> create(serviceClass: Class<T>): T = retrofit.create(serviceClass)
 
+    fun <T> baiduCreate(serviceClass: Class<T>): T =
+        baiduRetrofit.create(serviceClass)
+
+    fun <T> baiduLLCreate(serviceClass: Class<T>): T =
+        llRetrofit.create(serviceClass)
+
+    inline fun <reified T> baiduCreate(): T = baiduCreate(T::class.java)
+
+    inline fun <reified T> baiduLLCreate(): T = baiduLLCreate(T::class.java)
+
+    inline fun <reified T> create(): T = create(T::class.java)
 }

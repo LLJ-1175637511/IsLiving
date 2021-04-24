@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.*
 import android.widget.FrameLayout
+import android.widget.SeekBar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -15,10 +16,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.llj.living.R
 import com.llj.living.custom.ext.baseObserver
+import com.llj.living.custom.ext.convertToTime
+import com.llj.living.custom.ext.getVideoName
+import com.llj.living.custom.ext.toastLong
 import com.llj.living.databinding.ActivityVideoPreviewBinding
 import com.llj.living.logic.vm.VideoPreviewVM
 import com.llj.living.utils.LogUtils
-import com.llj.living.utils.ToastUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -33,20 +36,14 @@ class ActivityVideoPreview : AppCompatActivity() {
     private val TAG = this.javaClass.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        isVertical = intent.getBooleanExtra(ActivityVideotape.PREVIEW_ORIENTATION_VERTICAL, false)
-        if (!isVertical) { //如果是竖屏录制的视频 则垂直播放
-            if (resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE){
-                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-            }
-        }
-        super.onCreate(savedInstanceState)
-        LogUtils.d(TAG,"onCreate")
         hideSystemUi() //隐藏系统顶部状态栏
+        initOrientation() //初始化屏幕方向
+        super.onCreate(savedInstanceState)
         val tempUri = intent.getParcelableExtra<Uri>(ActivityVideotape.VIDEO_URI)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_video_preview)
         if (tempUri == null) {
             lifecycleScope.launch {
-                ToastUtils.toastLong("未获取到视频路径 请返回重试")
+                toastLong("未获取到视频路径 请返回重试")
                 delay(2000)
                 finish()
             }
@@ -60,22 +57,19 @@ class ActivityVideoPreview : AppCompatActivity() {
     }
 
     private fun initOrientation() {
-
+        isVertical = intent.getBooleanExtra(ActivityVideotape.PREVIEW_ORIENTATION_VERTICAL, false)
+        if (!isVertical) { //如果是竖屏录制的视频 则垂直播放
+            if (resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            }
+        }
     }
 
     private fun initUi() {
         binding.apply {
-            tvVideoName.text = uri.path.toString()
+            tvVideoName.text = uri.path.toString().getVideoName()
             surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
-                override fun surfaceChanged(
-                    holder: SurfaceHolder,
-                    format: Int,
-                    width: Int,
-                    height: Int
-                ) {
-
-                }
-
+                override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {}
                 override fun surfaceDestroyed(holder: SurfaceHolder) {}
                 override fun surfaceCreated(holder: SurfaceHolder) {
                     viewModel.getPlayer().apply {
@@ -83,7 +77,6 @@ class ActivityVideoPreview : AppCompatActivity() {
                         setScreenOnWhilePlaying(true) //设置不熄灭屏幕
                     }
                 }
-
             })
         }
     }
@@ -97,15 +90,23 @@ class ActivityVideoPreview : AppCompatActivity() {
                 }
             }
             currentPlayingTime.baseObserver(this@ActivityVideoPreview) {
-                binding.tvCurrentTime.text = (it / 1000).toString()
-                binding.seekBar.progress = it / 1000
+                val temp = it / 1000
+                binding.tvCurrentTime.text = temp.convertToTime()
+                binding.seekBar.progress = temp
+                if (temp >= binding.seekBar.max) {
+                    LogUtils.d("ActivityVideoPreview","finished")
+                    lifecycleScope.launch {
+                        delay(1000)
+                        finish()
+                    }
+                }
             }
             allPlayingTime.baseObserver(this@ActivityVideoPreview) {
-                binding.tvVideoAllTime.text = (it / 1000).toString()
+                binding.tvVideoAllTime.text = (it / 1000).convertToTime()
                 binding.seekBar.max = it / 1000
             }
             isPrepared.baseObserver(this@ActivityVideoPreview) {
-                binding.pbIsPrepared.visibility = View.INVISIBLE
+                binding.pbIsPrepared.visibility = it
             }
             loadVideo(uri)
         }
@@ -131,6 +132,7 @@ class ActivityVideoPreview : AppCompatActivity() {
             ivQuitPlaying.setOnClickListener {
                 finish()
             }
+
             VideoFrameLayout.setOnClickListener { _ ->
                 videoViewController.let {
                     userOperasTime = 0
@@ -139,7 +141,8 @@ class ActivityVideoPreview : AppCompatActivity() {
                 }
             }
             ivPlayerControl.setOnClickListener {
-                val statusPicture = if (viewModel.getPlayer().isPlaying) {
+                userOperasTime = 0
+                val statusPicture = if (!viewModel.getPlayer().isPlaying) {
                     viewModel.getPlayer().resumePlayer()
                     R.drawable.ic_baseline_pause_circle_outline_24
                 } else {
@@ -148,6 +151,22 @@ class ActivityVideoPreview : AppCompatActivity() {
                 }
                 ivPlayerControl.setImageResource(statusPicture)
             }
+            binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                private var newProcess = 0
+                override fun onProgressChanged(
+                    seekBar: SeekBar?,
+                    progress: Int,
+                    fromUser: Boolean
+                ) {
+                    if (fromUser) userOperasTime = 0
+                    newProcess = progress
+                }
+
+                override fun onStartTrackingTouch(seekBar: SeekBar?) { }
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                    viewModel.changeCurrentProgress(newProcess)
+                }
+            })
         }
     }
 
@@ -163,7 +182,7 @@ class ActivityVideoPreview : AppCompatActivity() {
             } else {
                 FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT,
-                    binding.VideoFrameLayout.width * width / height,
+                    binding.VideoFrameLayout.width * height / width,
                     Gravity.CENTER
                 )
             }

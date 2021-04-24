@@ -1,45 +1,82 @@
 package com.llj.living.ui.activity
 
-import android.content.Intent
-import android.graphics.Color
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
+import android.widget.TextView
+import androidx.lifecycle.MutableLiveData
 import com.llj.living.R
+import com.llj.living.custom.ext.*
+import com.llj.living.data.bean.SysTimeBean
+import com.llj.living.databinding.ActivityLoginBinding
+import com.llj.living.databinding.ActivitySplashBinding
+import com.llj.living.net.repository.SystemRepository
+import com.llj.living.utils.LogUtils
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class SplashActivity:AppCompatActivity() {
+class SplashActivity : BaseActivity<ActivitySplashBinding>() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setFullScreen()
-        setContentView(R.layout.activity_splash)
-        lifecycleScope.launch {
-            delay(2000)
-            startActivity(Intent(this@SplashActivity,LoginActivity::class.java))
-            finish()
+    override fun getLayoutId() = R.layout.activity_splash
+
+    override fun isScreenFull() = true
+
+    private val timeLiveData = MutableLiveData<Int>(5)
+    private var timeIsOk = false
+
+    val TAG = "${this.javaClass.simpleName}TEST"
+
+    override fun init() {
+        super.init()
+        setClickFunction()
+        setTimer()
+        getSysTime()?.let { toastShort(it) }
+    }
+
+    private fun setClickFunction() {
+        val tvTime = findViewById<TextView>(R.id.tvTime)
+        timeLiveData.baseObserver(this) {
+            tvTime.text = if (timeIsOk) {
+                tvTime.isEnabled = true
+                "关闭 $it"
+            } else it.toString()
+        }
+        tvTime.setOnClickListener {
+            startCommonFinishedActivity<LoginActivity>()
         }
     }
 
-    private fun setFullScreen() {
-        //沉浸式效果
-        window.statusBarColor = Color.TRANSPARENT//状态栏设置为透明色
-        window.navigationBarColor = Color.TRANSPARENT
-        //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-//            window.setDecorFitsSystemWindows(false)
-//            window.insetsController?.let {
-//                it.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-//                it.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-//            }
-//        } else {
-//            @Suppress("DEPRECATION")
-//            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_FULLSCREEN
-//                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-//                    or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-//                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-//                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-//                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION)
-//        }
+    private fun getSysTime() = tryExceptionLaunch {
+        val bean = SystemRepository.getSysTimeRequest()
+        LogUtils.d(TAG,bean.toString())
+        val versionBean = baseBeanConverter<SysTimeBean>(bean)
+        val cTime = System.currentTimeMillis() / 1000
+        if (cTime - versionBean.time > 60 * 60 * 24) {
+            toastShort("服务器时间校验失败")
+            delay(1000)
+            finish()
+        } else {
+            timeIsOk = true
+        }
+    }
+
+    private fun setTimer() = commonLaunch {
+        while (true) {
+            delay(1000)
+            val newTime = timeLiveData.value!! - 1
+            timeLiveData.postValue(newTime)
+            if (newTime == 0) {
+                break
+            }
+        }
+        if (timeIsOk) {
+            startCommonFinishedActivity<LoginActivity>()
+        } else {
+            withContext(Dispatchers.Main) {
+                toastShort("时间校验失败")
+            }
+            delay(1000)
+            finish()
+        }
     }
 }
+
+

@@ -9,16 +9,20 @@
     <string name="user_find_pwd">找回密码?</string>
     <string name="user_name_is_null">用户名不能为空</string>
     <string name="user_pwd_is_null">密码不能为空</string>
-    <string name="user_version">版本号：6.3.5</string>
+    <string name="user_version">版本号：%1$s</string>
+    <string name="new_version">最新版本号：</string>
     <string name="sp_saved_fail">数据保存失败 请重试</string>
     <string name="activity_face_auth">人脸鉴权</string>
     <string name="default_name">XXX</string>
     <string name="bed_count">床位</string>
     <string name="in_yard_count">在院人数：</string>
+    <string name="in_yard_count_str">在院人数</string>
     <string name="out_yard_count">离院人数：</string>
+    <string name="out_yard_count_str">离院人数</string>
     <string name="supplement">补录</string>
     <string name="check">核查</string>
     <string name="about">关于</string>
+    <string name="main_page">主页</string>
     <string name="doing">进行中</string>
     <string name="finished">已完成</string>
     <string name="wait_supple">待补录</string>
@@ -52,5 +56,8 @@
     <string name="make_sure">确\t认</string>
     <string name="completed">完\t成</string>
     <string name="click_take_photo">点击拍照</string>
+    <string name="click_picture_take_photo">点击图案拍照</string>
     <string name="check_detail">核查详情</string>
+    <string name="clickToTakeVideo">点击录像</string>
+    <string name="clickToPreviewVideo">视频预览</string>
 </resources>

@@ -7,8 +7,8 @@
     <fragment
         android:id="@+id/navigation_about"
         android:name="com.llj.living.ui.fragment.MainFragment"
-        tools:layout="@layout/fragment_main"
-        android:label="关于主页" />
+        tools:layout="@layout/fragment_new_main"
+        android:label="主页" />
     <fragment
         android:id="@+id/navigation_check"
         android:name="com.llj.living.ui.fragment.CheckFragment"

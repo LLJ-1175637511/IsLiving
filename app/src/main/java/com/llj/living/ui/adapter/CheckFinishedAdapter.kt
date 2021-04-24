@@ -20,6 +20,7 @@ class CheckFinishedAdapter(private val vm: CheckViewModel) :
                 LayoutInflater.from(parent.context),
                 viewType, parent, false
             )
+            binding.ivImg.setImageResource(R.drawable.ic_baseline_how_to_reg_24_orange)
             CheckFinishedViewHolder(binding)
         } else {
             val binding = DataBindingUtil.inflate<ItemReloadBinding>(
@@ -47,6 +48,11 @@ class CheckFinishedAdapter(private val vm: CheckViewModel) :
             if (data == null) return
             binding.apply {
                 tvTittle.text = data.title
+                tvItemWait.text = data.waitDealWith.toString()
+                tvItemHad.text = data.hadDealWith.toString()
+                tvStartDate.text = data.startTime
+                tvEndDate.text = data.endTime
+                tvState.text = "已审核"
             }
 //            binding.ivImgCheckFinished.setImageResource(R.mipmap.logo)
         }

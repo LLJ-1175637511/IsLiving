@@ -1,5 +1,6 @@
 package com.llj.living.data.factory
 
+import androidx.collection.arraySetOf
 import androidx.paging.DataSource
 import com.llj.living.data.bean.SecondFragmentBean
 import com.llj.living.data.datasource.WaitSuppleDataSource
@@ -10,14 +11,20 @@ class WaitSuppleDSFactory private constructor(private val viewModel: ActSuppleVi
 
     private var ds: WaitSuppleDataSource? = null
 
-    fun retryLoadData() {
+    var arraySet = arraySetOf<Int>()
+
+     fun retryLoadData() {
         ds?.retryLoadData()
     }
 
     override fun create(): DataSource<Int, SecondFragmentBean> {
-        return WaitSuppleDataSource(viewModel).also {
+        return WaitSuppleDataSource(viewModel,arraySet).also {
             ds = it
         }
+    }
+
+    fun removedId(id:Int){
+        arraySet.add(id)
     }
 
     companion object {
@@ -26,5 +33,6 @@ class WaitSuppleDSFactory private constructor(private val viewModel: ActSuppleVi
             instance ?: WaitSuppleDSFactory(viewModel).also {
                 instance = it
             }
+
     }
 }

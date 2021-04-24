@@ -21,11 +21,11 @@
                 android:layout_marginBottom="8dp"
                 android:text="@string/id_card"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_img"
-                app:layout_constraintStart_toStartOf="@+id/textView"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />
+                app:layout_constraintStart_toStartOf="@+id/tvVersionId"
+                app:layout_constraintTop_toBottomOf="@+id/tvVersionId" />
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/tvVersionId"
                 style="@style/ItemDataCommonText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -36,10 +36,9 @@
 
             <ImageView
                 android:id="@+id/iv_img"
-                android:layout_width="60dp"
+                android:layout_width="30dp"
                 android:layout_height="0dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginBottom="8dp"
                 android:src="@drawable/ic_baseline_help_24"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -50,11 +49,12 @@
                 android:id="@+id/tv_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
                 android:text="褚某某0"
+                android:textStyle="bold"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 app:layout_constraintStart_toEndOf="@+id/iv_img"
                 app:layout_constraintTop_toTopOf="@+id/iv_img" />
 
@@ -63,7 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="24dp"
+                android:layout_marginEnd="12dp"
                 android:background="@drawable/btn_login"
                 android:padding="8dp"
                 android:text="@string/supplement_info"
@@ -80,10 +80,10 @@
                 android:layout_marginEnd="8dp"
                 android:text="男"
                 style="@style/ItemDataCommonText"
-                app:layout_constraintBottom_toBottomOf="@+id/textView"
+                app:layout_constraintBottom_toBottomOf="@+id/tvVersionId"
                 app:layout_constraintEnd_toStartOf="@+id/bt_operas"
-                app:layout_constraintStart_toEndOf="@+id/textView"
-                app:layout_constraintTop_toTopOf="@+id/textView" />
+                app:layout_constraintStart_toEndOf="@+id/tvVersionId"
+                app:layout_constraintTop_toTopOf="@+id/tvVersionId" />
 
             <TextView
                 android:id="@+id/tv_id_num"

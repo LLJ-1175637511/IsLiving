@@ -19,6 +19,16 @@ object Const {
 
     //endregion
 
+
+    //region mySql
+    const val SPMySqlNet = "sp_mysql_net"
+    const val SPMySqlToken = "sp_mysql_net_token"
+    const val SPMySqlTodayReminderUpdate = "sp_mysql_today_reminder_update"
+    const val SPMySqlTodayReminderUpdateTime = "sp_mysql_today_reminder_update_time"
+    //endregion
+
+
+
     //region livedata token
     const val TokenFaceAuth = "token_face_auth"
     //endregion

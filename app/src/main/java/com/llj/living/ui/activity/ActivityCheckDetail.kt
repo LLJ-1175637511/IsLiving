@@ -6,6 +6,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.llj.living.R
 import com.llj.living.custom.ext.toSimpleTime
+import com.llj.living.custom.ext.toastShort
 import com.llj.living.data.bean.ToolbarConfig
 import com.llj.living.data.database.OldManInfoWait
 import com.llj.living.data.enums.TakePhotoEnum
@@ -13,7 +14,6 @@ import com.llj.living.databinding.ActivityCheckDetailBinding
 import com.llj.living.logic.vm.DatabaseVM
 import com.llj.living.ui.adapter.CheckDoingAdapter
 import com.llj.living.ui.adapter.WaitCheckAdapter
-import com.llj.living.utils.ToastUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -78,7 +78,7 @@ class ActivityCheckDetail : BaseTPActivity<ActivityCheckDetailBinding>() {
                     tvCheckIdCard.text = it.idCard
                     tvCheckTime.text = System.currentTimeMillis().toSimpleTime()
                 }
-                ToastUtils.toastShort("识别成功")
+                toastShort("识别成功")
             }
         }
     }

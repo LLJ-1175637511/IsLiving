@@ -41,7 +41,7 @@ class WaitCheckDataSource(private val viewModel: ActCheckViewModel) : PageKeyedD
 //            idCard = (10000000 + (0..88888).random()).toString()
 //        )
 //        firstList.add(bean1)
-        
+
         callback.onResult(firstList, 0, 1)
         viewModel.updateWaitCheckNetStatus(NetStatus.SUCCESS)
     }

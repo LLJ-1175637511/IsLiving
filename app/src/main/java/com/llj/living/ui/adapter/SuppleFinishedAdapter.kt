@@ -6,12 +6,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.llj.living.R
-import com.llj.living.data.bean.MainFragmentBean
+import com.llj.living.data.database.SuppleFinished
 import com.llj.living.databinding.ItemMainFinishedBinding
 import com.llj.living.databinding.ItemReloadBinding
-import com.llj.living.logic.vm.SupplementViewModel
 
-class SuppleFinishedAdapter(private val vm: SupplementViewModel):BaseReloadAdapter<MainFragmentBean>(DIFF_CALLBACK) {
+class SuppleFinishedAdapter():BaseReloadAdapter<SuppleFinished>(DIFF_CALLBACK) {
 
     override fun layoutId(): Int = R.layout.item_main_finished
 
@@ -35,17 +34,21 @@ class SuppleFinishedAdapter(private val vm: SupplementViewModel):BaseReloadAdapt
             getItem(position)
         ) else (holder as BaseReloadAdapter<*>.FooterViewHolder).bindData().also {
             holder.itemView.setOnClickListener {
-                vm.finishedFactory.retryLoadData()
+//                vm.finishedFactory.retryLoadData()
             }
         }
     }
 
     inner class SuppleFinishedViewHolder(private val binding: ItemMainFinishedBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindData(data: MainFragmentBean?) {
+        fun bindData(data: SuppleFinished?) {
             if (data==null) return
             binding.apply {
                 tvTittle.text = data.title
+                tvItemWait.text = data.waitDealWith.toString()
+                tvItemHad.text = data.hadDealWith.toString()
+                tvStartDate.text = data.startTime
+                tvEndDate.text = data.endTime
                 itemView.context.resources.let {
                     tvHadTypeStr.text = it.getString(R.string.had_supple_str)
                     tvWaitTypeStr.text = it.getString(R.string.wait_supple_str)
@@ -55,15 +58,15 @@ class SuppleFinishedAdapter(private val vm: SupplementViewModel):BaseReloadAdapt
     }
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<MainFragmentBean>() {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<SuppleFinished>() {
             override fun areItemsTheSame(
-                oldItem: MainFragmentBean,
-                newItem: MainFragmentBean
+                oldItem: SuppleFinished,
+                newItem: SuppleFinished
             ): Boolean = oldItem.title == newItem.title
 
             override fun areContentsTheSame(
-                oldItem: MainFragmentBean,
-                newItem: MainFragmentBean
+                oldItem: SuppleFinished,
+                newItem: SuppleFinished
             ): Boolean {
                 return oldItem.id == newItem.id
             }

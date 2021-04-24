@@ -2,6 +2,17 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <import type="android.view.View"/>
+
+        <variable
+            name="asiVM"
+            type="com.llj.living.logic.vm.SuppleInfoVM" />
+        <variable
+            name="types"
+            type="com.llj.living.data.enums.IsShowedType" />
+    </data>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,6 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="10dp"
             android:text="身份证：135135456864514656"
             android:textSize="16sp" />
 
@@ -28,9 +40,12 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:fadeScrollbars="false"
+            android:scrollbarSize="4dp"
+            android:paddingEnd="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:padding="20dp">
+            android:layout_marginBottom="8dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -38,10 +53,11 @@
 
                 <ImageView
                     android:id="@+id/iv_face_supple_info"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minHeight="180dp"
-                    android:src="@drawable/ic_baseline_image_24"
+                    android:background="@color/white"
+                    android:padding="10dp"
+                    android:src="@mipmap/face_old_man_2"
                     app:layout_constraintBottom_toTopOf="@+id/iv_id_card_a_supple_info"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -52,6 +68,7 @@
                     style="@style/SuppleInfoImgText"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
+                    android:visibility="@{asiVM.getIsHadTakePhotoLiveData(types.Face) ? View.INVISIBLE : View.VISIBLE}"
                     android:text="@string/click_take_photo"
                     app:layout_constraintBottom_toBottomOf="@+id/iv_face_supple_info"
                     app:layout_constraintEnd_toEndOf="@+id/iv_face_supple_info"
@@ -60,10 +77,12 @@
 
                 <ImageView
                     android:id="@+id/iv_id_card_a_supple_info"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minHeight="180dp"
-                    android:src="@drawable/ic_baseline_image_24"
+                    android:background="@color/white"
+                    android:layout_marginTop="10dp"
+                    android:padding="10dp"
+                    android:src="@mipmap/id_card_front"
                     app:layout_constraintBottom_toTopOf="@+id/iv_id_card_b_supple_info"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -74,18 +93,22 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     style="@style/SuppleInfoImgText"
+                    android:visibility="@{asiVM.getIsHadTakePhotoLiveData(types.IdCardA) ? View.INVISIBLE : View.VISIBLE}"
                     android:text="@string/click_take_photo"
                     app:layout_constraintBottom_toBottomOf="@+id/iv_id_card_a_supple_info"
                     app:layout_constraintEnd_toEndOf="@+id/iv_id_card_a_supple_info"
                     app:layout_constraintStart_toStartOf="@+id/iv_id_card_a_supple_info"
                     app:layout_constraintTop_toTopOf="@+id/iv_id_card_a_supple_info" />
 
+
                 <ImageView
                     android:id="@+id/iv_id_card_b_supple_info"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minHeight="180dp"
-                    android:src="@drawable/ic_baseline_image_24"
+                    android:background="@color/white"
+                    android:padding="10dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@mipmap/id_card_behind"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -97,12 +120,37 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:text="@string/click_take_photo"
+                    android:visibility="@{asiVM.getIsHadTakePhotoLiveData(types.IdCardB) ? View.INVISIBLE : View.VISIBLE}"
                     app:layout_constraintBottom_toBottomOf="@+id/iv_id_card_b_supple_info"
                     app:layout_constraintEnd_toEndOf="@+id/iv_id_card_b_supple_info"
                     app:layout_constraintStart_toStartOf="@+id/iv_id_card_b_supple_info"
                     app:layout_constraintTop_toTopOf="@+id/iv_id_card_b_supple_info" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/reFace"
+                    style="@style/TakePhotoFloatButtonStyle"
+                    android:visibility="@{asiVM.getIsHadTakePhotoLiveData(types.Face)? View.VISIBLE : View.INVISIBLE}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_face_supple_info"
+                    app:layout_constraintEnd_toEndOf="parent" />
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/reIdCardA"
+                    style="@style/TakePhotoFloatButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{asiVM.getIsHadTakePhotoLiveData(types.IdCardA) ? View.VISIBLE : View.INVISIBLE}"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_id_card_a_supple_info"
+                    app:layout_constraintEnd_toEndOf="parent" />
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/reIdCardB"
+                    style="@style/TakePhotoFloatButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{asiVM.getIsHadTakePhotoLiveData(types.IdCardB) ? View.VISIBLE : View.INVISIBLE}"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_id_card_b_supple_info"
+                    app:layout_constraintEnd_toEndOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
 
         <Button
@@ -112,8 +160,10 @@
             android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp"
             android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/btn_login"
             android:text="@string/make_sure"
+            android:visibility="gone"
             android:textColor="@color/white"
             android:textSize="16sp" />
     </LinearLayout>

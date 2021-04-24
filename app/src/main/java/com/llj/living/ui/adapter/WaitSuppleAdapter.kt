@@ -7,13 +7,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.llj.living.R
-import com.llj.living.data.bean.SecondFragmentBean
+import com.llj.living.data.database.OldManInfoWait
 import com.llj.living.databinding.ItemMainWaitBinding
 import com.llj.living.databinding.ItemReloadBinding
-import com.llj.living.logic.vm.ActSuppleViewModel
 import com.llj.living.ui.activity.ActivitySuppleInfo
 
-class WaitSuppleAdapter(private val vm: ActSuppleViewModel):BaseReloadAdapter<SecondFragmentBean>(DIFF_CALLBACK) {
+class WaitSuppleAdapter(
+):BaseReloadAdapter<OldManInfoWait>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         if (viewType == layoutId()) {
@@ -35,7 +35,7 @@ class WaitSuppleAdapter(private val vm: ActSuppleViewModel):BaseReloadAdapter<Se
             getItem(position)
         ) else (holder as BaseReloadAdapter<*>.FooterViewHolder).bindData().also {
             holder.itemView.setOnClickListener {
-                vm.waitSuppleFactory.retryLoadData()
+//                vm.waitSuppleFactory.retryLoadData()
             }
         }
     }
@@ -44,13 +44,15 @@ class WaitSuppleAdapter(private val vm: ActSuppleViewModel):BaseReloadAdapter<Se
 
     inner class HadSuppleViewHolder(private val binding: ItemMainWaitBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindData(data: SecondFragmentBean?) {
+        fun bindData(data: OldManInfoWait?) {
             if (data==null) return
+
             binding.apply {
-                tvName.text = data.uName
+                tvName.text = data.name
                 tvIdNum.text = data.idCard
                 tvSex.text = data.sex
                 btOperas.setOnClickListener {
+                    id = data.id
                     it.context.startActivity(Intent(it.context,ActivitySuppleInfo::class.java))
                 }
             }
@@ -58,19 +60,20 @@ class WaitSuppleAdapter(private val vm: ActSuppleViewModel):BaseReloadAdapter<Se
     }
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<SecondFragmentBean>() {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<OldManInfoWait>() {
             override fun areItemsTheSame(
-                oldItem: SecondFragmentBean,
-                newItem: SecondFragmentBean
-            ): Boolean = oldItem.uName == newItem.uName
+                oldItem: OldManInfoWait,
+                newItem: OldManInfoWait
+            ): Boolean = oldItem.id == newItem.id
 
             override fun areContentsTheSame(
-                oldItem: SecondFragmentBean,
-                newItem: SecondFragmentBean
+                oldItem: OldManInfoWait,
+                newItem: OldManInfoWait
             ): Boolean {
-                return oldItem.idCard == newItem.idCard
+                return oldItem == newItem
             }
-
         }
+        var id:Int = -1
     }
+
 }

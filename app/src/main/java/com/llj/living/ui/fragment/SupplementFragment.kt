@@ -18,6 +18,8 @@ class SupplementFragment : BaseFragment() {
         viewPager2 = requireView().findViewById(R.id.viewpager2_supplement)
         tabLayout = requireView().findViewById(R.id.tab_layout_supplement)
 
+
+        viewPager2.isUserInputEnabled = false   //设置水平不可滑动
         viewPager2.adapter = object : FragmentStateAdapter(requireActivity()) {
             override fun getItemCount(): Int = 2
 

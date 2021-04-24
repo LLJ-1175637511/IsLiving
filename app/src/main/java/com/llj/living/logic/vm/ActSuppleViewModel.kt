@@ -16,7 +16,7 @@ class ActSuppleViewModel(application: Application, savedStateHandle: SavedStateH
 
     val waitSuppleFactory = WaitSuppleDSFactory.getInstance(this)
 
-    val mainCheckLiveData:LiveData<PagedList<SecondFragmentBean>> = waitSuppleFactory.toLiveData(
+    val waitSuppleLiveData:LiveData<PagedList<SecondFragmentBean>> = waitSuppleFactory.toLiveData(
         20,null
     )
 
@@ -40,4 +40,7 @@ class ActSuppleViewModel(application: Application, savedStateHandle: SavedStateH
         updateNetStatus(netStatus,UpdateStatusType.HAD_SUPPLE)
     }
 
+    fun refreshDataHadSource(){
+        hadSuppleLiveData.value?.dataSource?.invalidate()
+    }
 }

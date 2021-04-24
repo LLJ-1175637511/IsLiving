@@ -1,54 +1,90 @@
 package com.llj.living.logic.vm
 
 import android.app.Application
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import com.llj.living.R
+import com.llj.living.application.MyApplication
+import com.llj.living.custom.ext.commonLaunch
+import com.llj.living.custom.ext.getSP
 import com.llj.living.custom.ext.save
+import com.llj.living.custom.ext.versionToInt
+import com.llj.living.data.bean.VersionBean
 import com.llj.living.data.const.Const
-import com.llj.living.utils.ToastUtils
+import com.llj.living.data.enums.VersionUpdateEnum
+import com.llj.living.net.repository.SystemRepository
+import com.llj.living.utils.LogUtils
 
 class LoginViewModel(application: Application, savedStateHandle: SavedStateHandle) :
     BaseViewModel(application, savedStateHandle) {
 
-    fun getPassWordLiveData() = getLiveDataForKey<String>(Const.UserPwdLogin)
-    fun getUserNameLiveData() = getLiveDataForKey<String>(Const.UserNameLogin)
-    fun getRememberPwdLiveData() = getLiveDataForKey<Boolean>(Const.UserRememberPwdLogin)
+    val passWordLiveData = MutableLiveData<String>("")
+    val userNameLiveData = MutableLiveData<String>("")
+    val rememberPwdLiveData = MutableLiveData<Boolean>(false)
 
-    suspend fun login(): Boolean {
-        if (!checkInfo()) return false
+    //是否允许登录
+    private val _loginResultLiveData = MutableLiveData<Boolean>(false)
+    val loginResultLiveData: LiveData<Boolean> = _loginResultLiveData
+
+    //是否验证版本
+    val isRemindUpdateLiveData = MutableLiveData<Boolean>(false)
+
+    private val _isDialogVersionLiveData = MutableLiveData<String>("${getApplication<MyApplication>().getString(
+        R.string.new_version)}${MyApplication.CURRENT_VERSION}")
+    val isDialogVersionLiveData:LiveData<String> = _isDialogVersionLiveData
+
+    //获取版本数据 Pair(first,second) first(0):需要更新  first(1):强制更新
+    private val _versionLiveData = MutableLiveData<Pair<VersionUpdateEnum,VersionBean>>()
+    val versionLiveData: LiveData<Pair<VersionUpdateEnum,VersionBean>> = _versionLiveData
+
+    private var checkVersionIsOk = false
+
+    fun checkVersion() = commonLaunch{
+        if (!checkVersionIsOk) {
+            //获取版本
+            val versionBean = quickRequest<VersionBean> {
+                SystemRepository.getVersionRequest(MyApplication.CURRENT_VERSION)
+            }?:return@commonLaunch
+            if (versionBean.enforce == 1){
+                _versionLiveData.postValue(Pair(VersionUpdateEnum.FORCE,versionBean))
+                return@commonLaunch
+            }
+            val newVersion = versionBean.newversion.versionToInt()
+            val oldVersion = MyApplication.CURRENT_VERSION.versionToInt()
+            LogUtils.d("${this.javaClass.simpleName}BASE","$oldVersion $newVersion")
+            if (newVersion == null || oldVersion == null) {
+                setToast("版本号错误")
+                return@commonLaunch
+            } else {
+                if (oldVersion < newVersion) {
+                    //提示可更新
+                    if (!getSP(Const.SPMySqlNet).getBoolean(Const.SPMySqlTodayReminderUpdate, false)) {
+                        _versionLiveData.postValue(Pair(VersionUpdateEnum.REMIND,versionBean))
+                        return@commonLaunch
+                    }
+                }
+                checkVersionIsOk = true
+                login()
+            }
+        } else { // 版本可用
+            login()
+        }
+    }
+
+    fun login(){
         //登录验证
-        //服务器验证成功后
-        return savedSp()
+        _loginResultLiveData.postValue(true)
+        savedSp()
     }
 
     /**
      * 保存用户名 密码
      */
-    private fun savedSp(): Boolean {
-        val spIsSuc = getSP(Const.SPUser).save {
-            putString(Const.SPUserPwdLogin, getPassWordLiveData().value)
-            putString(Const.SPUserNameLogin, getUserNameLiveData().value)
-            putBoolean(Const.SPUserRememberPwdLogin, getRememberPwdLiveData().value!!)
-        }
-        return if (!spIsSuc) {
-            ToastUtils.toastShort("登录${getApp().getString(R.string.sp_saved_fail)}")
-            false
-        } else true
-    }
-
-    private fun checkInfo(): Boolean {
-        getApp().apply {
-            if (getUserNameLiveData().value.isNullOrEmpty()) {
-                ToastUtils.toastShort(resources.getString(R.string.user_name_is_null))
-                return false
-            }
-            if (getPassWordLiveData().value.isNullOrEmpty()) {
-                ToastUtils.toastShort(resources.getString(R.string.user_pwd_is_null))
-                return false
-            }
-            //login----
-        }
-        return true
+    private fun savedSp() = getSP(Const.SPUser).save {
+        putString(Const.SPUserPwdLogin, passWordLiveData.value)
+        putString(Const.SPUserNameLogin, userNameLiveData.value)
+        putBoolean(Const.SPUserRememberPwdLogin, rememberPwdLiveData.value!!)
     }
 
     fun loadUserData() {
@@ -57,17 +93,19 @@ class LoginViewModel(application: Application, savedStateHandle: SavedStateHandl
                 val spIsSaved = sp.getBoolean(Const.SPUserRememberPwdLogin, false)//是否记住密码
                 if (spIsSaved) { //如果保存 则赋值给界面
                     if (sp.contains(Const.SPUserNameLogin)) {
-                        getUserNameLiveData().postValue(sp.getString(Const.SPUserNameLogin, ""))
+                        userNameLiveData.postValue(sp.getString(Const.SPUserNameLogin, ""))
                     }
                     if (sp.contains(Const.SPUserPwdLogin)) {
-                        getPassWordLiveData().postValue(sp.getString(Const.SPUserPwdLogin, ""))
+                        passWordLiveData.postValue(sp.getString(Const.SPUserPwdLogin, ""))
                     }
                 }
-                getRememberPwdLiveData().postValue(spIsSaved)
+                rememberPwdLiveData.postValue(spIsSaved)
             }
-
         }
     }
 
-    fun getApp() = getApplication<Application>()
+    fun loadNewApk() {
+        //下载吸纳不能apk
+    }
+
 }

@@ -3,7 +3,6 @@ package com.llj.living.logic.vm
 import android.app.Application
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.llj.living.custom.ext.isCodeSuc
 import com.llj.living.custom.ext.isMsgSuc
 import com.llj.living.data.bean.MatchFaceData
 import com.llj.living.data.const.Const
@@ -29,7 +28,7 @@ class FaceAuthViewModel(application: Application, savedStateHandle: SavedStateHa
         map: Map<String, String>,
         type: ModifyFaceType
     ) = viewModelScope.launch {
-        checkTokenAndSendRequest { token ->
+        checkBaiduTokenRequest { token ->
             val result = FaceAuthRepository.sendModifyFaceRequest(token, map, type)
             val msg = if (result.isSuc) {
                 if (type == ModifyFaceType.Register) getBaseFaceIdLiveData().postValue(result.data)
@@ -42,10 +41,10 @@ class FaceAuthViewModel(application: Application, savedStateHandle: SavedStateHa
     }
 
     fun deleteFace(map: Map<String, String>) = viewModelScope.launch {
-        checkTokenAndSendRequest { token ->
+        checkBaiduTokenRequest { token ->
             val result = FaceAuthRepository.sendDeleteFaceRequest(token, map)
             val msg =
-                if (result.error_code.isCodeSuc() && result.error_msg.isMsgSuc()) "删除成功 唯一码：${getPhotoIdLiveData().value}"
+                if (result.error_code==0 && result.error_msg.isMsgSuc()) "删除成功 唯一码：${getPhotoIdLiveData().value}"
                 else "删除失败 msg:${result.error_msg}"
             getContentLiveData().postValue(msg)
             LogUtils.d(TAG, msg)
@@ -53,10 +52,27 @@ class FaceAuthViewModel(application: Application, savedStateHandle: SavedStateHa
     }
 
     fun matchFace(mfbList: List<MatchFaceData>) = viewModelScope.launch {
-        checkTokenAndSendRequest { token ->
+        checkBaiduTokenRequest { token ->
             val result = FaceAuthRepository.sendMatchRequest(token, mfbList)
             if (result.isSuc) getContentLiveData().postValue("比对成功，相似率：${result.data}%")
             else getContentLiveData().postValue("比对失败，相似率：${result.data}%")
+        }
+    }
+
+    fun searchFace(map: Map<String, String>) = viewModelScope.launch {
+        checkBaiduTokenRequest { token ->
+            val result = FaceAuthRepository.sendSearchRequest(token, map)
+            if (result.isSuc) getContentLiveData().postValue("搜索成功，${result.data}")
+            else getContentLiveData().postValue("比对失败，${result.data}")
+        }
+    }
+
+    fun searchFaceInZn(map: Map<String, String>) = viewModelScope.launch {
+        checkBaiduTokenRequest { token ->
+            FaceAuthRepository.sendSearchInZnRequest(token, map)
+           /* val result = FaceAuthRepository.sendSearchInZnRequest(token, map)
+            if (result.isSuc) getContentLiveData().postValue("搜索成功，${result.data}")
+            else getContentLiveData().postValue("比对失败，${result.data}")*/
         }
     }
 

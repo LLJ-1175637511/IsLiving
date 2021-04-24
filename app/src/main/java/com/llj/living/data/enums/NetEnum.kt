@@ -1,13 +1,12 @@
 package com.llj.living.data.enums
 
-
 /**
  * 服务器基地址（baseUrl）
  * Face:百度云
  * Mysql：本系统
  */
 enum class UrlType{
-    Face,Token,Mysql
+    Face,Token
 }
 
 /**

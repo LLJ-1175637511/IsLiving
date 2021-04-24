@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+<!--    <item-->
+<!--        android:id="@+id/add_item"-->
+<!--        android:icon="@drawable/ic_launcher_foreground"-->
+<!--        android:title="Add"-->
+<!--        app:showAsAction="never"-->
+<!--        />-->
     <item
-        android:id="@+id/add_item"
+        android:id="@+id/quit_user"
         android:icon="@drawable/ic_launcher_foreground"
-        android:title="Add"
-        app:showAsAction="never"
-        />
-    <item
-        android:id="@+id/remo_item"
-        android:icon="@drawable/ic_launcher_foreground"
-        android:title="Remove"
+        android:title="退出登录"
         app:showAsAction="never"
         />
     <item

@@ -7,13 +7,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.llj.living.R
-import com.llj.living.data.bean.SecondFragmentBean
+import com.llj.living.data.database.OldManInfoHad
 import com.llj.living.databinding.ItemMainHadBinding
 import com.llj.living.databinding.ItemReloadBinding
-import com.llj.living.logic.vm.ActSuppleViewModel
+import com.llj.living.logic.vm.DatabaseVM
 import com.llj.living.ui.activity.ActivitySuppleInfo
 
-class HadSuppleAdapter(private val vm: ActSuppleViewModel):BaseReloadAdapter<SecondFragmentBean>(DIFF_CALLBACK) {
+class HadSuppleAdapter(private val vm: DatabaseVM):BaseReloadAdapter<OldManInfoHad>(DIFF_CALLBACK) {
 
     override fun layoutId(): Int = R.layout.item_main_had
 
@@ -37,17 +37,17 @@ class HadSuppleAdapter(private val vm: ActSuppleViewModel):BaseReloadAdapter<Sec
             getItem(position)
         ) else (holder as BaseReloadAdapter<*>.FooterViewHolder).bindData().also {
             holder.itemView.setOnClickListener {
-                vm.hadSuppleFactory.retryLoadData()
+//                vm.hadSuppleFactory.retryLoadData()
             }
         }
     }
 
     inner class HadSuppleViewHolder(private val binding: ItemMainHadBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindData(data: SecondFragmentBean?) {
+        fun bindData(data: OldManInfoHad?) {
             if (data==null) return
             binding.apply {
-                tvName.text = data.uName
+                tvName.text = data.name
                 tvIdNum.text = data.idCard
                 tvSex.text = data.sex
                 btOperas.setOnClickListener {
@@ -58,19 +58,18 @@ class HadSuppleAdapter(private val vm: ActSuppleViewModel):BaseReloadAdapter<Sec
     }
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<SecondFragmentBean>() {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<OldManInfoHad>() {
             override fun areItemsTheSame(
-                oldItem: SecondFragmentBean,
-                newItem: SecondFragmentBean
-            ): Boolean = oldItem.uName == newItem.uName
+                oldItem: OldManInfoHad,
+                newItem: OldManInfoHad
+            ): Boolean = oldItem.id == newItem.id
 
             override fun areContentsTheSame(
-                oldItem: SecondFragmentBean,
-                newItem: SecondFragmentBean
+                oldItem: OldManInfoHad,
+                newItem: OldManInfoHad
             ): Boolean {
-                return oldItem.idCard == newItem.idCard
+                return oldItem == newItem
             }
-
         }
     }
 }

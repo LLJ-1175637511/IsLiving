@@ -7,13 +7,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.llj.living.R
-import com.llj.living.data.bean.MainFragmentBean
+import com.llj.living.data.database.SuppleDoing
 import com.llj.living.databinding.ItemMainDoingBinding
 import com.llj.living.databinding.ItemReloadBinding
-import com.llj.living.logic.vm.SupplementViewModel
 import com.llj.living.ui.activity.ActivitySupplement
+import com.llj.living.utils.LogUtils
 
-class SuppleDoingAdapter(private val vm:SupplementViewModel):BaseReloadAdapter<MainFragmentBean>(DIFF_ITEM_CALLBACK) {
+class SuppleDoingAdapter() :
+    BaseReloadAdapter<SuppleDoing>(DIFF_ITEM_CALLBACK) {
 
     override fun layoutId(): Int = R.layout.item_main_doing
 
@@ -38,17 +39,22 @@ class SuppleDoingAdapter(private val vm:SupplementViewModel):BaseReloadAdapter<M
             getItem(position)
         ) else (holder as BaseReloadAdapter<*>.FooterViewHolder).bindData().also {
             holder.itemView.setOnClickListener {
-                vm.doingFactory.retryLoadData()
+//                vm.doingFactory.retryLoadData()
             }
         }
     }
 
-    inner class SuppleDoingViewHolder(private val binding:ItemMainDoingBinding):RecyclerView.ViewHolder(binding.root){
+    inner class SuppleDoingViewHolder(private val binding: ItemMainDoingBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-        fun bindData(bean:MainFragmentBean?){
-            if (bean==null) return
+        fun bindData(bean: SuppleDoing?) {
+            if (bean == null) return
             binding.apply {
                 tvTittle.text = bean.title
+                tvStartTime.text = bean.startTime
+                tvEndTime.text = bean.endTime
+                tvItemWait.text = bean.waitDealWith.toString()
+                tvItemHad.text = bean.hadDealWith.toString()
                 itemView.context.resources.let {
                     tvHadTypeStr.text = it.getString(R.string.had_supple_str)
                     tvWaitTypeStr.text = it.getString(R.string.wait_supple_str)
@@ -57,25 +63,26 @@ class SuppleDoingAdapter(private val vm:SupplementViewModel):BaseReloadAdapter<M
             }
             binding.btOperas.setOnClickListener { view ->
                 view.context.also {
+                    id = bean.id
+                    LogUtils.d("SuppleDoingAdapter","id:${id}")
                     it.startActivity(Intent(it, ActivitySupplement::class.java))
                 }
             }
         }
-
     }
 
-    companion object{
-        private val DIFF_ITEM_CALLBACK= object :DiffUtil.ItemCallback<MainFragmentBean>(){
+    companion object {
+        private val DIFF_ITEM_CALLBACK = object : DiffUtil.ItemCallback<SuppleDoing>() {
             override fun areItemsTheSame(
-                oldItem: MainFragmentBean,
-                newItem: MainFragmentBean
-            ): Boolean = oldItem.title == newItem.title
+                oldItem: SuppleDoing,
+                newItem: SuppleDoing
+            ): Boolean = oldItem.id == newItem.id
 
             override fun areContentsTheSame(
-                oldItem: MainFragmentBean,
-                newItem: MainFragmentBean
-            ): Boolean = oldItem.id== newItem.id
-
+                oldItem: SuppleDoing,
+                newItem: SuppleDoing
+            ): Boolean = oldItem == newItem
         }
+        var id = -1
     }
 }

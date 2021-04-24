@@ -1,14 +1,14 @@
 package com.llj.living.ui.adapter
 
 import android.view.View
-import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.llj.living.R
 import com.llj.living.data.enums.NetStatus
 import com.llj.living.databinding.ItemReloadBinding
 
-abstract class BaseReloadAdapter<T>(diff:DiffUtil.ItemCallback<T>):PagedListAdapter<T,RecyclerView.ViewHolder>(diff) {
+abstract class BaseReloadAdapter<T>(diff:DiffUtil.ItemCallback<T>):ListAdapter<T,RecyclerView.ViewHolder>(diff) {
 
     private var netStatus = NetStatus.INIT
 
@@ -53,11 +53,13 @@ abstract class BaseReloadAdapter<T>(diff:DiffUtil.ItemCallback<T>):PagedListAdap
             when (netStatus) {
                 NetStatus.FAILED -> {
                     binding.progressBar.visibility = View.VISIBLE
+                    binding.itemLoadTips.visibility = View.VISIBLE
                     binding.itemLoadTips.text = "点击重试"
                     itemView.isClickable = true
                 }
                 NetStatus.SUCCESS -> {
                     binding.progressBar.visibility = View.GONE
+                    binding.itemLoadTips.visibility = View.GONE
                     itemView.isClickable = false
                 }
                 else -> {

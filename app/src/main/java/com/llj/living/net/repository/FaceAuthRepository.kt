@@ -54,11 +54,38 @@ object FaceAuthRepository {
     ): CommonDataBean = withContext(Dispatchers.Default) {
         val result = FaceAuthNetwork.matchFace(token, mfbList)//获取response
         LogUtils.d(TAG, result.toString())
-        if (result.error_code.isCodeSuc() && result.error_msg.isMsgSuc()) {
+        if (result.error_code == 0 && result.error_msg.isMsgSuc()) {
             val score = result.result.score.toInt()
             if (score > 80) CommonDataBean(true, score.toString())
             else CommonDataBean(false, score.toString())
         } else CommonDataBean(false, result.error_msg)
+    }
+
+    suspend fun sendSearchRequest(
+        token: String,
+        map: Map<String, String>
+    ): CommonDataBean = withContext(Dispatchers.Default) {
+        val result = FaceAuthNetwork.searchFace(token, map)//获取response
+        LogUtils.d(TAG, result.toString())
+        if (result.error_code == 0 && result.error_msg.isMsgSuc()) {
+            val faceToken = result.result.toString()
+            if (result.result.user_list[0].score > 80) CommonDataBean(true, faceToken)
+            else CommonDataBean(false, faceToken)
+        } else CommonDataBean(false, result.error_msg)
+    }
+
+    suspend fun sendSearchInZnRequest(
+        token: String,
+        map: Map<String, String>
+    ): Unit = withContext(Dispatchers.Default) {
+        val result = FaceAuthNetwork.searchFaceInZn(token, map)//获取response
+        val data = result.string()
+        LogUtils.d(TAG, data)
+        /*if (result.error_code.isCodeSuc() && result.error_msg.isMsgSuc()) {
+            val faceToken = result.result.toString()
+            if (result.result.user_list[0].score > 80) CommonDataBean(true, faceToken)
+            else CommonDataBean(false, faceToken)
+        } else CommonDataBean(false, result.error_msg)*/
     }
 
     /**

@@ -28,7 +28,6 @@ class MainActivity : BaseActivity<ActivityNavMainBinding>() {
         dbViewModel.insertSuppleDoing(loadData())
         dbViewModel.insertSuppleFinished(loadFinishedData())
         dbViewModel.insertOldmanInfo(loadOldManData())
-
     }
 
     private fun loadData() = mutableListOf<SuppleDoing>().apply {

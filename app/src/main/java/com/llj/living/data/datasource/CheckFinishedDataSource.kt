@@ -24,15 +24,15 @@ class CheckFinishedDataSource(private val viewModel: CheckViewModel) :
         viewModel.updateFinishedNetStatus(NetStatus.LOADING)
         LogUtils.d("CheckFinishedDataSource", "loadInitial key:${params.requestedLoadSize}")
         val firstList = mutableListOf<MainFragmentBean>()
-        repeat(20) { num ->
+        repeat(10) { num ->
             firstList.add(
                 MainFragmentBean(
-                    title = "标题${num}",
+                    title = "审核${num}批",
                     startTime = "2021-03-08",
-                    id = (0..6000).random(),
-                    endTime = "2021-03-10",
-                    waitDealWith = 56,
-                    hadDealWith = 256
+                    id = num,
+                    endTime = "2021-03-${(10..12).random()}",
+                    waitDealWith = 0,
+                    hadDealWith = (4..9).random()
                 )
             )
         }
@@ -51,15 +51,16 @@ class CheckFinishedDataSource(private val viewModel: CheckViewModel) :
             "loadAfter key:${params.key} request:${params.requestedLoadSize}"
         )
         val firstList = mutableListOf<MainFragmentBean>()
-        repeat(20) { num ->
+        repeat(2) { num ->
+            val id = num + params.key * 10
             firstList.add(
                 MainFragmentBean(
-                    title = "标题${num + params.key * 20}",
+                    title = "审核${id}批",
                     startTime = "2021-03-08",
-                    id = (0..6000).random(),
+                    id = id,
                     endTime = "2021-03-10",
-                    waitDealWith = 56,
-                    hadDealWith = 256
+                    waitDealWith = 0,
+                    hadDealWith = (4..9).random()
                 )
             )
         }

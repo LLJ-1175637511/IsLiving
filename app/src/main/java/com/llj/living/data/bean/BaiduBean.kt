@@ -80,4 +80,27 @@ class MatchFaceBean {
     )
 }
 
+class SearchFaceBean {
+    data class SearchBean(
+        val cached: Int,
+        val error_code: Int,
+        val error_msg: String,
+        val log_id: Long,
+        val result: Result,
+        val timestamp: Int
+    )
+
+    data class Result(
+        val face_token: String,
+        val user_list: List<User>
+    )
+
+    data class User(
+        val group_id: String,
+        val score: Double,
+        val user_id: String,
+        val user_info: String
+    )
+}
+
 data class CommonDataBean(val isSuc: Boolean, val data: String)
