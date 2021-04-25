@@ -1,23 +1,28 @@
 package com.llj.living.ui.activity
 
+import android.util.Base64
 import androidx.activity.viewModels
 import androidx.navigation.Navigation
 import androidx.navigation.ui.setupWithNavController
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.llj.living.R
+import com.llj.living.custom.ext.commonLaunch
+import com.llj.living.custom.ext.startCommonFinishedActivity
 import com.llj.living.custom.ext.toSimpleTime
+import com.llj.living.custom.ext.toastShort
+import com.llj.living.data.bean.LoginBean
 import com.llj.living.data.bean.ToolbarConfig
 import com.llj.living.data.database.OldManInfoWait
 import com.llj.living.data.database.SuppleDoing
 import com.llj.living.data.database.SuppleFinished
 import com.llj.living.databinding.ActivityNavMainBinding
 import com.llj.living.logic.vm.DatabaseVM
+import kotlinx.coroutines.delay
 
 class MainActivity : BaseActivity<ActivityNavMainBinding>() {
 
     override fun getLayoutId(): Int = R.layout.activity_nav_main
-
-    private val TAG = this.javaClass.simpleName
 
     private val dbViewModel by viewModels<DatabaseVM>()
 
@@ -25,9 +30,56 @@ class MainActivity : BaseActivity<ActivityNavMainBinding>() {
         buildToolbar()
         buildBottomView()
         initListener()
+        initData()
+    }
+
+    private fun initData() {
         dbViewModel.insertSuppleDoing(loadData())
         dbViewModel.insertSuppleFinished(loadFinishedData())
         dbViewModel.insertOldmanInfo(loadOldManData())
+//        loadLoginBean()
+        test()
+    }
+
+    private fun test() {
+        getDataBinding().viewHeader.apply {
+            lifecycleOwner = this@MainActivity
+            vm = dbViewModel
+        }
+        val tempIcon =
+            """PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgaGVpZ2h0PSIxMDAiIHdpZHRoPSIxMDAiPjxyZWN0IGZpbGw9InJnYigxNjAsMTkwLDIyOSkiIHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48L3JlY3Q+PHRleHQgeD0iNTAiIHk9IjUwIiBmb250LXNpemU9IjUwIiB0ZXh0LWNvcHk9ImZhc3QiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHRleHQtcmlnaHRzPSJhZG1pbiIgZG9taW5hbnQtYmFzZWxpbmU9ImNlbnRyYWwiPkE8L3RleHQ+PC9zdmc+"""
+        val iconByte = Base64.decode(tempIcon, Base64.DEFAULT)
+        iconByte?.let { ba ->
+            Glide.with(this@MainActivity).load(iconByte)
+                .into(getDataBinding().viewHeader.ivLogoMain)
+        }
+    }
+
+    private fun loadLoginBean() {
+        val lb = intent.getParcelableExtra<LoginBean>(LoginActivity.ENT_BEAN_FLAG)
+        if (lb == null) {
+            toastShort("数据获取失败")
+            commonLaunch {
+                delay(1000)
+                startCommonFinishedActivity<LoginActivity>()
+            }
+            return
+        }
+        dbViewModel.setEntBean(lb)
+        getDataBinding().viewHeader.apply {
+            lifecycleOwner = this@MainActivity
+            vm = dbViewModel
+        }
+        lb.avatar.let {
+            if (!it.contains(',')) {
+                toastShort("解析头像出错")
+            } else {
+                val tArray = lb.avatar.split(',')[1]
+                val iconByte = Base64.decode(tArray, Base64.DEFAULT)
+                Glide.with(this@MainActivity).load(iconByte)
+                    .into(getDataBinding().viewHeader.ivLogoMain)
+            }
+        }
     }
 
     private fun loadData() = mutableListOf<SuppleDoing>().apply {
@@ -54,7 +106,7 @@ class MainActivity : BaseActivity<ActivityNavMainBinding>() {
         }
     }
 
-    private fun loadFinishedData() =  mutableListOf<SuppleFinished>().apply {
+    private fun loadFinishedData() = mutableListOf<SuppleFinished>().apply {
         add(
             SuppleFinished(
                 title = "补录（8周3批）",
@@ -85,40 +137,45 @@ class MainActivity : BaseActivity<ActivityNavMainBinding>() {
     }
 
     private fun loadOldManData() = mutableListOf<OldManInfoWait>().apply {
-        for (i in 1..name.size){
+        for (i in 1..name.size) {
             add(
                 OldManInfoWait(
-                name=name[i-1],
-                idCard= idCard[i-1],
-                sex= sex[i-1]
-            ))
+                    name = name[i - 1],
+                    idCard = idCard[i - 1],
+                    sex = sex[i - 1]
+                )
+            )
         }
     }
 
     private fun buildBottomView() {
-        val navController = Navigation.findNavController(this,R.id.nav_main_fragment)
-        val bottomBar:BottomNavigationView = findViewById(R.id.bottom_nav_view)
+        val navController = Navigation.findNavController(this, R.id.nav_main_fragment)
+        val bottomBar: BottomNavigationView = findViewById(R.id.bottom_nav_view)
         bottomBar.setupWithNavController(navController)
     }
 
     private fun initListener() {
-      /*  getDataBinding().btStartToFaceAuth.setOnClickListener {
-            startCommonActivity<FaceAuthenticActivity>()
-        }*/
+
     }
 
     private fun buildToolbar() {
-        setToolbar(ToolbarConfig(title = resources.getString(R.string.app_name), isShowBack = false, isShowMenu = true))
+        setToolbar(
+            ToolbarConfig(
+                title = resources.getString(R.string.app_name),
+                isShowBack = false,
+                isShowMenu = true
+            )
+        )
     }
 
- /*   override fun onResume() {
-        super.onResume()
-        val changedCount = intent.getIntExtra(ActivitySupplement.ACTIVITY_SUPPLEMENT_COUNT, -1)
-        LogUtils.d("ActivitySupplement", "changedCount${changedCount}")
-        if (changedCount != -1) {
-            suppleVM.setChangedSize(changedCount)
-        }
-    }*/
+    /*   override fun onResume() {
+           super.onResume()
+           val changedCount = intent.getIntExtra(ActivitySupplement.ACTIVITY_SUPPLEMENT_COUNT, -1)
+           LogUtils.d("ActivitySupplement", "changedCount${changedCount}")
+           if (changedCount != -1) {
+               suppleVM.setChangedSize(changedCount)
+           }
+       }*/
 
     val name = arrayOf<String>(
         "寿百易",
