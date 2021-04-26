@@ -1,9 +1,15 @@
 package com.llj.living.ui.activity
 
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.os.Environment
 import android.view.ViewGroup
+import android.webkit.MimeTypeMap
 import androidx.activity.viewModels
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.llj.living.R
@@ -14,10 +20,13 @@ import com.llj.living.data.bean.VersionBean
 import com.llj.living.data.const.Const
 import com.llj.living.data.enums.VersionUpdateEnum
 import com.llj.living.databinding.ActivityLoginBinding
+import com.llj.living.databinding.DialogLoadApkBinding
 import com.llj.living.databinding.DialogUpdateCommonBinding
 import com.llj.living.databinding.DialogUpdateForceBinding
 import com.llj.living.logic.vm.LoginViewModel
 import com.llj.living.utils.LogUtils
+import java.io.File
+import java.util.*
 
 class LoginActivity : BaseBLActivity<ActivityLoginBinding>() {
 
@@ -25,7 +34,20 @@ class LoginActivity : BaseBLActivity<ActivityLoginBinding>() {
 
     private val viewModel by viewModels<LoginViewModel>()
 
-    private val TAG = "${this.javaClass.simpleName}TEST"
+    private var dialog: AlertDialog? = null //提示更新、强制更新 dialog
+
+    private var versionId = ""
+
+    private val loadDialog by lazy {
+        AlertDialog.Builder(this).apply {
+            setCancelable(false)
+            val viewBinding = buildView<DialogLoadApkBinding>(R.layout.dialog_load_apk)
+            viewBinding.vm = viewModel
+            val tips = "$versionId 下载中"
+            viewBinding.tvTips.text = tips
+            setView(viewBinding.root)
+        }.create()
+    }
 
     override fun init() {
         setToolbar(ToolbarConfig(title = "用户登录", isShowBack = false, isShowMenu = false))
@@ -34,28 +56,30 @@ class LoginActivity : BaseBLActivity<ActivityLoginBinding>() {
     }
 
     private fun initLD() {
-        viewModel.loginResultLiveData.baseObserver(this) { isSuc ->
-            if (isSuc) { //登录成功
-                startCommonFinishedActivity<MainActivity>()
+        viewModel.loginLiveData.baseObserver(this) {
+            //登录成功
+            val intent = Intent(this, MainActivity::class.java).apply {
+                putExtra(ENT_BEAN_FLAG, it)
             }
+            startCommonFinishedActivity<MainActivity>(intent)
         }
         viewModel.toastMsgLiveData.baseObserver(this) {
             if (it.isNotEmpty()) toastShort(it)
         }
+
         viewModel.versionLiveData.baseObserver(this) {
-            buildAlertDialog(VersionUpdateEnum.REMIND, it.second)
+            buildAlertDialog(it.first, it.second)
         }
-        locationLiveData.baseObserver(this) {
-            viewModel.setLocation(it)
-        }
-        viewModel.isRemindUpdateLiveData.baseObserver(this) {
-            if (it){
-                val now = System.currentTimeMillis()/1000
-                getSP(Const.SPMySqlNet).save {
-                    putBoolean(Const.SPMySqlTodayReminderUpdate,it)
-                    putLong(Const.SPMySqlTodayReminderUpdateTime,now)
+
+        viewModel.cancelLoadApkDialogLD.baseObserver(this) {
+            loadDialog.let { ad ->
+                if (ad.isShowing && it) {
+                    ad.cancel()
                 }
             }
+        }
+        viewModel.installLiveData.baseObserver(this) {
+            installAPK(it)
         }
     }
 
@@ -63,39 +87,65 @@ class LoginActivity : BaseBLActivity<ActivityLoginBinding>() {
         ue: VersionUpdateEnum,
         versionData: VersionBean
     ) {
-        AlertDialog.Builder(this).apply {
-            if (ue == VersionUpdateEnum.FORCE) {  //强制更新界面
-                LogUtils.d(TAG, "强制更新")
-                val viewBinding = buildView<DialogUpdateForceBinding>(R.layout.dialog_update_force)
-                viewBinding.apply {
-                    lifecycleOwner = this@LoginActivity
-                    vm = viewModel
-                    val versionId = "${getString(R.string.new_version)}${versionData.newversion}"
-                    tvVersionId.text = versionId
-                    tvStartLoad.setOnClickListener {
-                        vm.loadNewApk()
-                    }
-                    setCancelable(false)
+        dialog = AlertDialog.Builder(this).apply {
+            setCancelable(false) //设置触碰外界不可销毁当前dialog
+            versionId = "${getString(R.string.new_version)}${versionData.newversion}"
+            when (ue) {
+                VersionUpdateEnum.FORCE -> {
+                    LogUtils.d(TAG, "强制更新")
+                    val viewBinding =
+                        buildView<DialogUpdateForceBinding>(R.layout.dialog_update_force).apply {
+                            tvVersionId.text = versionId
+                            ivCancel.setOnClickListener {
+                                dialog?.cancel()
+                            }
+                            tvStartLoad.setOnClickListener {
+                                dialog?.cancel()
+                                buildLoadApkDialog()
+                                viewModel.loadNewApk()
+                            }
+                        }
+                    setView(viewBinding.root)
                 }
-            } else { //提示更新界面
-                LogUtils.d(TAG, "提醒更新")
-                val viewBinding =
-                    buildView<DialogUpdateCommonBinding>(R.layout.dialog_update_common)
-                viewBinding.apply {
-                    lifecycleOwner = this@LoginActivity
-                    vm = viewModel
-                    val versionId = "${getString(R.string.new_version)}${versionData.newversion}"
-                    tvVersionId.text = versionId
-                    setCancelable(false)
-                    tvDownloadNew.setOnClickListener {
-                        vm.loadNewApk()
-                    }
-                    tvContinueLogin.setOnClickListener {
-                        vm.login()
-                    }
+                VersionUpdateEnum.REMIND -> {
+                    LogUtils.d(TAG, "提醒更新")
+                    val viewBinding =
+                        buildView<DialogUpdateCommonBinding>(R.layout.dialog_update_common).apply {
+                            tvVersionId.text = versionId
+                            cbIsRemind.setOnClickListener {
+                                getSP(Const.SPMySqlNet).save {
+                                    putBoolean(
+                                        Const.SPMySqlTodayReminderUpdate,
+                                        cbIsRemind.isChecked
+                                    )
+                                    putInt(
+                                        Const.SPMySqlTodayReminderUpdateTime,
+                                        Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+                                    )
+                                }
+                            }
+                            ivCancel.setOnClickListener {
+                                dialog?.cancel()
+                            }
+                            tvLoadNew.setOnClickListener {
+                                dialog?.cancel()
+                                buildLoadApkDialog()
+                                viewModel.loadNewApk()
+                            }
+                            tvLogin.setOnClickListener {
+                                dialog?.cancel()
+                                viewModel.login()
+                            }
+                        }
+                    setView(viewBinding.root)
                 }
             }
-        }
+        }.create()
+        dialog?.show()
+    }
+
+    private fun buildLoadApkDialog() {
+        loadDialog.show()
     }
 
     private fun <DB : ViewDataBinding> buildView(@LayoutRes resId: Int) =
@@ -104,7 +154,9 @@ class LoginActivity : BaseBLActivity<ActivityLoginBinding>() {
             resId,
             getDataBinding().root as ViewGroup,
             false
-        )
+        ).apply {
+            lifecycleOwner = this@LoginActivity
+        }
 
     private fun initVM() {
         getDataBinding().loginVm = viewModel
@@ -114,5 +166,37 @@ class LoginActivity : BaseBLActivity<ActivityLoginBinding>() {
         viewModel.loadUserData()
     }
 
+    private fun installAPK(apkFile: File) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        val type = "application/vnd.android.package-archive"
+        if (Build.VERSION.SDK_INT < 23) {
+            intent.apply {
+                setDataAndType(Uri.fromFile(apkFile), type)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            startActivity(intent)
+        } else {
+            val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider",apkFile)
+            intent.apply {
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                LogUtils.d(TAG,"$apkFile")
+                setDataAndType(uri, type)
+            }
+            try {
+                startActivity(intent)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                toastShort("没有找到打开此类文件的程序")
+            }
+        }
+    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.cancelLoadApk()
+    }
+
+    companion object {
+        const val ENT_BEAN_FLAG = "ent_bean_flag"
+    }
 }
