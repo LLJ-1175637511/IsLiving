@@ -1,20 +1,29 @@
 package com.llj.living.logic.vm
 
+import android.annotation.SuppressLint
 import android.app.Application
+import android.content.Context
+import android.os.Build
+import android.os.Environment
+import android.telephony.TelephonyManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
-import com.llj.living.R
+import androidx.lifecycle.viewModelScope
 import com.llj.living.application.MyApplication
-import com.llj.living.custom.ext.commonLaunch
-import com.llj.living.custom.ext.getSP
-import com.llj.living.custom.ext.save
-import com.llj.living.custom.ext.versionToInt
+import com.llj.living.custom.ext.*
+import com.llj.living.data.bean.LoginBean
 import com.llj.living.data.bean.VersionBean
 import com.llj.living.data.const.Const
 import com.llj.living.data.enums.VersionUpdateEnum
+import com.llj.living.net.config.SystemNetConfig.buildLoginMap
 import com.llj.living.net.repository.SystemRepository
 import com.llj.living.utils.LogUtils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
 
 class LoginViewModel(application: Application, savedStateHandle: SavedStateHandle) :
     BaseViewModel(application, savedStateHandle) {
@@ -23,44 +32,54 @@ class LoginViewModel(application: Application, savedStateHandle: SavedStateHandl
     val userNameLiveData = MutableLiveData<String>("")
     val rememberPwdLiveData = MutableLiveData<Boolean>(false)
 
-    //是否允许登录
-    private val _loginResultLiveData = MutableLiveData<Boolean>(false)
-    val loginResultLiveData: LiveData<Boolean> = _loginResultLiveData
-
-    //是否验证版本
-    val isRemindUpdateLiveData = MutableLiveData<Boolean>(false)
-
-    private val _isDialogVersionLiveData = MutableLiveData<String>("${getApplication<MyApplication>().getString(
-        R.string.new_version)}${MyApplication.CURRENT_VERSION}")
-    val isDialogVersionLiveData:LiveData<String> = _isDialogVersionLiveData
-
     //获取版本数据 Pair(first,second) first(0):需要更新  first(1):强制更新
-    private val _versionLiveData = MutableLiveData<Pair<VersionUpdateEnum,VersionBean>>()
-    val versionLiveData: LiveData<Pair<VersionUpdateEnum,VersionBean>> = _versionLiveData
+    private val _versionLiveData = MutableLiveData<Pair<VersionUpdateEnum, VersionBean>>()
+    val versionLiveData: LiveData<Pair<VersionUpdateEnum, VersionBean>> = _versionLiveData
+
+    private val _loginLiveData = MutableLiveData<LoginBean>()
+    val loginLiveData: LiveData<LoginBean> = _loginLiveData
 
     private var checkVersionIsOk = false
+    private var currentImei: String? = null
 
-    fun checkVersion() = commonLaunch{
+    private val _loadApkProgressLD = MutableLiveData<Int>(0)
+    val loadApkProgressLD: LiveData<Int> = _loadApkProgressLD
+
+    private val _cancelLoadApkDialogLD = MutableLiveData<Boolean>()
+    val cancelLoadApkDialogLD = _cancelLoadApkDialogLD
+
+    private val _installLiveData = MutableLiveData<File>()
+    val installLiveData: LiveData<File> = _installLiveData
+
+    private lateinit var downLoadJob: Job
+
+    fun checkVersion() = commonLaunch {
+        currentImei = getImei()
+        currentImei ?: return@commonLaunch
         if (!checkVersionIsOk) {
             //获取版本
-            val versionBean = quickRequest<VersionBean> {
+            val versionBean = quickRequest<VersionBean>(isLogined = false) {
                 SystemRepository.getVersionRequest(MyApplication.CURRENT_VERSION)
-            }?:return@commonLaunch
-            if (versionBean.enforce == 1){
-                _versionLiveData.postValue(Pair(VersionUpdateEnum.FORCE,versionBean))
+            } ?: return@commonLaunch
+            if (versionBean.enforce == 1) {
+                _versionLiveData.postValue(Pair(VersionUpdateEnum.FORCE, versionBean))
                 return@commonLaunch
             }
             val newVersion = versionBean.newversion.versionToInt()
             val oldVersion = MyApplication.CURRENT_VERSION.versionToInt()
-            LogUtils.d("${this.javaClass.simpleName}BASE","$oldVersion $newVersion")
+            LogUtils.d(TAG, "oldVersion:$oldVersion newVersion:$newVersion")
             if (newVersion == null || oldVersion == null) {
                 setToast("版本号错误")
                 return@commonLaunch
             } else {
                 if (oldVersion < newVersion) {
                     //提示可更新
-                    if (!getSP(Const.SPMySqlNet).getBoolean(Const.SPMySqlTodayReminderUpdate, false)) {
-                        _versionLiveData.postValue(Pair(VersionUpdateEnum.REMIND,versionBean))
+                    if (!getSP(Const.SPMySqlNet).getBoolean(
+                            Const.SPMySqlTodayReminderUpdate,
+                            false
+                        )
+                    ) {
+                        _versionLiveData.postValue(Pair(VersionUpdateEnum.REMIND, versionBean))
                         return@commonLaunch
                     }
                 }
@@ -72,10 +91,33 @@ class LoginViewModel(application: Application, savedStateHandle: SavedStateHandl
         }
     }
 
-    fun login(){
+    fun login() = commonLaunch {
         //登录验证
-        _loginResultLiveData.postValue(true)
+        LogUtils.d(
+            TAG,
+            "imei:${currentImei} name:${userNameLiveData.value} pass:${passWordLiveData.value}"
+        )
+        val loginBean = quickRequest<LoginBean>(isLogined = false) {
+            val map =
+                buildLoginMap(userNameLiveData.value!!, passWordLiveData.value!!, currentImei!!)
+            SystemRepository.loginRequest(map)
+        } ?: return@commonLaunch
+        MyApplication.setEntLocation(Pair(loginBean.ent_lng, loginBean.ent_lat))
+        //地理位置验证 登录后默认 isLogined = true 请求网络时自动验证
+        checkLocation() ?: return@commonLaunch
+        _loginLiveData.postValue(loginBean)
         savedSp()
+    }
+
+    @SuppressLint("HardwareIds", "MissingPermission")
+    private fun getImei(): String? {
+        val mTelephonyMgr =
+            getApplication<MyApplication>().getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        val imei = if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+            mTelephonyMgr.imei
+        } else mTelephonyMgr.deviceId
+        if (imei == null) setToast("获取设备编号失败 请返回重试")
+        return imei
     }
 
     /**
@@ -92,12 +134,8 @@ class LoginViewModel(application: Application, savedStateHandle: SavedStateHandl
             if (sp.contains(Const.SPUserRememberPwdLogin)) {
                 val spIsSaved = sp.getBoolean(Const.SPUserRememberPwdLogin, false)//是否记住密码
                 if (spIsSaved) { //如果保存 则赋值给界面
-                    if (sp.contains(Const.SPUserNameLogin)) {
-                        userNameLiveData.postValue(sp.getString(Const.SPUserNameLogin, ""))
-                    }
-                    if (sp.contains(Const.SPUserPwdLogin)) {
-                        passWordLiveData.postValue(sp.getString(Const.SPUserPwdLogin, ""))
-                    }
+                    userNameLiveData.postValue(sp.getString(Const.SPUserNameLogin, ""))
+                    passWordLiveData.postValue(sp.getString(Const.SPUserPwdLogin, ""))
                 }
                 rememberPwdLiveData.postValue(spIsSaved)
             }
@@ -105,7 +143,51 @@ class LoginViewModel(application: Application, savedStateHandle: SavedStateHandl
     }
 
     fun loadNewApk() {
-        //下载吸纳不能apk
+        if (this::downLoadJob.isInitialized) return
+        try {
+            val extrasFile =
+                getApplication<MyApplication>().applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+            downLoadJob = viewModelScope.launch(Dispatchers.IO) {
+                //下载最新apk
+                val apkStrArray = versionLiveData.value!!.second.downloadurl.split('/')
+                val apkName = apkStrArray[apkStrArray.size - 1]
+                LogUtils.d(TAG, "apkName:${apkName}")
+                val response = SystemRepository.loadAPKRequest(apkName)
+                val ios = response.byteStream()
+                val apkLength = response.contentLength()
+                LogUtils.d(TAG,"apkLength:${apkLength}")
+                var readLength = 0
+                val tempFile = File(extrasFile, apkName)
+                if (tempFile.exists()) {
+                    tempFile.delete()
+                }
+                tempFile.createNewFile()
+                val fos = FileOutputStream(tempFile)
+                val bytes = ByteArray(1024)
+                var currentLength = 0L
+                while (ios.read(bytes).also { readLength = it } != -1) {
+                    currentLength += readLength
+                    fos.write(bytes, 0, readLength)
+                    _loadApkProgressLD.postValue((currentLength * 100 / apkLength ).toInt())
+                }
+                fos.flush()
+                fos.close()
+                ios.close()
+                _cancelLoadApkDialogLD.postValue(true)
+                _installLiveData.postValue(tempFile)
+            }
+        } catch (e: Exception) {
+            _cancelLoadApkDialogLD.postValue(true)
+            setErrToast("file err:${e.message}")
+            LogUtils.d(TAG, "file err:${e.message}")
+            e.printStackTrace()
+        }
+    }
+
+    fun cancelLoadApk(){
+        if (this::downLoadJob.isInitialized) { //如果下载任务已经开始 则自动取消
+            downLoadJob.cancel()
+        }
     }
 
 }
