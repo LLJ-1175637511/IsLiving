@@ -15,7 +15,7 @@ class SuppleDoingFragment private constructor() : NavBaseFragment<FragmentSupple
 
     override fun getLayoutId() = R.layout.fragment_supple_doing
 
-//    private val viewModel by activityViewModels<SupplementViewModel>()
+    //    private val viewModel by activityViewModels<SupplementViewModel>()
     private val dbViewModel by activityViewModels<DatabaseVM>()
 
     private val adapter by lazy { SuppleDoingAdapter() }
@@ -24,19 +24,19 @@ class SuppleDoingFragment private constructor() : NavBaseFragment<FragmentSupple
     override fun init() {
         getBinding().recyclerviewSuppleDoing.adapter = adapter
 
-       /* viewModel.doingLiveData.observe(this, Observer {
-            adapter.submitList(it)
-            getBinding().refreshSuppleDoing.isRefreshing = false
-        })*/
+        /* viewModel.doingLiveData.observe(this, Observer {
+             adapter.submitList(it)
+             getBinding().refreshSuppleDoing.isRefreshing = false
+         })*/
 
-       /* viewModel.getDoingNS().observe(viewLifecycleOwner, Observer {
-            adapter.updateLoadingUi(it)
-            LogUtils.d("status", it.name)
-        })*/
+        /* viewModel.getDoingNS().observe(viewLifecycleOwner, Observer {
+             adapter.updateLoadingUi(it)
+             LogUtils.d("status", it.name)
+         })*/
 
-        pagedListLives = LivePagedListBuilder(dbViewModel.getSuppleDoingListLD(),5).build()
+        pagedListLives = LivePagedListBuilder(dbViewModel.getSuppleDoingListLD(), 5).build()
 
-        pagedListLives.observe(requireActivity(), Observer { data->
+        pagedListLives.observe(requireActivity(), Observer { data ->
             data?.let {
                 adapter.submitList(it)
             }

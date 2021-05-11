@@ -3,9 +3,7 @@ package com.llj.living.ui.activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import android.os.Environment
 import android.view.ViewGroup
-import android.webkit.MimeTypeMap
 import androidx.activity.viewModels
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AlertDialog

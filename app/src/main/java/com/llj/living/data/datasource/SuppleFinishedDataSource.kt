@@ -10,14 +10,15 @@ import com.llj.living.logic.vm.SupplementViewModel
 import com.llj.living.utils.LogUtils
 
 @SuppressLint("SimpleDateFormat")
-class SuppleFinishedDataSource(private val viewModel: SupplementViewModel) : PageKeyedDataSource<Int, MainFragmentBean>() {
+class SuppleFinishedDataSource(private val viewModel: SupplementViewModel) :
+    PageKeyedDataSource<Int, MainFragmentBean>() {
 
     private val TAG = this.javaClass.simpleName
 
     private var retry: (() -> Any)? = null
     private var count = 0
 
-    fun retryLoadData(){
+    fun retryLoadData() {
         retry?.invoke()
     }
 
@@ -27,7 +28,7 @@ class SuppleFinishedDataSource(private val viewModel: SupplementViewModel) : Pag
     ) {
         retry = null
         viewModel.updateFinishedNetStatus(NetStatus.LOADING)
-        LogUtils.d(TAG,"loadInitial key:${params.requestedLoadSize}")
+        LogUtils.d(TAG, "loadInitial key:${params.requestedLoadSize}")
         MyApplication.hadFinishedList.value?.let {
             callback.onResult(it, 0, 1)
         }
@@ -41,7 +42,7 @@ class SuppleFinishedDataSource(private val viewModel: SupplementViewModel) : Pag
         return
         retry = null
         viewModel.updateFinishedNetStatus(NetStatus.LOADING)
-        LogUtils.d(TAG,"loadAfter key:${params.key} request:${params.requestedLoadSize}")
+        LogUtils.d(TAG, "loadAfter key:${params.key} request:${params.requestedLoadSize}")
         val firstList = mutableListOf<MainFragmentBean>()
         val waitCount = (5..11).random()
         firstList.add(
@@ -54,13 +55,13 @@ class SuppleFinishedDataSource(private val viewModel: SupplementViewModel) : Pag
                 hadDealWith = waitCount
             )
         )
-        if (count<3){
+        if (count < 3) {
             count++
             viewModel.updateFinishedNetStatus(NetStatus.SUCCESS)
             callback.onResult(firstList, params.key + 1)
-        }else{
+        } else {
             viewModel.updateFinishedNetStatus(NetStatus.FAILED)
-            retry = {loadAfter(params, callback)}
+            retry = { loadAfter(params, callback) }
             count = 0
         }
     }

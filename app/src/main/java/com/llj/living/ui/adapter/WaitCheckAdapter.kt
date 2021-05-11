@@ -13,7 +13,7 @@ import com.llj.living.databinding.ItemReloadBinding
 import com.llj.living.ui.activity.ActivityCheckDetail
 import com.llj.living.ui.activity.ActivityVideotape
 
-class WaitCheckAdapter: BaseReloadAdapter<OldManInfoWait>(DIFF_CALLBACK) {
+class WaitCheckAdapter : BaseReloadAdapter<OldManInfoWait>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         if (viewType == layoutId()) {
@@ -56,10 +56,14 @@ class WaitCheckAdapter: BaseReloadAdapter<OldManInfoWait>(DIFF_CALLBACK) {
                 tvSex.text = data.sex
                 btOperas.text = itemView.context.resources.getString(R.string.video_check)
                 btOperas.setOnClickListener {
-                    it.context.startActivity(Intent(it.context, ActivityVideotape::class.java).apply {
-                        id = data.id
-                        putExtra(VIDEO_PATH_ID,data.idCard)
-                    })
+                    it.context.startActivity(
+                        Intent(
+                            it.context,
+                            ActivityVideotape::class.java
+                        ).apply {
+                            id = data.id
+                            putExtra(VIDEO_PATH_ID, data.idCard)
+                        })
                 }
             }
         }

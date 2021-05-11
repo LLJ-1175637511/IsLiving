@@ -60,7 +60,7 @@ class CheckDoingAdapter(private val vm: DatabaseVM) :
                 btOperas.setOnClickListener { view ->
                     view.context.let {
                         id = bean.id
-                        LogUtils.d("CheckDoingAdapter","id:${bean.id}")
+                        LogUtils.d("CheckDoingAdapter", "id:${bean.id}")
                         it.startActivity(Intent(it, ActivityCheck::class.java))
                     }
                 }

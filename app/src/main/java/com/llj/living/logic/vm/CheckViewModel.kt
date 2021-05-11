@@ -16,28 +16,28 @@ class CheckViewModel(application: Application, savedStateHandle: SavedStateHandl
 
     val finishedFactory = CheckFinishedDSFactory.getInstance(this)
 
-    val finishedLiveData:LiveData<PagedList<MainFragmentBean>> = finishedFactory.toLiveData(
-        20,null
+    val finishedLiveData: LiveData<PagedList<MainFragmentBean>> = finishedFactory.toLiveData(
+        20, null
     )
 
     val doingFactory = CheckDoingDSFactory.getInstance(this)
 
-    val fragmentLiveData:LiveData<PagedList<MainFragmentBean>> = doingFactory.toLiveData(
-        20,null
+    val fragmentLiveData: LiveData<PagedList<MainFragmentBean>> = doingFactory.toLiveData(
+        20, null
     )
 
     //获取 进行中 netStatusLiveData
     fun getDoingNS() = getNSLiveData(UpdateStatusType.CHECK_DOING)
 
-    fun updateDoingNetStatus(netStatus: NetStatus){
-        updateNetStatus(netStatus,UpdateStatusType.CHECK_DOING)
+    fun updateDoingNetStatus(netStatus: NetStatus) {
+        updateNetStatus(netStatus, UpdateStatusType.CHECK_DOING)
     }
 
     //获取 已完成 netStatusLiveData
     fun getFinishedNS() = getNSLiveData(UpdateStatusType.CHECK_FINISHED)
 
-    fun updateFinishedNetStatus(netStatus: NetStatus){
-        updateNetStatus(netStatus,UpdateStatusType.CHECK_FINISHED)
+    fun updateFinishedNetStatus(netStatus: NetStatus) {
+        updateNetStatus(netStatus, UpdateStatusType.CHECK_FINISHED)
     }
 
 }

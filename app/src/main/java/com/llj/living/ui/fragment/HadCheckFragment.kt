@@ -15,16 +15,16 @@ class HadCheckFragment : NavBaseFragment<FragmentHadCheckBinding>() {
 
     override fun getLayoutId() = R.layout.fragment_had_check
 
-//    private val viewModel by activityViewModels<ActCheckViewModel>()
+    //    private val viewModel by activityViewModels<ActCheckViewModel>()
     private val adapter by lazy { HadCheckAdapter() }
     private lateinit var pagedListLives: LiveData<PagedList<OldManInfoCheckHad>>
     private val dbViewModel by activityViewModels<DatabaseVM>()
     override fun init() {
         getBinding().recyclerviewHadCheck.adapter = adapter
 
-        pagedListLives = LivePagedListBuilder(dbViewModel.getCheckFinishedLD(),5).build()
+        pagedListLives = LivePagedListBuilder(dbViewModel.getCheckFinishedLD(), 5).build()
 
-        pagedListLives.observe(requireActivity(), Observer { data->
+        pagedListLives.observe(requireActivity(), Observer { data ->
             data?.let {
                 adapter.submitList(it)
             }
@@ -53,13 +53,13 @@ class HadCheckFragment : NavBaseFragment<FragmentHadCheckBinding>() {
         }*/
     }
 
-  /*  private fun refreshData() {
-        viewModel.hadCheckLiveData.value?.dataSource?.invalidate()
-    }*/
+    /*  private fun refreshData() {
+          viewModel.hadCheckLiveData.value?.dataSource?.invalidate()
+      }*/
 
-    companion object{
-        private var instance:HadCheckFragment ?= null
-        fun getInstance() = instance?:HadCheckFragment().also {
+    companion object {
+        private var instance: HadCheckFragment? = null
+        fun getInstance() = instance ?: HadCheckFragment().also {
             instance = it
         }
     }

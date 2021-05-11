@@ -51,15 +51,15 @@ class ActivitySupplement : BaseActivity<ActivitySupplementBinding>() {
             }.attach()
         }
 
-        LogUtils.d("ActivitySupplement","id:${SuppleDoingAdapter.id}")
+        LogUtils.d("ActivitySupplement", "id:${SuppleDoingAdapter.id}")
         pagedListLives = dbViewModel.getSuppleInfoItemListLD(SuppleDoingAdapter.id)
 
         pagedListLives.observe(this, Observer { data ->
-            LogUtils.d("ActivitySupplement","observe:--->")
+            LogUtils.d("ActivitySupplement", "observe:--->")
             data?.let {
                 waitSuppleCount = it.waitDealWith
                 hadSuppleCount = it.hadDealWith
-                LogUtils.d("ActivitySupplement","data:--->")
+                LogUtils.d("ActivitySupplement", "data:--->")
                 getDataBinding().root.findViewById<TextView>(R.id.tvStartTime).text = it.startTime
                 getDataBinding().root.findViewById<TextView>(R.id.tvEndTime).text = it.endTime
                 getDataBinding().root.findViewById<TextView>(R.id.tvHeaderWait).text =
@@ -70,7 +70,7 @@ class ActivitySupplement : BaseActivity<ActivitySupplementBinding>() {
         })
     }
 
-    companion object{
+    companion object {
         var waitSuppleCount = -1
         var hadSuppleCount = -1
     }

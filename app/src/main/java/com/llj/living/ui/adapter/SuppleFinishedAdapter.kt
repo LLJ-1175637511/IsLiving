@@ -10,7 +10,7 @@ import com.llj.living.data.database.SuppleFinished
 import com.llj.living.databinding.ItemMainFinishedBinding
 import com.llj.living.databinding.ItemReloadBinding
 
-class SuppleFinishedAdapter():BaseReloadAdapter<SuppleFinished>(DIFF_CALLBACK) {
+class SuppleFinishedAdapter() : BaseReloadAdapter<SuppleFinished>(DIFF_CALLBACK) {
 
     override fun layoutId(): Int = R.layout.item_main_finished
 
@@ -42,7 +42,7 @@ class SuppleFinishedAdapter():BaseReloadAdapter<SuppleFinished>(DIFF_CALLBACK) {
     inner class SuppleFinishedViewHolder(private val binding: ItemMainFinishedBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bindData(data: SuppleFinished?) {
-            if (data==null) return
+            if (data == null) return
             binding.apply {
                 tvTittle.text = data.title
                 tvItemWait.text = data.waitDealWith.toString()

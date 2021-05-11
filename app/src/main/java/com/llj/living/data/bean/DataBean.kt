@@ -19,8 +19,8 @@ data class MainFragmentBean(
     val title: String,
     val endTime: String,
     val startTime: String,
-    var waitDealWith:Int,
-    var hadDealWith:Int,
+    var waitDealWith: Int,
+    var hadDealWith: Int,
     val id: Int
 ) : Parcelable
 
@@ -28,19 +28,19 @@ data class MainFragmentBean(
 data class SecondFragmentBean(
     val uName: String,
     val idCard: String,
-    val sex:String,
+    val sex: String,
     val id: Int
 ) : Parcelable
 //endregion
 
 data class AdBean(
     val titleName: String,
-    val id:Int,
-    val addr:String
+    val id: Int,
+    val addr: String
 )
 
 data class PhotoBean(
-    val photoName:String,
+    val photoName: String,
     var uri: Uri?,
     var bitmap: Bitmap?
 )

@@ -17,10 +17,9 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.llj.living.custom.ext.commonTryException
+import com.llj.living.application.MyApplication
 import com.llj.living.custom.ext.toastShort
+import com.llj.living.custom.ext.tryException
 import com.llj.living.custom.ext.tryExceptionLaunch
 import com.llj.living.net.repository.SystemRepository
 import com.llj.living.utils.LogUtils
@@ -33,8 +32,6 @@ abstract class BaseBLActivity<DB : ViewDataBinding> : BaseActivity<DB>() {
 
     private lateinit var locationManager: LocationManager
     private var locationProvider: String? = null
-    private val _locationLiveData = MutableLiveData<Pair<Double,Double>>(Pair(0.0,0.0))
-    val locationLiveData: LiveData<Pair<Double, Double>> = _locationLiveData
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,19 +45,19 @@ abstract class BaseBLActivity<DB : ViewDataBinding> : BaseActivity<DB>() {
     }
 
     private fun checkPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            //获取权限（如果没有开启权限，会弹出对话框，询问是否开启权限）
-            if (!allPermissionsGranted()) {
-                //请求权限
-                ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, LOCATION_CODE)
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !allPermissionsGranted()) {
+            //请求权限
+            ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, LOCATION_CODE)
         } else {
             getBaiduLocation()
         }
     }
 
     private fun getBaiduLocation() {
-        if (locationManager.getProvider(LocationManager.GPS_PROVIDER) == null) {//申请打开定位
+        val network =
+            locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+        val gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        if (!(gps || network)) {//申请打开定位
             val i = Intent().apply {
                 action = Settings.ACTION_LOCATION_SOURCE_SETTINGS
             }
@@ -118,51 +115,31 @@ abstract class BaseBLActivity<DB : ViewDataBinding> : BaseActivity<DB>() {
     }
 
     @SuppressLint("MissingPermission")
-    private fun startGetLocation() = commonTryException {
-        val providers = locationManager.getProviders(true)
-        if (providers.contains(LocationManager.GPS_PROVIDER)) {
-            //如果是GPS
-            locationProvider = LocationManager.GPS_PROVIDER
-        } else if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
-            //如果是Network
-            locationProvider = LocationManager.NETWORK_PROVIDER
-        }
-        //设置刷新间隔时间
-        locationProvider?.let {
+    private fun startGetLocation() = tryException("获取定位信息") {
+        locationProvider?.let { lp ->
             locationManager.requestLocationUpdates(
-                it,
+                lp,
                 30000,
                 1f,
                 locationListener
             )
+            val location = locationManager.getLastKnownLocation(lp)
+            location?.let {
+                convertLoc(it.longitude,it.latitude)
+            }
         }
     }
 
     private var locationListener: LocationListener = object : LocationListener {
         //当坐标改变时触发此函数，如果Provider传进相同的坐标，它就不会被触发
         override fun onLocationChanged(location: Location) {
-            val loaX = location.longitude
-            val loaY = location.latitude
-            val e = tryExceptionLaunch(Dispatchers.IO) {
-                val bean = SystemRepository.getBaiduLLRequest(loaX, loaY)
-                val baiduX = Base64.decode(bean.x, Base64.DEFAULT)
-                val baiduY = Base64.decode(bean.y, Base64.DEFAULT)
-                val dX = String(baiduX).toDouble()
-                val dY = String(baiduY).toDouble()
-                _locationLiveData.postValue(Pair(dX, dY))
-                LogUtils.d("Test2", "baidu:$dX $dY")
-            }
-            e?.let {
-                toastShort(it)
-            }
+            val lon = location.longitude
+            val lat = location.latitude
+            convertLoc(lon,lat)
         }
 
         // Provider的状态在可用、暂时不可用和无服务三个状态直接切换时触发此函数
-        override fun onStatusChanged(
-            provider: String,
-            status: Int,
-            extras: Bundle
-        ) {
+        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
         }
 
         // Provider被enable时触发此函数，比如GPS被打开
@@ -170,6 +147,18 @@ abstract class BaseBLActivity<DB : ViewDataBinding> : BaseActivity<DB>() {
 
         // Provider被disable时触发此函数，比如GPS被关闭
         override fun onProviderDisabled(provider: String) {}
+    }
+
+    private fun convertLoc(lon: Double, lat: Double) {
+        tryExceptionLaunch(Dispatchers.IO,"转换地理坐标") {
+            val bean = SystemRepository.getBaiduLLRequest(lon, lat)
+            val baiduLon = Base64.decode(bean.x, Base64.DEFAULT)
+            val baiduLat = Base64.decode(bean.y, Base64.DEFAULT)
+            val dLon = String(baiduLon).toDouble()
+            val dLat = String(baiduLat).toDouble()
+            MyApplication.setLocation(Pair(dLon, dLat))
+            LogUtils.d(TAG, "坐标 lng:$dLon lat:$dLat")
+        }
     }
 
     override fun onDestroy() {
@@ -181,6 +170,8 @@ abstract class BaseBLActivity<DB : ViewDataBinding> : BaseActivity<DB>() {
         private const val LOCATION_CODE = 301
         private val REQUIRED_PERMISSIONS = arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.INTERNET,
+            Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.CAMERA,

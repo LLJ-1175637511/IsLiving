@@ -23,7 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class TestActivity2 : AppCompatActivity() , ActivityCompat.OnRequestPermissionsResultCallback{
+class TestActivity2 : AppCompatActivity(), ActivityCompat.OnRequestPermissionsResultCallback {
 
     private lateinit var locationManager: LocationManager
     private var locationProvider: String? = null
@@ -142,14 +142,14 @@ class TestActivity2 : AppCompatActivity() , ActivityCompat.OnRequestPermissionsR
             val loaX = location.longitude
             val loaY = location.latitude
             lifecycleScope.launch(Dispatchers.IO) {
-                val bean = SystemRepository.getBaiduLLRequest(loaX,loaY)
-                val baiduX = Base64.decode(bean.x,Base64.DEFAULT)
-                val baiduY = Base64.decode(bean.y,Base64.DEFAULT)
+                val bean = SystemRepository.getBaiduLLRequest(loaX, loaY)
+                val baiduX = Base64.decode(bean.x, Base64.DEFAULT)
+                val baiduY = Base64.decode(bean.y, Base64.DEFAULT)
                 val dX = String(baiduX).toDouble()
                 val dY = String(baiduY).toDouble()
                 LogUtils.d("Test2", "gps:$loaX $loaY")
                 LogUtils.d("Test2", "baidu:${dX} ${dY}")
-                withContext(Dispatchers.Main){
+                withContext(Dispatchers.Main) {
                     Toast.makeText(
                         this@TestActivity2,
                         "$baiduX $baiduY",
@@ -232,6 +232,6 @@ class TestActivity2 : AppCompatActivity() , ActivityCompat.OnRequestPermissionsR
     }
 
     companion object {
-       private const val LOCATION_CODE = 301
+        private const val LOCATION_CODE = 301
     }
 }

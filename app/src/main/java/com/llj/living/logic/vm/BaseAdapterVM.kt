@@ -10,23 +10,23 @@ import com.llj.living.data.enums.UpdateStatusType
 open class BaseAdapterVM(application: Application, savedStateHandle: SavedStateHandle) :
     BaseViewModel(application, savedStateHandle) {
 
-    private fun getNetStatusLiveData(type: UpdateStatusType):MutableLiveData<NetStatus>{
+    private fun getNetStatusLiveData(type: UpdateStatusType): MutableLiveData<NetStatus> {
         val key = "${type.name}$NET_STATUS"
-        if (!getSavedHandle().contains(key)){
+        if (!getSavedHandle().contains(key)) {
             getSavedHandle()[key] = NetStatus.INIT
         }
         return getSavedHandle().getLiveData<NetStatus>(key)
     }
 
-    fun updateNetStatus(netStatus: NetStatus,type: UpdateStatusType){
+    fun updateNetStatus(netStatus: NetStatus, type: UpdateStatusType) {
         getNetStatusLiveData(type).postValue(netStatus)
     }
 
-    fun getNSLiveData(type: UpdateStatusType):LiveData<NetStatus>{
+    fun getNSLiveData(type: UpdateStatusType): LiveData<NetStatus> {
         return getNetStatusLiveData(type)
     }
 
-    companion object{
+    companion object {
         const val NET_STATUS = "net_status"
     }
 }

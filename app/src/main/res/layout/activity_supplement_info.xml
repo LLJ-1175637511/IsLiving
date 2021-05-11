@@ -3,11 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
 
         <variable
             name="asiVM"
             type="com.llj.living.logic.vm.SuppleInfoVM" />
+
         <variable
             name="types"
             type="com.llj.living.data.enums.IsShowedType" />
@@ -134,6 +136,7 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="@+id/iv_face_supple_info"
                     app:layout_constraintEnd_toEndOf="parent" />
+
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/reIdCardA"
                     style="@style/TakePhotoFloatButtonStyle"
@@ -142,6 +145,7 @@
                     android:visibility="@{asiVM.getIsHadTakePhotoLiveData(types.IdCardA) ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_constraintBottom_toBottomOf="@+id/iv_id_card_a_supple_info"
                     app:layout_constraintEnd_toEndOf="parent" />
+
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/reIdCardB"
                     style="@style/TakePhotoFloatButtonStyle"

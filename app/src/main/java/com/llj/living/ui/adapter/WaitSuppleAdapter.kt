@@ -13,7 +13,7 @@ import com.llj.living.databinding.ItemReloadBinding
 import com.llj.living.ui.activity.ActivitySuppleInfo
 
 class WaitSuppleAdapter(
-):BaseReloadAdapter<OldManInfoWait>(DIFF_CALLBACK) {
+) : BaseReloadAdapter<OldManInfoWait>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         if (viewType == layoutId()) {
@@ -45,7 +45,7 @@ class WaitSuppleAdapter(
     inner class HadSuppleViewHolder(private val binding: ItemMainWaitBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bindData(data: OldManInfoWait?) {
-            if (data==null) return
+            if (data == null) return
 
             binding.apply {
                 tvName.text = data.name
@@ -53,7 +53,7 @@ class WaitSuppleAdapter(
                 tvSex.text = data.sex
                 btOperas.setOnClickListener {
                     id = data.id
-                    it.context.startActivity(Intent(it.context,ActivitySuppleInfo::class.java))
+                    it.context.startActivity(Intent(it.context, ActivitySuppleInfo::class.java))
                 }
             }
         }
@@ -73,7 +73,7 @@ class WaitSuppleAdapter(
                 return oldItem == newItem
             }
         }
-        var id:Int = -1
+        var id: Int = -1
     }
 
 }

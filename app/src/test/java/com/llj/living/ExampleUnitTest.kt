@@ -8,11 +8,3 @@ package com.llj.living
 class ExampleUnitTest {
 
 }
-
-fun main() {
-    val nums = intArrayOf(1, 2, 3, 4, 5, 6, 7)
-    Test.rotate(nums, 3)
-    for (i in nums.indices) {
-        println(i)
-    }
-}

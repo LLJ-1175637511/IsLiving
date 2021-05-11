@@ -8,8 +8,8 @@ import retrofit2.await
 
 object FaceAuthNetwork {
 
-    private const val grantType = "client_credentials" //百度云 请求token默认固定参数
-    private const val contentType = "application/json" //百度云 注册人脸 固定请求头
+    const val grantType = "client_credentials" //百度云 请求token默认固定参数
+    const val contentType = "application/json" //百度云 注册人脸 固定请求头
 
     private val tokenServer by lazy { RetrofitCreator.baiduCreate<TokenServer>() }
 
@@ -26,20 +26,25 @@ object FaceAuthNetwork {
     private val sendFaceSearchInZnServer by lazy { RetrofitCreator.baiduCreate<SearchFaceInZnServer>() }
 
     suspend fun getToken() =
-        tokenServer.getToken(grantType,MyApplication.ApiKey,MyApplication.SecretKey).await()
+        tokenServer.getToken(grantType, MyApplication.ApiKey, MyApplication.SecretKey).await()
 
-    suspend fun registerFace(token:String,map: Map<String,String>) = addFaceServer.addFace(contentType,token,map).await()
+    suspend fun registerFace(token: String, map: Map<String, String>) =
+        addFaceServer.addFace(contentType, token, map).await()
 
-    suspend fun updateFace(token:String,map: Map<String,String>) = updateFaceServer.updateFace(contentType,token,map).await()
+    suspend fun updateFace(token: String, map: Map<String, String>) =
+        updateFaceServer.updateFace(contentType, token, map).await()
 
-    suspend fun deleteFace(token:String,map: Map<String,String>) = deleteFaceServer.deleteFace(contentType,token,map).await()
+    suspend fun deleteFace(token: String, map: Map<String, String>) =
+        deleteFaceServer.deleteFace(contentType, token, map).await()
 
-    suspend fun matchFace(token:String,mfbList: List<MatchFaceData>) = matchFaceServer.matchFace(contentType,token,mfbList).await()
+    suspend fun matchFace(token: String, mfbList: List<MatchFaceData>) =
+        matchFaceServer.matchFace(contentType, token, mfbList).await()
 
-    suspend fun searchFace(token:String,map: Map<String,String>) = sendFaceSearchServer.searchFace(contentType,token,map).await()
+    suspend fun searchFace(token: String, map: Map<String, String>) =
+        sendFaceSearchServer.searchFace(contentType, token, map).await()
 
-    suspend fun searchFaceInZn(token:String,map: Map<String,String>) = sendFaceSearchInZnServer.searchFace(contentType,token,map).await()
-
+    suspend fun searchFaceInZn(token: String, map: Map<String, String>) =
+        sendFaceSearchInZnServer.searchFace(contentType, token, map).await()
 
 
 }

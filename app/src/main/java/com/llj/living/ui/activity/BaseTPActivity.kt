@@ -19,8 +19,6 @@ import java.io.IOException
 
 abstract class BaseTPActivity<DB : ViewDataBinding> : BaseActivity<DB>() {
 
-    private val TAG = this.javaClass.simpleName
-
     private val ops = BitmapFactory.Options()
 
     private var bitmap: Bitmap? = null
@@ -54,7 +52,7 @@ abstract class BaseTPActivity<DB : ViewDataBinding> : BaseActivity<DB>() {
         return Intent(MediaStore.ACTION_VIDEO_CAPTURE).apply {
             putExtra(MediaStore.EXTRA_OUTPUT, videoUri)
             putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1)
-            putExtra(MediaStore.EXTRA_DURATION_LIMIT,15)
+            putExtra(MediaStore.EXTRA_DURATION_LIMIT, 15)
         }
     }
 
@@ -135,7 +133,7 @@ abstract class BaseTPActivity<DB : ViewDataBinding> : BaseActivity<DB>() {
 //            base64 = PhotoUtils.bitmapToBase64(bitmap).toString()
         }
 
-    fun buildVideoLaunch(block: (uri:Uri) -> Unit) =
+    fun buildVideoLaunch(block: (uri: Uri) -> Unit) =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             try {
                 videoUri?.let {

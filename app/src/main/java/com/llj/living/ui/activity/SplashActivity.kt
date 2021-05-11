@@ -5,13 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import com.llj.living.R
 import com.llj.living.custom.ext.*
 import com.llj.living.data.bean.SysTimeBean
-import com.llj.living.databinding.ActivityLoginBinding
+import com.llj.living.data.const.Const
 import com.llj.living.databinding.ActivitySplashBinding
 import com.llj.living.net.repository.SystemRepository
 import com.llj.living.utils.LogUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import java.util.*
 
 class SplashActivity : BaseActivity<ActivitySplashBinding>() {
 
@@ -19,16 +20,29 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
 
     override fun isScreenFull() = true
 
+    override fun showToolbar() = false
+
     private val timeLiveData = MutableLiveData<Int>(5)
     private var timeIsOk = false
-
-    val TAG = "${this.javaClass.simpleName}TEST"
 
     override fun init() {
         super.init()
         setClickFunction()
         setTimer()
-        getSysTime()?.let { toastShort(it) }
+        getSysTime()
+        updateSpTime()
+    }
+
+    private fun updateSpTime() {
+        val sp = getSP(Const.SPMySqlNet)
+        val savedDate = sp.getInt(Const.SPMySqlTodayReminderUpdateTime, 0)
+        val nowDate = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+        if (nowDate != savedDate) {
+            sp.save {
+                putBoolean(Const.SPMySqlTodayReminderUpdate, false)
+                putInt(Const.SPMySqlTodayReminderUpdateTime, nowDate)
+            }
+        }
     }
 
     private fun setClickFunction() {
@@ -44,9 +58,9 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
         }
     }
 
-    private fun getSysTime() = tryExceptionLaunch {
+    private fun getSysTime() = tryExceptionLaunch(errTips = "服务器时间") {
         val bean = SystemRepository.getSysTimeRequest()
-        LogUtils.d(TAG,bean.toString())
+        LogUtils.d(TAG, bean.toString())
         val versionBean = baseBeanConverter<SysTimeBean>(bean)
         val cTime = System.currentTimeMillis() / 1000
         if (cTime - versionBean.time > 60 * 60 * 24) {
@@ -54,6 +68,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
             delay(1000)
             finish()
         } else {
+            LogUtils.d("SplashActivityTEST",bean.toString())
             timeIsOk = true
         }
     }

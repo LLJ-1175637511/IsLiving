@@ -8,7 +8,7 @@ import androidx.annotation.Nullable
 
 class CircleDrawable(mBitmap: Bitmap) : Drawable() {
     private val mPaint: Paint
-    private val mWidth : Int//宽/高，直径
+    private val mWidth: Int//宽/高，直径
 
     override fun draw(@NonNull canvas: Canvas) {
         canvas.drawCircle(
@@ -18,7 +18,7 @@ class CircleDrawable(mBitmap: Bitmap) : Drawable() {
         ) //绘制圆形
     }
 
-    override fun setAlpha( i: Int) {
+    override fun setAlpha(i: Int) {
         mPaint.alpha = i
     }
 

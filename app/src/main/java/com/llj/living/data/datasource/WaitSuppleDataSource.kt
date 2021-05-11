@@ -8,7 +8,10 @@ import com.llj.living.data.enums.NetStatus
 import com.llj.living.logic.vm.ActSuppleViewModel
 import com.llj.living.utils.LogUtils
 
-class WaitSuppleDataSource(private val viewModel: ActSuppleViewModel,private var removedArray:ArraySet<Int>) :
+class WaitSuppleDataSource(
+    private val viewModel: ActSuppleViewModel,
+    private var removedArray: ArraySet<Int>
+) :
     PageKeyedDataSource<Int, SecondFragmentBean>() {
 
     private var retry: (() -> Any)? = null

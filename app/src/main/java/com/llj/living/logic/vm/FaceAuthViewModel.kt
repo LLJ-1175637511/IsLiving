@@ -14,8 +14,6 @@ import kotlinx.coroutines.launch
 class FaceAuthViewModel(application: Application, savedStateHandle: SavedStateHandle) :
     BaseViewModel(application, savedStateHandle) {
 
-    private val TAG = this.javaClass.simpleName
-
     fun getContentLiveData() = getLiveDataForKey<String>(Const.FaceAuthContent)
 
     fun getPhotoLiveData() = getLiveDataForKey<String>(Const.FaceAuthPhoto)
@@ -44,7 +42,7 @@ class FaceAuthViewModel(application: Application, savedStateHandle: SavedStateHa
         checkBaiduTokenRequest { token ->
             val result = FaceAuthRepository.sendDeleteFaceRequest(token, map)
             val msg =
-                if (result.error_code==0 && result.error_msg.isMsgSuc()) "删除成功 唯一码：${getPhotoIdLiveData().value}"
+                if (result.error_code == 0 && result.error_msg.isMsgSuc()) "删除成功 唯一码：${getPhotoIdLiveData().value}"
                 else "删除失败 msg:${result.error_msg}"
             getContentLiveData().postValue(msg)
             LogUtils.d(TAG, msg)
@@ -70,9 +68,9 @@ class FaceAuthViewModel(application: Application, savedStateHandle: SavedStateHa
     fun searchFaceInZn(map: Map<String, String>) = viewModelScope.launch {
         checkBaiduTokenRequest { token ->
             FaceAuthRepository.sendSearchInZnRequest(token, map)
-           /* val result = FaceAuthRepository.sendSearchInZnRequest(token, map)
-            if (result.isSuc) getContentLiveData().postValue("搜索成功，${result.data}")
-            else getContentLiveData().postValue("比对失败，${result.data}")*/
+            /* val result = FaceAuthRepository.sendSearchInZnRequest(token, map)
+             if (result.isSuc) getContentLiveData().postValue("搜索成功，${result.data}")
+             else getContentLiveData().postValue("比对失败，${result.data}")*/
         }
     }
 

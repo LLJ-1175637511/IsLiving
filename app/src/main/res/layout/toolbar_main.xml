@@ -12,5 +12,4 @@
     app:subtitleTextColor="@color/white"
     app:title="@string/app_name"
     app:titleMarginStart="25dp"
-    app:titleTextColor="@color/white" >
-</androidx.appcompat.widget.Toolbar>
+    app:titleTextColor="@color/white"></androidx.appcompat.widget.Toolbar>

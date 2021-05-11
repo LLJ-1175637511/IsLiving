@@ -8,19 +8,19 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 
-class MyChronometer:Chronometer,LifecycleObserver {
+class MyChronometer : Chronometer, LifecycleObserver {
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
 
     private var elapseTime = 0L
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-    fun pauseAR(){
+    fun pauseAR() {
         elapseTime = SystemClock.elapsedRealtime() - base
         stop()
     }
 
-    fun resumeAR(){
+    fun resumeAR() {
         base = SystemClock.elapsedRealtime() - elapseTime
         start()
     }

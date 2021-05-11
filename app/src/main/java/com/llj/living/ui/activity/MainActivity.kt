@@ -1,16 +1,12 @@
 package com.llj.living.ui.activity
 
-import android.util.Base64
 import androidx.activity.viewModels
 import androidx.navigation.Navigation
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.llj.living.R
-import com.llj.living.custom.ext.commonLaunch
-import com.llj.living.custom.ext.startCommonFinishedActivity
-import com.llj.living.custom.ext.toSimpleTime
-import com.llj.living.custom.ext.toastShort
+import com.llj.living.custom.ext.*
 import com.llj.living.data.bean.LoginBean
 import com.llj.living.data.bean.ToolbarConfig
 import com.llj.living.data.database.OldManInfoWait
@@ -34,25 +30,10 @@ class MainActivity : BaseActivity<ActivityNavMainBinding>() {
     }
 
     private fun initData() {
-        dbViewModel.insertSuppleDoing(loadData())
+        /*dbViewModel.insertSuppleDoing(loadData())
         dbViewModel.insertSuppleFinished(loadFinishedData())
-        dbViewModel.insertOldmanInfo(loadOldManData())
-//        loadLoginBean()
-        test()
-    }
-
-    private fun test() {
-        getDataBinding().viewHeader.apply {
-            lifecycleOwner = this@MainActivity
-            vm = dbViewModel
-        }
-        val tempIcon =
-            """PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgaGVpZ2h0PSIxMDAiIHdpZHRoPSIxMDAiPjxyZWN0IGZpbGw9InJnYigxNjAsMTkwLDIyOSkiIHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48L3JlY3Q+PHRleHQgeD0iNTAiIHk9IjUwIiBmb250LXNpemU9IjUwIiB0ZXh0LWNvcHk9ImZhc3QiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHRleHQtcmlnaHRzPSJhZG1pbiIgZG9taW5hbnQtYmFzZWxpbmU9ImNlbnRyYWwiPkE8L3RleHQ+PC9zdmc+"""
-        val iconByte = Base64.decode(tempIcon, Base64.DEFAULT)
-        iconByte?.let { ba ->
-            Glide.with(this@MainActivity).load(iconByte)
-                .into(getDataBinding().viewHeader.ivLogoMain)
-        }
+        dbViewModel.insertOldmanInfo(loadOldManData())*/
+        loadLoginBean()
     }
 
     private fun loadLoginBean() {
@@ -69,15 +50,8 @@ class MainActivity : BaseActivity<ActivityNavMainBinding>() {
         getDataBinding().viewHeader.apply {
             lifecycleOwner = this@MainActivity
             vm = dbViewModel
-        }
-        lb.avatar.let {
-            if (!it.contains(',')) {
-                toastShort("解析头像出错")
-            } else {
-                val tArray = lb.avatar.split(',')[1]
-                val iconByte = Base64.decode(tArray, Base64.DEFAULT)
-                Glide.with(this@MainActivity).load(iconByte)
-                    .into(getDataBinding().viewHeader.ivLogoMain)
+            tryException(errTips = "头像") {
+                Glide.with(this@MainActivity).load(lb.avatar).into(getDataBinding().viewHeader.ivLogoMain)
             }
         }
     }
@@ -167,7 +141,6 @@ class MainActivity : BaseActivity<ActivityNavMainBinding>() {
             )
         )
     }
-
     /*   override fun onResume() {
            super.onResume()
            val changedCount = intent.getIntExtra(ActivitySupplement.ACTIVITY_SUPPLEMENT_COUNT, -1)

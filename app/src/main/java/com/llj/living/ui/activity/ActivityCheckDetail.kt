@@ -24,7 +24,7 @@ class ActivityCheckDetail : BaseTPActivity<ActivityCheckDetailBinding>() {
 
     //    private val TAG = this.javaClass.simpleName
     private val dbViewModel by viewModels<DatabaseVM>()
-    private var bean: OldManInfoWait ?= null
+    private var bean: OldManInfoWait? = null
 
     override fun init() {
         setToolbar(
@@ -51,7 +51,7 @@ class ActivityCheckDetail : BaseTPActivity<ActivityCheckDetailBinding>() {
         }
 
         val id = WaitCheckAdapter.id
-        dbViewModel.getOldManInfoById(id).observe(this, Observer {data->
+        dbViewModel.getOldManInfoById(id).observe(this, Observer { data ->
             data?.let {
                 bean = it
             }
@@ -61,7 +61,7 @@ class ActivityCheckDetail : BaseTPActivity<ActivityCheckDetailBinding>() {
 
     private fun updateData() {
         bean?.let {
-            dbViewModel.finishedOneHad(it,CheckDoingAdapter.id)
+            dbViewModel.finishedOneHad(it, CheckDoingAdapter.id)
         }
     }
 

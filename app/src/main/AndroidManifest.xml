@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.CAMERA" /> <!-- 具备摄像头 -->
     <uses-feature android:name="android.hardware.camera.any" /> <!-- 存储图像或者视频权限 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -16,7 +18,8 @@
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-
+<!-- 安装apk 在Android O新增权限，必须添加-->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application
         android:name=".application.MyApplication"
@@ -35,8 +38,22 @@
         <activity android:name=".ui.activity.TestActivity">
 
         </activity>
-        <activity android:name=".ui.activity.LoginActivity"
+        <activity
+            android:name=".ui.activity.LoginActivity"
             android:launchMode="singleTask">
+
+        </activity>
+        <activity
+            android:name=".ui.activity.MainActivity"
+            android:launchMode="singleTop">
+
+        </activity>
+
+        <activity android:name=".ui.activity.FaceAuthenticActivity">
+
+        </activity>
+        <activity
+            android:name=".ui.activity.SplashActivity">
             <intent-filter>
                 <action
                     android:name="android.intent.action.MAIN"
@@ -44,17 +61,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".ui.activity.MainActivity"
-            android:launchMode="singleTop" />
-        <activity android:name=".ui.activity.FaceAuthenticActivity">
-
-        </activity>
-        <activity
-            android:name=".ui.activity.SplashActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-
         </activity>
         <activity android:name=".ui.activity.ActivitySuppleInfo" />
         <activity android:name=".ui.activity.ActivityCheckDetail" />

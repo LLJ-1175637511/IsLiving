@@ -55,11 +55,11 @@ object PhotoUtils {
         val mWidth = bitmap.width
         val mHeight = bitmap.height
         if (mWidth <= mHeight) {
-            scaleWidth = (mWidth/2).toFloat()
-            scaleHeight = (mHeight/2).toFloat()
+            scaleWidth = (mWidth / 2).toFloat()
+            scaleHeight = (mHeight / 2).toFloat()
         } else {
-            scaleWidth = (mWidth/2).toFloat()
-            scaleHeight = (mHeight/2).toFloat()
+            scaleWidth = (mWidth / 2).toFloat()
+            scaleHeight = (mHeight / 2).toFloat()
         }
         val matrix = Matrix()
         // 按照固定宽高进行缩放

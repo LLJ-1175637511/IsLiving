@@ -18,7 +18,7 @@ import com.llj.living.ui.fragment.HadCheckFragment
 import com.llj.living.ui.fragment.WaitCheckFragment
 import com.llj.living.utils.LogUtils
 
-class ActivityCheck:BaseActivity<ActivityCheckBinding>() {
+class ActivityCheck : BaseActivity<ActivityCheckBinding>() {
 
     override fun getLayoutId(): Int = R.layout.activity_check
 
@@ -28,9 +28,9 @@ class ActivityCheck:BaseActivity<ActivityCheckBinding>() {
     private lateinit var pagedListLives: LiveData<CheckDoing>
 
     override fun init() {
-        setToolbar(ToolbarConfig("核查信息",isShowBack = true,isShowMenu = true))
+        setToolbar(ToolbarConfig("核查信息", isShowBack = true, isShowMenu = true))
 
-        getDataBinding().viewPager2.adapter = object :FragmentStateAdapter(this){
+        getDataBinding().viewPager2.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount() = 2
 
             override fun createFragment(position: Int): Fragment {
@@ -41,7 +41,7 @@ class ActivityCheck:BaseActivity<ActivityCheckBinding>() {
 
         getDataBinding().apply {
             viewPager2.isUserInputEnabled = false //禁用水平滑动
-            TabLayoutMediator( TabLayout,viewPager2){ tab: TabLayout.Tab, position: Int ->
+            TabLayoutMediator(TabLayout, viewPager2) { tab: TabLayout.Tab, position: Int ->
                 if (position == 0) tab.text = resources.getString(R.string.wait_check)
                 else tab.text = resources.getString(R.string.had_check)
             }.attach()
@@ -50,11 +50,11 @@ class ActivityCheck:BaseActivity<ActivityCheckBinding>() {
         pagedListLives = dbViewModel.getCheckDoingItemById(CheckDoingAdapter.id)
 
         pagedListLives.observe(this, Observer { data ->
-            LogUtils.d("ActivitySupplement","observe:--->")
+            LogUtils.d("ActivitySupplement", "observe:--->")
             data?.let {
                 waitSuppleCount = it.waitDealWith
                 hadSuppleCount = it.hadDealWith
-                LogUtils.d("ActivitySupplement","data:--->")
+                LogUtils.d("ActivitySupplement", "data:--->")
                 getDataBinding().root.findViewById<TextView>(R.id.tvStartTime).text = it.startTime
                 getDataBinding().root.findViewById<TextView>(R.id.tvEndTime).text = it.endTime
                 getDataBinding().root.findViewById<TextView>(R.id.tvHeaderWait).text =
@@ -65,7 +65,7 @@ class ActivityCheck:BaseActivity<ActivityCheckBinding>() {
         })
     }
 
-    companion object{
+    companion object {
         var waitSuppleCount = -1
         var hadSuppleCount = -1
     }

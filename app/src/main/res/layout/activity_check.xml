@@ -17,13 +17,13 @@
             app:tabTextAppearance="@style/TabLayoutTextStyle"
             app:tabRippleColor="@color/tab_ripple"
             app:tabTextColor="@color/grey"
-            app:tabSelectedTextColor="@color/qq_blue"/>
+            app:tabSelectedTextColor="@color/qq_blue" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
     </LinearLayout>
 </layout>

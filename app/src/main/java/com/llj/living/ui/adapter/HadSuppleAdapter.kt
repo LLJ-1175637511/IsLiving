@@ -13,7 +13,8 @@ import com.llj.living.databinding.ItemReloadBinding
 import com.llj.living.logic.vm.DatabaseVM
 import com.llj.living.ui.activity.ActivitySuppleInfo
 
-class HadSuppleAdapter(private val vm: DatabaseVM):BaseReloadAdapter<OldManInfoHad>(DIFF_CALLBACK) {
+class HadSuppleAdapter(private val vm: DatabaseVM) :
+    BaseReloadAdapter<OldManInfoHad>(DIFF_CALLBACK) {
 
     override fun layoutId(): Int = R.layout.item_main_had
 
@@ -45,7 +46,7 @@ class HadSuppleAdapter(private val vm: DatabaseVM):BaseReloadAdapter<OldManInfoH
     inner class HadSuppleViewHolder(private val binding: ItemMainHadBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bindData(data: OldManInfoHad?) {
-            if (data==null) return
+            if (data == null) return
             binding.apply {
                 tvName.text = data.name
                 tvIdNum.text = data.idCard

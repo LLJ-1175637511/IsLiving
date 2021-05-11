@@ -30,7 +30,7 @@ class WaitSuppleFragment private constructor() : NavBaseFragment<FragmentWaitSup
                 val waitCount = ActivitySupplement.waitSuppleCount
                 val tempList = mutableListOf<OldManInfoWait>()
                 pData.forEachIndexed { index, bean ->
-                    LogUtils.d("WaitSuppleFragment","bean:${bean}")
+                    LogUtils.d("WaitSuppleFragment", "bean:${bean}")
                     if (index in 1..waitCount) {
                         bean?.let {
                             tempList.add(it)

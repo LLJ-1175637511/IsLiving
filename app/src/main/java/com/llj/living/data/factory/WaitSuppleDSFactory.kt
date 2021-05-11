@@ -13,17 +13,17 @@ class WaitSuppleDSFactory private constructor(private val viewModel: ActSuppleVi
 
     var arraySet = arraySetOf<Int>()
 
-     fun retryLoadData() {
+    fun retryLoadData() {
         ds?.retryLoadData()
     }
 
     override fun create(): DataSource<Int, SecondFragmentBean> {
-        return WaitSuppleDataSource(viewModel,arraySet).also {
+        return WaitSuppleDataSource(viewModel, arraySet).also {
             ds = it
         }
     }
 
-    fun removedId(id:Int){
+    fun removedId(id: Int) {
         arraySet.add(id)
     }
 

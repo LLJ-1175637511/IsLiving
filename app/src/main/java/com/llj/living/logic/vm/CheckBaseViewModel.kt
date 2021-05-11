@@ -8,8 +8,4 @@ class CheckBaseViewModel(application: Application, savedStateHandle: SavedStateH
     AndroidViewModel(application) {
 
 
-
-
-
-
 }

@@ -5,7 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [SuppleDoing::class, SuppleFinished::class,OldManInfoWait::class,OldManInfoHad::class,CheckDoing::class,OldManInfoCheckHad::class], version = 1, exportSchema = false)
+@Database(
+    entities = [SuppleDoing::class, SuppleFinished::class, OldManInfoWait::class, OldManInfoHad::class, CheckDoing::class, OldManInfoCheckHad::class],
+    version = 1,
+    exportSchema = false
+)
 abstract class OldManDatabase : RoomDatabase() {
 
     abstract fun getSuppleDoingDao(): SuppleDoingDao

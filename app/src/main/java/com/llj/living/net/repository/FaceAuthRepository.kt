@@ -1,7 +1,6 @@
 package com.llj.living.net.repository
 
 import com.google.gson.reflect.TypeToken
-import com.llj.living.custom.ext.isCodeSuc
 import com.llj.living.custom.ext.isMsgSuc
 import com.llj.living.custom.ext.stringToBean
 import com.llj.living.data.bean.CommonDataBean

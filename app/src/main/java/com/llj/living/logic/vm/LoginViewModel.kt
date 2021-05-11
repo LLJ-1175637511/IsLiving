@@ -1,6 +1,5 @@
 package com.llj.living.logic.vm
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.os.Build
@@ -16,7 +15,7 @@ import com.llj.living.data.bean.LoginBean
 import com.llj.living.data.bean.VersionBean
 import com.llj.living.data.const.Const
 import com.llj.living.data.enums.VersionUpdateEnum
-import com.llj.living.net.config.SystemNetConfig.buildLoginMap
+import com.llj.living.net.config.SysNetConfig.buildLoginMap
 import com.llj.living.net.repository.SystemRepository
 import com.llj.living.utils.LogUtils
 import kotlinx.coroutines.Dispatchers
@@ -91,25 +90,26 @@ class LoginViewModel(application: Application, savedStateHandle: SavedStateHandl
         }
     }
 
-    fun login() = commonLaunch {
+    fun login() = tryExceptionLaunch(errTips = "登录信息") {
         //登录验证
         LogUtils.d(
             TAG,
             "imei:${currentImei} name:${userNameLiveData.value} pass:${passWordLiveData.value}"
         )
         val loginBean = quickRequest<LoginBean>(isLogined = false) {
+            val lat = MyApplication.getLocation().second.toString()
+            val lng = MyApplication.getLocation().first.toString()
             val map =
-                buildLoginMap(userNameLiveData.value!!, passWordLiveData.value!!, currentImei!!)
+                buildLoginMap(userNameLiveData.value!!, passWordLiveData.value!!, currentImei!!,lat,lng)
             SystemRepository.loginRequest(map)
-        } ?: return@commonLaunch
+        } ?: return@tryExceptionLaunch
         MyApplication.setEntLocation(Pair(loginBean.ent_lng, loginBean.ent_lat))
         //地理位置验证 登录后默认 isLogined = true 请求网络时自动验证
-        checkLocation() ?: return@commonLaunch
+        checkLocation() ?: return@tryExceptionLaunch
         _loginLiveData.postValue(loginBean)
-        savedSp()
+        savedUserSp(loginBean.token)
     }
 
-    @SuppressLint("HardwareIds", "MissingPermission")
     private fun getImei(): String? {
         val mTelephonyMgr =
             getApplication<MyApplication>().getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
@@ -123,9 +123,10 @@ class LoginViewModel(application: Application, savedStateHandle: SavedStateHandl
     /**
      * 保存用户名 密码
      */
-    private fun savedSp() = getSP(Const.SPUser).save {
+    private fun savedUserSp(token: String) = getSP(Const.SPUser).save {
         putString(Const.SPUserPwdLogin, passWordLiveData.value)
         putString(Const.SPUserNameLogin, userNameLiveData.value)
+        putString(Const.SPUserTokenLogin, token)
         putBoolean(Const.SPUserRememberPwdLogin, rememberPwdLiveData.value!!)
     }
 

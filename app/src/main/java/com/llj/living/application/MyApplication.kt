@@ -5,9 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.llj.living.data.bean.MainFragmentBean
 import com.llj.living.data.bean.SecondFragmentBean
+import com.llj.living.utils.ContextUtils
 
 class MyApplication : Application() {
 
+    override fun onCreate() {
+        super.onCreate()
+        ContextUtils.init(applicationContext)
+    }
 
     companion object {
         const val ApiKey = "f05CbSUbz4fpk5EFMfwNzgdh"
@@ -41,10 +46,20 @@ class MyApplication : Application() {
 
         const val CURRENT_VERSION = "1.0.1"
 
-        private var entLocation = Pair(0.0,0.0)
+        //养老院位置 lon lat
+        private var entLocation = Pair(0.0, 0.0)
         fun getEntLocation() = entLocation
-        fun setEntLocation(location:Pair<Double,Double>) {
-            entLocation = location
+        fun setEntLocation(locPair: Pair<Double, Double>) {
+            entLocation = locPair
         }
+
+        //当前设备位置 lon lat
+        private var location = Pair(0.0, 0.0)
+        fun getLocation() = location
+        fun setLocation(locPair: Pair<Double, Double>) {
+            location = locPair
+        }
+
     }
+
 }

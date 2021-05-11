@@ -5,8 +5,8 @@ package com.llj.living.data.enums
  * Face:百度云
  * Mysql：本系统
  */
-enum class UrlType{
-    Face,Token
+enum class UrlType {
+    Face, Token
 }
 
 /**
@@ -15,16 +15,16 @@ enum class UrlType{
  * FACE_TOKEN：人脸库唯一ID
  * URL：图片链接（不推荐 网络原因 可能会导致百度云下载图片失败）
  */
-enum class ImageType{
-    BASE64,FACE_TOKEN,URL
+enum class ImageType {
+    BASE64, FACE_TOKEN, URL
 }
 
-enum class ActionType{
-    APPEND,REPLACE,UPDATE
+enum class ActionType {
+    APPEND, REPLACE, UPDATE
 }
 
-enum class ModifyFaceType{
-    Register,Update
+enum class ModifyFaceType {
+    Register, Update
 }
 
 /**
@@ -34,10 +34,10 @@ enum class ModifyFaceType{
  * CERT：证件照片
  * INFRARED：红外照片
  */
-enum class FaceType{
-    LIVE,IDCARD,WATERMARK,CERT,INFRARED
+enum class FaceType {
+    LIVE, IDCARD, WATERMARK, CERT, INFRARED
 }
 
-enum class NetStatus{
-    LOADING,FAILED,SUCCESS,LOAD_ALL,INIT
+enum class NetStatus {
+    LOADING, FAILED, SUCCESS, LOAD_ALL, INIT
 }

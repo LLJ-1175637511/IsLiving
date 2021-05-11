@@ -7,9 +7,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include android:id="@+id/toolbar" layout="@layout/toolbar_base" />
+        <include
+            android:id="@+id/toolbar" layout="@layout/toolbar_base" />
 
-        <include layout="@layout/view_main_header"/>
+        <include
+            android:id="@+id/viewHeader"
+            layout="@layout/view_main_header" />
 
         <fragment
             android:id="@+id/nav_main_fragment"
@@ -18,7 +21,7 @@
             app:defaultNavHost="true"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_nav_view"
@@ -26,6 +29,6 @@
             app:itemBackground="@null"
             android:background="?android:windowBackground"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
     </LinearLayout>
 </layout>

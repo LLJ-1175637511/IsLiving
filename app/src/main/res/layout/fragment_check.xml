@@ -15,8 +15,7 @@
             app:tabTextColor="@color/grey"
             app:tabSelectedTextColor="@color/qq_blue"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-        </com.google.android.material.tabs.TabLayout>
+            android:layout_height="wrap_content"></com.google.android.material.tabs.TabLayout>
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewpager2_check"

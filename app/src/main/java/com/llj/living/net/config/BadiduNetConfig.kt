@@ -70,8 +70,13 @@ object BadiduNetConfig {
         image: String,
         imageType: ImageType,
         name: String,
-        idCardNumber:String
+        idCardNumber: String
     ): Map<String, String> =
-        mapOf(Image to image, ImageType to imageType.name, Name to name,IdCardNumber to idCardNumber)
+        mapOf(
+            Image to image,
+            ImageType to imageType.name,
+            Name to name,
+            IdCardNumber to idCardNumber
+        )
 
 }

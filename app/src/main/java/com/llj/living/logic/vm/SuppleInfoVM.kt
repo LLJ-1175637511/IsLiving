@@ -14,22 +14,22 @@ class SuppleInfoVM(application: Application, savedStateHandle: SavedStateHandle)
 
     private val _ivIdCardBCoverIsShowLD = getLiveDataForKey<Boolean>(IsShowedType.IdCardB.name)
 
-    fun getIsHadTakePhotoLiveData(key:IsShowedType):LiveData<Boolean> = when(key){
-        IsShowedType.Face-> _ivFaceCoverIsShowLD
+    fun getIsHadTakePhotoLiveData(key: IsShowedType): LiveData<Boolean> = when (key) {
+        IsShowedType.Face -> _ivFaceCoverIsShowLD
         IsShowedType.IdCardA -> _ivIdCardACoverIsShowLD
         IsShowedType.IdCardB -> _ivIdCardBCoverIsShowLD
     }
 
-    fun setShowedUi(key:IsShowedType){
-        val tempLiveData = when(key){
-            IsShowedType.Face-> _ivFaceCoverIsShowLD
+    fun setShowedUi(key: IsShowedType) {
+        val tempLiveData = when (key) {
+            IsShowedType.Face -> _ivFaceCoverIsShowLD
             IsShowedType.IdCardA -> _ivIdCardACoverIsShowLD
             IsShowedType.IdCardB -> _ivIdCardBCoverIsShowLD
         }
         tempLiveData.postValue(true)
     }
 
-    companion object{
+    companion object {
         private const val TakePhotosCompleted = "TakePhotosCompleted"
     }
 }

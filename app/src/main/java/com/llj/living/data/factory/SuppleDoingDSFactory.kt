@@ -22,8 +22,9 @@ class SuppleDoingDSFactory private constructor(private val viewModel: Supplement
 
     companion object {
         private var instance: SuppleDoingDSFactory? = null
-        fun getInstance(viewModel: SupplementViewModel) = instance?:SuppleDoingDSFactory(viewModel).apply {
-            instance = this
-        }
+        fun getInstance(viewModel: SupplementViewModel) =
+            instance ?: SuppleDoingDSFactory(viewModel).apply {
+                instance = this
+            }
     }
 }

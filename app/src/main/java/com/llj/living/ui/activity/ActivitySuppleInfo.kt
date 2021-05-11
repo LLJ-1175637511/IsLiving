@@ -32,7 +32,7 @@ class ActivitySuppleInfo : BaseTPActivity<ActivitySupplementInfoBinding>() {
         setToolbar(ToolbarConfig("补录信息", isShowBack = true, isShowMenu = false))
         val id = WaitSuppleAdapter.id
         dbViewModel.getOldManInfoById(id).observe(this, Observer {
-            if (it==null) return@Observer
+            if (it == null) return@Observer
             oldManInfoWait = it
             val idCard = "身份证：${it.idCard}"
             getDataBinding().tvIdCardNumber.text = idCard

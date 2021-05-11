@@ -30,7 +30,7 @@
                 android:paddingBottom="40dp"
                 android:text="@string/click_picture_take_photo"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
         </FrameLayout>
 
 

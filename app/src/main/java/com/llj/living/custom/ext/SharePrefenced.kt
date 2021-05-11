@@ -17,7 +17,10 @@ fun SharedPreferences.save(block: SharedPreferences.Editor.() -> Unit): Boolean 
 }
 
 fun AndroidViewModel.getSP(key: String) =
-    this.getApplication<Application>().getSharedPreferences(key, Context.MODE_PRIVATE)
+    getApplication<Application>().getSharedPreferences(key, Context.MODE_PRIVATE)
 
 fun AppCompatActivity.getSP(key: String) =
-    this.getSharedPreferences(key, Context.MODE_PRIVATE)
+    getSharedPreferences(key, Context.MODE_PRIVATE)
+
+fun Context.getSP(key: String) =
+    getSharedPreferences(key, Context.MODE_PRIVATE)

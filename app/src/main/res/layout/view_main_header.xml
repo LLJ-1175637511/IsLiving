@@ -1,153 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/constraintLayout"
-    android:layout_width="match_parent"
-    android:layout_height="150dp"
-    android:layout_marginTop="2dp"
-    android:background="@color/qq_blue"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
-        android:id="@+id/iv_logo_main"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="35dp"
-        android:src="@mipmap/logo_main"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <data>
+        <variable
+            name="vm"
+            type="com.llj.living.logic.vm.DatabaseVM" />
+    </data>
 
-    <TextView
-        android:id="@+id/tv_institutions_name_main"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="银龄养老院"
-        android:textColor="@color/white"
-        android:textSize="18dp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/iv_logo_main"
-        app:layout_constraintTop_toTopOf="@+id/iv_logo_main" />
-
-    <TextView
-        android:id="@+id/tv_address_main"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:maxLines="2"
-        android:text="辽宁省锦州市凌河区\n菊园街道中段银龄养老院"
-        android:textColor="@color/white"
-        android:textSize="14dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
-        app:layout_constraintEnd_toEndOf="@+id/tv_out_yard_str_main"
-        app:layout_constraintStart_toStartOf="@+id/tv_institutions_name_main"
-        app:layout_constraintTop_toBottomOf="@+id/tv_institutions_name_main" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.67" />
-
-    <TextView
-        android:id="@+id/tv_bed_count_str_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="@string/bed_count"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/tv_in_yard_str_main"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline" />
-
-    <TextView
-        android:id="@+id/tv_in_yard_str_main"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/in_yard_count_str"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_bed_count_str_login"
-        app:layout_constraintEnd_toStartOf="@+id/tv_out_yard_str_main"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tv_bed_count_str_login"
-        app:layout_constraintTop_toTopOf="@+id/tv_bed_count_str_login" />
-
-    <TextView
-        android:id="@+id/tv_out_yard_str_main"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/out_yard_count_str"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_in_yard_str_main"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="2dp"
+        android:background="@color/qq_blue"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tv_in_yard_str_main"
-        app:layout_constraintTop_toTopOf="@+id/tv_in_yard_str_main" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/tv_bed_count_main"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="78"
-        android:textColor="@color/white"
-        android:textSize="12dp"
-        app:layout_constraintEnd_toEndOf="@+id/tv_bed_count_str_login"
-        app:layout_constraintHorizontal_bias="0.4"
-        app:layout_constraintStart_toStartOf="@+id/tv_bed_count_str_login"
-        app:layout_constraintTop_toBottomOf="@+id/tv_bed_count_str_login"
-        app:layout_constraintVertical_bias="0.12" />
+        <ImageView
+            android:id="@+id/iv_logo_main"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="35dp"
+            android:src="@mipmap/logo_main"
+            app:layout_constraintBottom_toTopOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_in_yard_count_main"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="62"
-        android:textColor="@color/white"
-        android:textSize="12dp"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_bed_count_main"
-        app:layout_constraintEnd_toEndOf="@+id/tv_in_yard_str_main"
-        app:layout_constraintStart_toStartOf="@+id/tv_in_yard_str_main"
-        app:layout_constraintTop_toTopOf="@+id/tv_bed_count_main" />
+        <TextView
+            android:id="@+id/tv_institutions_name_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@{vm.entBeanLiveDate.ent_name}"
+            android:textColor="@color/white"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/iv_logo_main"
+            app:layout_constraintTop_toTopOf="@+id/iv_logo_main" />
 
-    <TextView
-        android:id="@+id/tv_out_yard_main"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="25"
-        android:textColor="@color/white"
-        android:textSize="12dp"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_in_yard_count_main"
-        app:layout_constraintEnd_toEndOf="@+id/tv_out_yard_str_main"
-        app:layout_constraintStart_toStartOf="@+id/tv_out_yard_str_main"
-        app:layout_constraintTop_toTopOf="@+id/tv_in_yard_count_main" />
+        <TextView
+            android:id="@+id/tv_address_main"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:text="@{vm.entBeanLiveDate.ent_address}"
+            android:textColor="@color/white"
+            android:textSize="14dp"
+            app:layout_constraintBottom_toTopOf="@+id/guideline"
+            app:layout_constraintEnd_toEndOf="@+id/tv_out_yard_str_main"
+            app:layout_constraintStart_toStartOf="@+id/tv_institutions_name_main"
+            app:layout_constraintTop_toBottomOf="@+id/tv_institutions_name_main" />
 
-    <View
-        android:id="@+id/divider2"
-        android:layout_width="6dp"
-        android:layout_height="0dp"
-        android:background="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/tv_bed_count_main"
-        app:layout_constraintEnd_toStartOf="@+id/tv_in_yard_str_main"
-        app:layout_constraintStart_toEndOf="@+id/tv_bed_count_str_login"
-        app:layout_constraintTop_toTopOf="@+id/tv_bed_count_str_login" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.67" />
 
-    <View
-        android:id="@+id/divider3"
-        android:layout_width="6dp"
-        android:layout_height="0dp"
-        android:background="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/tv_in_yard_count_main"
-        app:layout_constraintEnd_toStartOf="@+id/tv_out_yard_str_main"
-        app:layout_constraintStart_toEndOf="@+id/tv_in_yard_str_main"
-        app:layout_constraintTop_toTopOf="@+id/tv_in_yard_str_main" />
+        <TextView
+            android:id="@+id/tv_bed_count_str_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/bed_count"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/tv_in_yard_str_main"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tv_in_yard_str_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/in_yard_count_str"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_bed_count_str_login"
+            app:layout_constraintEnd_toStartOf="@+id/tv_out_yard_str_main"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tv_bed_count_str_login"
+            app:layout_constraintTop_toTopOf="@+id/tv_bed_count_str_login" />
+
+        <TextView
+            android:id="@+id/tv_out_yard_str_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/out_yard_count_str"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_in_yard_str_main"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tv_in_yard_str_main"
+            app:layout_constraintTop_toTopOf="@+id/tv_in_yard_str_main" />
+
+        <TextView
+            android:id="@+id/tv_bed_count_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(vm.entBeanLiveDate.ent_bednum)}"
+            android:textColor="@color/white"
+            android:textSize="12dp"
+            app:layout_constraintEnd_toEndOf="@+id/tv_bed_count_str_login"
+            app:layout_constraintHorizontal_bias="0.4"
+            app:layout_constraintStart_toStartOf="@+id/tv_bed_count_str_login"
+            app:layout_constraintTop_toBottomOf="@+id/tv_bed_count_str_login"
+            app:layout_constraintVertical_bias="0.12" />
+
+        <TextView
+            android:id="@+id/tv_in_yard_count_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(vm.entBeanLiveDate.ent_people)}"
+            android:textColor="@color/white"
+            android:textSize="12dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_bed_count_main"
+            app:layout_constraintEnd_toEndOf="@+id/tv_in_yard_str_main"
+            app:layout_constraintStart_toStartOf="@+id/tv_in_yard_str_main"
+            app:layout_constraintTop_toTopOf="@+id/tv_bed_count_main" />
+
+        <TextView
+            android:id="@+id/tv_out_yard_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(vm.entBeanLiveDate.ent_leave)}"
+            android:textColor="@color/white"
+            android:textSize="12dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_in_yard_count_main"
+            app:layout_constraintEnd_toEndOf="@+id/tv_out_yard_str_main"
+            app:layout_constraintStart_toStartOf="@+id/tv_out_yard_str_main"
+            app:layout_constraintTop_toTopOf="@+id/tv_in_yard_count_main" />
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="6dp"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/tv_bed_count_main"
+            app:layout_constraintEnd_toStartOf="@+id/tv_in_yard_str_main"
+            app:layout_constraintStart_toEndOf="@+id/tv_bed_count_str_login"
+            app:layout_constraintTop_toTopOf="@+id/tv_bed_count_str_login" />
+
+        <View
+            android:id="@+id/divider3"
+            android:layout_width="6dp"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/tv_in_yard_count_main"
+            app:layout_constraintEnd_toStartOf="@+id/tv_out_yard_str_main"
+            app:layout_constraintStart_toEndOf="@+id/tv_in_yard_str_main"
+            app:layout_constraintTop_toTopOf="@+id/tv_in_yard_str_main" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

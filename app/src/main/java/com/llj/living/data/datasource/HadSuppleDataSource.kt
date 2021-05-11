@@ -29,17 +29,17 @@ class HadSuppleDataSource(
         LogUtils.d("CheckFinishedDataSource", "loadInitial key:${params.requestedLoadSize}")
 //        val firstList = mutableListOf<SecondFragmentBean>()
 
-     /*   for (i in 0..6) {
-            if (arraySet.contains(i))
-                firstList.add(
-                    SecondFragmentBean(
-                        uName = name[i],
-                        sex = sex[i],
-                        id = i,
-                        idCard = idCard[i]
-                    )
-                )
-        }*/
+        /*   for (i in 0..6) {
+               if (arraySet.contains(i))
+                   firstList.add(
+                       SecondFragmentBean(
+                           uName = name[i],
+                           sex = sex[i],
+                           id = i,
+                           idCard = idCard[i]
+                       )
+                   )
+           }*/
         MyApplication.suppleHadList.value?.let {
             callback.onResult(it, 0, 1)
         }
@@ -81,7 +81,11 @@ class HadSuppleDataSource(
         }
     }
 
-    override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, SecondFragmentBean>) { }
+    override fun loadBefore(
+        params: LoadParams<Int>,
+        callback: LoadCallback<Int, SecondFragmentBean>
+    ) {
+    }
 
     val name = arrayOf<String>(
         "寿百易",

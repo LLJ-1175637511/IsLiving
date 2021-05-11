@@ -34,7 +34,6 @@ class FaceAuthenticActivity : BaseActivity<ActivityFaceAuthBinding>() {
 
     private val viewMode by viewModels<FaceAuthViewModel>()
     private var bitmap: Bitmap? = null
-    private val TAG = this.javaClass.simpleName
     private val ops = BitmapFactory.Options()
 
     init {
@@ -126,10 +125,10 @@ class FaceAuthenticActivity : BaseActivity<ActivityFaceAuthBinding>() {
             "temp photo",
             ActionType.APPEND //暂时不需要此参数
         )
-        viewMode.modifyFace(map,type)
+        viewMode.modifyFace(map, type)
     }
 
-    private fun searchFace(){
+    private fun searchFace() {
         if (base64.isEmpty()) return
         val map = BadiduNetConfig.buildSearchFaceMap(
             base64,
@@ -139,7 +138,7 @@ class FaceAuthenticActivity : BaseActivity<ActivityFaceAuthBinding>() {
         viewMode.searchFace(map)
     }
 
-    private fun searchFaceInZN(){
+    private fun searchFaceInZN() {
         if (base64.isEmpty()) return
         val map = BadiduNetConfig.buildSearchFaceInZnMap(
             base64,
@@ -150,13 +149,13 @@ class FaceAuthenticActivity : BaseActivity<ActivityFaceAuthBinding>() {
         viewMode.searchFaceInZn(map)
     }
 
-    private fun matchFace(){
+    private fun matchFace() {
         val baseId = viewMode.getBaseFaceIdLiveData().value
-        if (baseId.isNullOrEmpty()||base64.isEmpty()) return
+        if (baseId.isNullOrEmpty() || base64.isEmpty()) return
         val list = mutableListOf<MatchFaceData>()
-        val baseBean = MatchFaceData(baseId,ImageType.FACE_TOKEN)
+        val baseBean = MatchFaceData(baseId, ImageType.FACE_TOKEN)
         list.add(baseBean)
-        val needAuthBean = MatchFaceData(base64,ImageType.BASE64)
+        val needAuthBean = MatchFaceData(base64, ImageType.BASE64)
         list.add(needAuthBean)
         viewMode.matchFace(list)
     }

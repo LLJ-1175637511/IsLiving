@@ -14,16 +14,16 @@ class CheckDoingDSFactory private constructor(private val viewModel: CheckViewMo
         ds?.retryLoadData()
     }
 
-    override fun create(): DataSource<Int, MainFragmentBean> {
-        return CheckDoingDataSource(viewModel).also {
+    override fun create(): DataSource<Int, MainFragmentBean> =
+        CheckDoingDataSource(viewModel).also {
             ds = it
         }
-    }
 
     companion object {
         private var instance: CheckDoingDSFactory? = null
-        fun getInstance(viewModel: CheckViewModel) = instance?:CheckDoingDSFactory(viewModel).apply {
-            instance = this
-        }
+        fun getInstance(viewModel: CheckViewModel) =
+            instance ?: CheckDoingDSFactory(viewModel).apply {
+                instance = this
+            }
     }
 }

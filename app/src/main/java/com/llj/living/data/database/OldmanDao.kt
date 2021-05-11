@@ -23,7 +23,7 @@ interface SuppleDoingDao {
     fun updates(vararg bean: SuppleDoing) //可以设置返回值：Int 可以返回影响的条数
 
     @Query("UPDATE SUPPLE_DOING SET SUPPLE_WAITDEALWITH = SUPPLE_WAITDEALWITH-1,supple_hadDealWith = supple_hadDealWith+1 WHERE id = :id")
-    fun updateCount(id: Int):Int
+    fun updateCount(id: Int): Int
 
     @Query("SELECT * FROM SUPPLE_DOING WHERE ID = :queryId")
     fun getOneById(queryId: Int): LiveData<SuppleDoing>
@@ -106,7 +106,7 @@ interface CheckDoingDao {
     fun queryOneWaitById(id: Int): LiveData<CheckDoing>
 
     @Query("UPDATE CHECK_DOING SET CHECK_WAITDEALWITH = check_waitDealWith-1,check_hadDealWith = check_hadDealWith+1 WHERE id = :id")
-    fun updateCount(id: Int):Int
+    fun updateCount(id: Int): Int
 
     @Update
     fun updates(vararg bean: SuppleFinished) //可以设置返回值：Int 可以返回影响的条数

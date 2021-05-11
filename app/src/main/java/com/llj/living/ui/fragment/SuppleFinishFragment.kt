@@ -11,11 +11,12 @@ import com.llj.living.databinding.FragmentSuppleFinishedBinding
 import com.llj.living.logic.vm.DatabaseVM
 import com.llj.living.ui.adapter.SuppleFinishedAdapter
 
-class SuppleFinishFragment private constructor():NavBaseFragment<FragmentSuppleFinishedBinding>() {
+class SuppleFinishFragment private constructor() :
+    NavBaseFragment<FragmentSuppleFinishedBinding>() {
 
     override fun getLayoutId() = R.layout.fragment_supple_finished
 
-//    private val viewModel by activityViewModels<SupplementViewModel>()
+    //    private val viewModel by activityViewModels<SupplementViewModel>()
 //    private val adapter by lazy { SuppleFinishedAdapter(viewModel) }
     private val adapter by lazy { SuppleFinishedAdapter() }
     private val dbViewModel by activityViewModels<DatabaseVM>()
@@ -23,19 +24,19 @@ class SuppleFinishFragment private constructor():NavBaseFragment<FragmentSuppleF
     override fun init() {
         getBinding().recyclerviewSuppleFinished.adapter = adapter
 
-      /*  viewModel.finishedLiveData.observe(this, Observer {
-            adapter.submitList(it)
-            getBinding().refreshSuppleFinished.isRefreshing = false
-        })
+        /*  viewModel.finishedLiveData.observe(this, Observer {
+              adapter.submitList(it)
+              getBinding().refreshSuppleFinished.isRefreshing = false
+          })
 
-        viewModel.getFinishedNS().observe(viewLifecycleOwner, Observer {
-            adapter.updateLoadingUi(it)
-            LogUtils.d("status", it.name)
-        })*/
+          viewModel.getFinishedNS().observe(viewLifecycleOwner, Observer {
+              adapter.updateLoadingUi(it)
+              LogUtils.d("status", it.name)
+          })*/
 
-        pagedListLives = LivePagedListBuilder(dbViewModel.getSuppleFinishedListLD(),5).build()
+        pagedListLives = LivePagedListBuilder(dbViewModel.getSuppleFinishedListLD(), 5).build()
 
-        pagedListLives.observe(requireActivity(), Observer { data->
+        pagedListLives.observe(requireActivity(), Observer { data ->
             data?.let {
                 adapter.submitList(it)
             }
@@ -54,12 +55,12 @@ class SuppleFinishFragment private constructor():NavBaseFragment<FragmentSuppleF
         }*/
     }
 
-   /* private fun refreshData() {
-        viewModel.finishedLiveData.value?.dataSource?.invalidate()
-    }*/
+    /* private fun refreshData() {
+         viewModel.finishedLiveData.value?.dataSource?.invalidate()
+     }*/
 
-    companion object{
-        private var instance:SuppleFinishFragment ?= null
-        fun getInstance() = instance?:SuppleFinishFragment()
+    companion object {
+        private var instance: SuppleFinishFragment? = null
+        fun getInstance() = instance ?: SuppleFinishFragment()
     }
 }

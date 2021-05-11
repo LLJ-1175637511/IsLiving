@@ -1,13 +1,13 @@
 package com.llj.living.data.bean
 
 import android.os.Parcelable
-import com.google.gson.JsonObject
+import com.google.gson.JsonElement
 import kotlinx.android.parcel.Parcelize
 
 data class BaseBean(
     val code: String,
     val msg: String,
-    val result: JsonObject,
+    val result: JsonElement,
     val token: String
 )
 
@@ -59,4 +59,11 @@ data class BaiduLLBean(
     val x: String,
     val y: String
 )
+
+data class EntInfoBean(
+    val news_id: Int,
+    val rand: Int?,
+    val title: String
+)
+
 

@@ -12,7 +12,7 @@ import com.llj.living.databinding.ItemMainHadBinding
 import com.llj.living.databinding.ItemReloadBinding
 import com.llj.living.ui.activity.ActivityCheckDetail
 
-class HadCheckAdapter():BaseReloadAdapter<OldManInfoCheckHad>(DIFF_CALLBACK) {
+class HadCheckAdapter() : BaseReloadAdapter<OldManInfoCheckHad>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         if (viewType == layoutId()) {

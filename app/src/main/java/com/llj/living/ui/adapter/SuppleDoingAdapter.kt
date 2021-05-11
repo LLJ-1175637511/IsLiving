@@ -64,7 +64,7 @@ class SuppleDoingAdapter() :
             binding.btOperas.setOnClickListener { view ->
                 view.context.also {
                     id = bean.id
-                    LogUtils.d("SuppleDoingAdapter","id:${id}")
+                    LogUtils.d("SuppleDoingAdapter", "id:${id}")
                     it.startActivity(Intent(it, ActivitySupplement::class.java))
                 }
             }

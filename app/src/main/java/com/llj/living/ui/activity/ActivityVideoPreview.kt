@@ -69,7 +69,14 @@ class ActivityVideoPreview : AppCompatActivity() {
         binding.apply {
             tvVideoName.text = uri.path.toString().getVideoName()
             surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
-                override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {}
+                override fun surfaceChanged(
+                    holder: SurfaceHolder,
+                    format: Int,
+                    width: Int,
+                    height: Int
+                ) {
+                }
+
                 override fun surfaceDestroyed(holder: SurfaceHolder) {}
                 override fun surfaceCreated(holder: SurfaceHolder) {
                     viewModel.getPlayer().apply {
@@ -94,7 +101,7 @@ class ActivityVideoPreview : AppCompatActivity() {
                 binding.tvCurrentTime.text = temp.convertToTime()
                 binding.seekBar.progress = temp
                 if (temp >= binding.seekBar.max) {
-                    LogUtils.d("ActivityVideoPreview","finished")
+                    LogUtils.d("ActivityVideoPreview", "finished")
                     lifecycleScope.launch {
                         delay(1000)
                         finish()
@@ -162,7 +169,7 @@ class ActivityVideoPreview : AppCompatActivity() {
                     newProcess = progress
                 }
 
-                override fun onStartTrackingTouch(seekBar: SeekBar?) { }
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {}
                 override fun onStopTrackingTouch(seekBar: SeekBar?) {
                     viewModel.changeCurrentProgress(newProcess)
                 }

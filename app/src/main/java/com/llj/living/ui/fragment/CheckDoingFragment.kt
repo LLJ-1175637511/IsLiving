@@ -15,7 +15,7 @@ class CheckDoingFragment : NavBaseFragment<FragmentCheckDoingBinding>() {
 
     override fun getLayoutId() = R.layout.fragment_check_doing
 
-//    private val viewModel by activityViewModels<CheckViewModel>()
+    //    private val viewModel by activityViewModels<CheckViewModel>()
     private val adapter by lazy { CheckDoingAdapter(dbViewModel) }
     private lateinit var pagedListLives: LiveData<PagedList<CheckDoing>>
     private val dbViewModel by activityViewModels<DatabaseVM>()
@@ -23,9 +23,9 @@ class CheckDoingFragment : NavBaseFragment<FragmentCheckDoingBinding>() {
     override fun init() {
         getBinding().recyclerviewCheckDoing.adapter = adapter
 
-        pagedListLives = LivePagedListBuilder(dbViewModel.getCheckDoingLD(),5).build()
+        pagedListLives = LivePagedListBuilder(dbViewModel.getCheckDoingLD(), 5).build()
 
-        pagedListLives.observe(requireActivity(), Observer { data->
+        pagedListLives.observe(requireActivity(), Observer { data ->
             data?.let {
                 adapter.submitList(it)
             }

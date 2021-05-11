@@ -8,13 +8,14 @@ import com.llj.living.R
 import com.llj.living.data.enums.NetStatus
 import com.llj.living.databinding.ItemReloadBinding
 
-abstract class BaseReloadAdapter<T>(diff:DiffUtil.ItemCallback<T>):ListAdapter<T,RecyclerView.ViewHolder>(diff) {
+abstract class BaseReloadAdapter<T>(diff: DiffUtil.ItemCallback<T>) :
+    ListAdapter<T, RecyclerView.ViewHolder>(diff) {
 
     private var netStatus = NetStatus.INIT
 
     private var hasFooter = false
 
-    abstract fun layoutId():Int
+    abstract fun layoutId(): Int
 
     override fun getItemViewType(position: Int): Int {
         return if (hasFooter && position == itemCount - 1) R.layout.item_reload else layoutId()
@@ -28,7 +29,7 @@ abstract class BaseReloadAdapter<T>(diff:DiffUtil.ItemCallback<T>):ListAdapter<T
         this.netStatus = netStatus
         if (netStatus == NetStatus.INIT) {
             hideLoadingView()
-        }else{
+        } else {
             showLoadingView()
         }
     }

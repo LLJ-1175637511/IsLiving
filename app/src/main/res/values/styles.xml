@@ -2,6 +2,7 @@
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
+        <item name="android:fitsSystemWindows">true</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -38,7 +39,7 @@
     </style>
 
     <style name="SuppleInfoImgText">
-         <item name="android:textSize">25sp</item>
+        <item name="android:textSize">25sp</item>
         <item name="android:background">@color/half_white</item>
         <item name="android:textColor">@color/blue</item>
         <item name="android:gravity">center</item>
@@ -67,6 +68,7 @@
     <style name="ItemDataDarkText">
         <item name="android:textSize">14sp</item>
     </style>
+
     <style name="TakePhotoFloatButtonStyle">
         <item name="android:src">@drawable/ic_baseline_add_a_photo_24</item>
         <item name="fabSize">mini</item>

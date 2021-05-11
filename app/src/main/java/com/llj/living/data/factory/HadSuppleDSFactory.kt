@@ -18,12 +18,12 @@ class HadSuppleDSFactory private constructor(private val viewModel: ActSuppleVie
     }
 
     override fun create(): DataSource<Int, SecondFragmentBean> {
-        return HadSuppleDataSource(viewModel,arraySet).also {
+        return HadSuppleDataSource(viewModel, arraySet).also {
             ds = it
         }
     }
 
-    fun addItem(id:Int){
+    fun addItem(id: Int) {
         arraySet.add(id)
     }
 

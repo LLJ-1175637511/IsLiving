@@ -1,17 +1,19 @@
 package com.llj.living.logic.vm
 
 import android.app.Application
-import android.content.Context
-import android.content.SharedPreferences
 import androidx.lifecycle.*
 import com.llj.living.application.MyApplication
-import com.llj.living.custom.ext.*
+import com.llj.living.custom.ext.getSP
+import com.llj.living.custom.ext.realRequest
+import com.llj.living.custom.ext.save
 import com.llj.living.data.bean.BaseBean
 import com.llj.living.data.const.Const
 import com.llj.living.data.enums.BaseDataEnum
 import com.llj.living.net.repository.FaceAuthRepository
 import com.llj.living.utils.LogUtils
+import com.llj.living.utils.LonLatUtils
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 
 abstract class BaseViewModel(
@@ -19,16 +21,10 @@ abstract class BaseViewModel(
     private val savedStateHandle: SavedStateHandle
 ) : AndroidViewModel(application) {
 
-    private val TAG = "${this.javaClass.simpleName}BASE"
-
-    private val _locationLiveData = MutableLiveData<Pair<Double, Double>>(Pair(0.0, 0.0))
-    val locationLiveData: LiveData<Pair<Double, Double>> = _locationLiveData
+    val TAG = "${this.javaClass.simpleName}BASE"
 
     private val _toastMsgLiveData = MutableLiveData<String>()
     val toastMsgLiveData: LiveData<String> = _toastMsgLiveData
-
-    /*  private val _tokenLiveData = MutableLiveData<String>()
-      val tokenLiveData: LiveData<String> = _tokenLiveData*/
 
     fun <T : Any> getLiveDataForKey(name: String, type: Class<T>): MutableLiveData<T> {
         try {
@@ -51,18 +47,37 @@ abstract class BaseViewModel(
         return savedStateHandle.getLiveData(name)
     }
 
-    fun setLocation(location: Pair<Double, Double>) {
-        _locationLiveData.postValue(location)
-    }
-
     fun setToast(msg: String) {
-        _toastMsgLiveData.postValue(msg)
+        if (true) { //开发调试用
+            _toastMsgLiveData.postValue(msg)
+        }
     }
 
     fun setErrToast(msg: String) {
-        if (true){ //开发调试用
+        if (true) { //开发调试用
             _toastMsgLiveData.postValue(msg)
         }
+    }
+
+    fun checkLocation(): Boolean? {
+        val entLoc = MyApplication.getEntLocation()
+        val loc = MyApplication.getLocation()
+        if (loc.first == 0.0 || loc.second == 0.0) {
+            setToast("获取本机定位信息失败 请返回重试")
+            return null
+        }
+        /* if (entLoc.first == 0.0 || entLoc.second == 0.0) {
+             setToast("获取服务器定位参数错误")
+             return null
+         }*/
+        //获取两坐标点距离（米）
+        val distance = LonLatUtils.getDistance(entLoc, loc)
+        LogUtils.d(TAG, "distance:${distance}")
+        /* if (distance > 2000) { //如果 当前定位 到 规定定位 的距离 大于2公里
+             setToast("超出服务范围")
+             return null
+         }*/
+        return true
     }
 
     suspend fun getToken() = withContext<String>(Dispatchers.IO) {
@@ -71,7 +86,7 @@ abstract class BaseViewModel(
             val periodTime = sp.getLong(Const.SPBaiduTokenPeriod, 0L)
             val currentTime = System.currentTimeMillis() / 1000
             LogUtils.d(TAG, "periodTime:${periodTime} currentTime:${currentTime}")
-            if (periodTime - 60 * 60 * 24 * 2 > currentTime) {
+            if (periodTime - 60 * 60 * 24 * 2 > currentTime) { //最后两天过期的情况下 请求新的token
                 return@withContext getSP(Const.SPBaiduToken).getString(
                     Const.SPBaiduTokenString,
                     ""
@@ -109,53 +124,26 @@ abstract class BaseViewModel(
         }
     }
 
-    fun checkLocation(block: () -> Unit) {
-        //登录验证
-        if (locationLiveData.value!!.first == 0.0 && locationLiveData.value!!.second == 0.0) {
-            setToast("验证定位中 请稍后再试")
-            return
+    /**
+     * isLogined:判断是否已经登录 未登录时 请求网络 不检测定位信息
+     */
+    suspend inline fun <reified T> quickRequest(
+        isLogined: Boolean = true,
+        crossinline block: suspend () -> BaseBean
+    ): T? = viewModelScope.async{
+        if (isLogined) {
+            checkLocation() ?: return@async null
         }
-        block()
-    }
-
-    suspend inline fun <reified T> realRequest(crossinline block: suspend () -> BaseBean): Pair<T?, Exception?> {
-        var exc: Exception? = null
-        var data: T? = null
-        try {
-            val baseBean = block()
-            LogUtils.d("${this.javaClass.simpleName}BASE", baseBean.toString())
-            if (baseBean.code.isCodeSuc() && baseBean.msg.isMsgSuc()) {
-                data = baseBeanConverter<T>(baseBean)
-                val sp = getSP(Const.SPMySqlNet)
-                val token = baseBean.token
-                if (token.isNotEmpty()) {
-                    sp.save {
-                        putString(Const.SPMySqlToken, token)
-                    }
-                }
-            } else {
-                exc = Exception("错误--> errCode:${baseBean.code} errMsg:${baseBean.msg}")
-            }
-        } catch (e: Exception) {
-            LogUtils.d("${this.javaClass.simpleName}BASE", e.message.toString())
-            exc = e
+        val beanPair = realRequest<T> {
+            block()
         }
-        return Pair(data, exc)
-    }
-
-    suspend inline fun <reified T> quickRequest(crossinline block: suspend () -> BaseBean): T? =
-        commonAsych commonLaunch@{
-            val beanPair = realRequest<T> {
-                block()
-            }
-            val exception = beanPair.second
-            if (exception != null) {
-                setErrToast(exception.message.toString())
-                return@commonLaunch null
-            }
-            beanPair.first
-        }.await()
-
+        val exception = beanPair.second
+        if (exception != null) {
+            setErrToast(exception.message.toString())
+            return@async null
+        }
+        beanPair.first
+    }.await()
 
     fun <T> getLiveDataListForKey(
         name: String,
@@ -179,8 +167,5 @@ abstract class BaseViewModel(
         getLiveDataListForKey(name, mutableListOf<T>())
 
     fun getSavedHandle() = savedStateHandle
-
-    /*fun getSP(key: String): SharedPreferences =
-        getApplication<MyApplication>().getSharedPreferences(key, Context.MODE_PRIVATE)*/
 
 }

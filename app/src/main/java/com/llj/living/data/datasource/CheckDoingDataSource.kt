@@ -38,7 +38,7 @@ class CheckDoingDataSource(private val viewModel: CheckViewModel) :
             MainFragmentBean(
                 title = "补录（9周2批））",
                 startTime = "2021-03-${(10..15).random()}",
-                id =1,
+                id = 1,
                 endTime = (System.currentTimeMillis() + 1000 * 60 * 60 * 24).toSimpleTime(),
                 waitDealWith = 10,
                 hadDealWith = 0
@@ -51,7 +51,7 @@ class CheckDoingDataSource(private val viewModel: CheckViewModel) :
                 id = 2,
                 endTime = (System.currentTimeMillis() - 1000 * 60 * 60 * 24 * 3).toSimpleTime(),
                 waitDealWith = 8,
-                hadDealWith =  0
+                hadDealWith = 0
             )
         )
         callback.onResult(firstList, 0, 1)

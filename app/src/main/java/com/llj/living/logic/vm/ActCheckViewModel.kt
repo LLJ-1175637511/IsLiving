@@ -16,28 +16,28 @@ class ActCheckViewModel(application: Application, savedStateHandle: SavedStateHa
 
     val waitCheckFactory = WaitCheckDSFactory.getInstance(this)
 
-    val waitCheckLiveData:LiveData<PagedList<SecondFragmentBean>> = waitCheckFactory.toLiveData(
-        20,null
+    val waitCheckLiveData: LiveData<PagedList<SecondFragmentBean>> = waitCheckFactory.toLiveData(
+        20, null
     )
 
     val hadCheckFactory = HadCheckDSFactory.getInstance(this)
 
-    val hadCheckLiveData:LiveData<PagedList<SecondFragmentBean>> = hadCheckFactory.toLiveData(
-        20,null
+    val hadCheckLiveData: LiveData<PagedList<SecondFragmentBean>> = hadCheckFactory.toLiveData(
+        20, null
     )
 
     //获取 进行中 netStatusLiveData
     fun getHadCheckNS() = getNSLiveData(UpdateStatusType.WAIT_CHECK)
 
-    fun updateHadCheckNetStatus(netStatus: NetStatus){
-        updateNetStatus(netStatus,UpdateStatusType.WAIT_CHECK)
+    fun updateHadCheckNetStatus(netStatus: NetStatus) {
+        updateNetStatus(netStatus, UpdateStatusType.WAIT_CHECK)
     }
 
     //获取 已完成 netStatusLiveData
     fun getWaitCheckNS() = getNSLiveData(UpdateStatusType.HAD_CHECK)
 
-    fun updateWaitCheckNetStatus(netStatus: NetStatus){
-        updateNetStatus(netStatus,UpdateStatusType.HAD_CHECK)
+    fun updateWaitCheckNetStatus(netStatus: NetStatus) {
+        updateNetStatus(netStatus, UpdateStatusType.HAD_CHECK)
     }
 
 }

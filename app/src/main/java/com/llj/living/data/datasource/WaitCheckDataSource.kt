@@ -6,12 +6,13 @@ import com.llj.living.data.enums.NetStatus
 import com.llj.living.logic.vm.ActCheckViewModel
 import com.llj.living.utils.LogUtils
 
-class WaitCheckDataSource(private val viewModel: ActCheckViewModel) : PageKeyedDataSource<Int, SecondFragmentBean>() {
+class WaitCheckDataSource(private val viewModel: ActCheckViewModel) :
+    PageKeyedDataSource<Int, SecondFragmentBean>() {
 
     private var retry: (() -> Any)? = null
     private var count = 0
 
-    fun retryLoadData(){
+    fun retryLoadData() {
         retry?.invoke()
     }
 
@@ -21,7 +22,7 @@ class WaitCheckDataSource(private val viewModel: ActCheckViewModel) : PageKeyedD
     ) {
         retry = null
         viewModel.updateWaitCheckNetStatus(NetStatus.LOADING)
-        LogUtils.d("CheckFinishedDataSource","loadInitial key:${params.requestedLoadSize}")
+        LogUtils.d("CheckFinishedDataSource", "loadInitial key:${params.requestedLoadSize}")
         val firstList = mutableListOf<SecondFragmentBean>()
         repeat(20) { num ->
             firstList.add(
@@ -52,10 +53,13 @@ class WaitCheckDataSource(private val viewModel: ActCheckViewModel) : PageKeyedD
     ) {
         retry = null
         viewModel.updateWaitCheckNetStatus(NetStatus.LOADING)
-        LogUtils.d("CheckFinishedDataSource","loadAfter key:${params.key} request:${params.requestedLoadSize}")
+        LogUtils.d(
+            "CheckFinishedDataSource",
+            "loadAfter key:${params.key} request:${params.requestedLoadSize}"
+        )
         val firstList = mutableListOf<SecondFragmentBean>()
         repeat(20) { num ->
-            val newNum = params.key*20 + num
+            val newNum = params.key * 20 + num
             firstList.add(
                 SecondFragmentBean(
                     uName = "褚某某${newNum}",
@@ -66,13 +70,13 @@ class WaitCheckDataSource(private val viewModel: ActCheckViewModel) : PageKeyedD
             )
         }
 
-        if (count<3){
+        if (count < 3) {
             count++
             viewModel.updateWaitCheckNetStatus(NetStatus.SUCCESS)
             callback.onResult(firstList, params.key + 1)
-        }else{
+        } else {
             viewModel.updateWaitCheckNetStatus(NetStatus.FAILED)
-            retry = {loadAfter(params, callback)}
+            retry = { loadAfter(params, callback) }
             count = 0
         }
 

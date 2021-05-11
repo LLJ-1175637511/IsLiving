@@ -1,8 +1,11 @@
 package com.llj.living.logic.vm
 
 import android.app.Application
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.llj.living.data.bean.LoginBean
 import com.llj.living.data.database.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,6 +18,13 @@ class DatabaseVM(application: Application, savedStateHandle: SavedStateHandle) :
     private var suppleFinishedDao: SuppleFinishedDao
     private var oldManInfoDao: OldManInfoDao
     private var checkHadDao: CheckHadDao
+
+    private val _entBeanLiveDate = MutableLiveData<LoginBean>()
+    val entBeanLiveDate: LiveData<LoginBean> = _entBeanLiveDate
+
+    fun setEntBean(lb: LoginBean) {
+        _entBeanLiveDate.postValue(lb)
+    }
 
     init {
         val oldDatabase: OldManDatabase = OldManDatabase.newInstance(application.applicationContext)
@@ -46,7 +56,7 @@ class DatabaseVM(application: Application, savedStateHandle: SavedStateHandle) :
 
     fun getOldManInfoById(id: Int) = oldManInfoDao.queryOneWaitByIdLD(id)
 
-    fun finishedOneInfo(bean: OldManInfoWait,suppleDoingId: Int) {
+    fun finishedOneInfo(bean: OldManInfoWait, suppleDoingId: Int) {
         oldManInfoDao.deleteWaitById(bean.id)
         oldManInfoDao.insertsHad(
             listOf(
@@ -61,11 +71,11 @@ class DatabaseVM(application: Application, savedStateHandle: SavedStateHandle) :
 
     fun getCheckDoingLD() = checkDoingDao.getAll()
     fun getCheckDoingItemById(id: Int) = checkDoingDao.queryOneWaitById(id)
-    fun insertCheckDoing(list:List<CheckDoing>) =viewModelScope.launch(Dispatchers.IO) {
+    fun insertCheckDoing(list: List<CheckDoing>) = viewModelScope.launch(Dispatchers.IO) {
         checkDoingDao.inserts(list)
     }
 
-    fun finishedOneHad(bean: OldManInfoWait,checkDoingId: Int) {
+    fun finishedOneHad(bean: OldManInfoWait, checkDoingId: Int) {
         oldManInfoDao.deleteWaitById(bean.id)
         checkHadDao.insertOne(
             OldManInfoCheckHad(
@@ -75,5 +85,6 @@ class DatabaseVM(application: Application, savedStateHandle: SavedStateHandle) :
         )
         checkDoingDao.updateCount(checkDoingId)
     }
+
     fun getCheckFinishedLD() = checkHadDao.getAll()
 }

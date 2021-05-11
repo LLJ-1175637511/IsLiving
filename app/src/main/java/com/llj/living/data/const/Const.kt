@@ -12,6 +12,7 @@ object Const {
     const val SPUserNameLogin = "sp_user_name_login"
     const val SPUserPwdLogin = "sp_user_pwd_login"
     const val SPUserRememberPwdLogin = "sp_user_remember_pwd_login"
+    const val SPUserTokenLogin = "sp_user_token_login"
 
     const val SPBaiduToken = "sp_baidu_token"
     const val SPBaiduTokenPeriod = "sp_baidu_token_period"
@@ -26,7 +27,6 @@ object Const {
     const val SPMySqlTodayReminderUpdate = "sp_mysql_today_reminder_update"
     const val SPMySqlTodayReminderUpdateTime = "sp_mysql_today_reminder_update_time"
     //endregion
-
 
 
     //region livedata token

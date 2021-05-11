@@ -26,7 +26,7 @@ class ActivityVideotape : BaseTPActivity<ActivityVideotapeBinding>() {
 
     private var path = ""
     private lateinit var uri: Uri
-    private var bean: OldManInfoWait?= null
+    private var bean: OldManInfoWait? = null
     private val dbViewModel by viewModels<DatabaseVM>()
 
     override fun init() {
@@ -38,7 +38,7 @@ class ActivityVideotape : BaseTPActivity<ActivityVideotapeBinding>() {
                 return@setOnClickListener
             }
             val isVerticalPreview = getNextActivityOrientationIsVertical()
-            if (isVerticalPreview==null) {
+            if (isVerticalPreview == null) {
                 toastShort("视频参数获取失败")
                 return@setOnClickListener
             }
@@ -55,7 +55,7 @@ class ActivityVideotape : BaseTPActivity<ActivityVideotapeBinding>() {
         }
 
         val id = WaitCheckAdapter.id
-        dbViewModel.getOldManInfoById(id).observe(this, Observer {data->
+        dbViewModel.getOldManInfoById(id).observe(this, Observer { data ->
             data?.let {
                 bean = it
             }
@@ -76,7 +76,7 @@ class ActivityVideotape : BaseTPActivity<ActivityVideotapeBinding>() {
         }
     }
 
-    private fun getNextActivityOrientationIsVertical():Boolean? {
+    private fun getNextActivityOrientationIsVertical(): Boolean? {
         val retriever = MediaMetadataRetriever().apply {
             setDataSource(this@ActivityVideotape, uri)
         }
