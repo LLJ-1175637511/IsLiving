@@ -49,7 +49,6 @@ abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity() {
     open fun isScreenFull(): Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-//        setFullScreen()
         super.onCreate(savedInstanceState)
         val filter = IntentFilter().apply {
             addAction("android.net.conn.CONNECTIVITY_CHANGE")
