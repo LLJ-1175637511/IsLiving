@@ -1,5 +1,6 @@
 package com.llj.living.ui.activity
 
+import android.content.Intent
 import androidx.activity.viewModels
 import androidx.navigation.Navigation
 import androidx.navigation.ui.setupWithNavController

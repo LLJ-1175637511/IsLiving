@@ -6,6 +6,8 @@ import androidx.lifecycle.Observer
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.llj.living.R
+import com.llj.living.custom.ext.baseObserver
+import com.llj.living.custom.ext.loadView
 import com.llj.living.data.database.CheckDoing
 import com.llj.living.databinding.FragmentCheckDoingBinding
 import com.llj.living.logic.vm.DatabaseVM

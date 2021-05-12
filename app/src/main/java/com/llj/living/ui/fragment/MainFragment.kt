@@ -46,9 +46,9 @@ class MainFragment : NavBaseFragment<FragmentNewMainBinding>() {
      */
     private fun loadData() {
         lifecycleScope.launch {
-            LogUtils.d("MainFragmentTest","suc finished")
+            LogUtils.d(TAG,"suc finished")
             mainVM.getData().collectLatest {
-                LogUtils.d("MainFragmentTest","times")
+                LogUtils.d(TAG,"times")
                 adapter.submitData(it)
             }
         }

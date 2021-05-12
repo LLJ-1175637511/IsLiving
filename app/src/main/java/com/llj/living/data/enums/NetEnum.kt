@@ -41,3 +41,7 @@ enum class FaceType {
 enum class NetStatus {
     LOADING, FAILED, SUCCESS, LOAD_ALL, INIT
 }
+
+enum class TypeEnums(num: Int) {
+    FINISHED(1),DOING(2),ALL(0),
+}

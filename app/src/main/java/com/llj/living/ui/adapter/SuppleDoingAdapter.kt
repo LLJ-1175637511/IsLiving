@@ -13,8 +13,7 @@ import com.llj.living.databinding.ItemReloadBinding
 import com.llj.living.ui.activity.ActivitySupplement
 import com.llj.living.utils.LogUtils
 
-class SuppleDoingAdapter() :
-    BaseReloadAdapter<SuppleDoing>(DIFF_ITEM_CALLBACK) {
+class SuppleDoingAdapter : BaseReloadAdapter<SuppleDoing>(DIFF_ITEM_CALLBACK) {
 
     override fun layoutId(): Int = R.layout.item_main_doing
 
@@ -50,16 +49,17 @@ class SuppleDoingAdapter() :
         fun bindData(bean: SuppleDoing?) {
             if (bean == null) return
             binding.apply {
-                tvTittle.text = bean.title
-                tvStartTime.text = bean.startTime
-                tvEndTime.text = bean.endTime
-                tvItemWait.text = bean.waitDealWith.toString()
-                tvItemHad.text = bean.hadDealWith.toString()
                 itemView.context.resources.let {
                     tvHadTypeStr.text = it.getString(R.string.had_supple_str)
                     tvWaitTypeStr.text = it.getString(R.string.wait_supple_str)
                     btOperas.text = it.getString(R.string.supplementing)
                 }
+                tvTittle.text = bean.title
+                tvStartTime.text = bean.startTime
+                tvEndTime.text = bean.endTime
+                tvItemWait.text = bean.waitDealWith.toString()
+                tvItemHad.text = bean.hadDealWith.toString()
+
             }
             binding.btOperas.setOnClickListener { view ->
                 view.context.also {

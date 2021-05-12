@@ -57,3 +57,16 @@ interface AdsServer{
     @POST("pi.php/user/getads")
     fun getAds(@Field(SysNetConfig.Token) token: String): Call<BaseBean>
 }
+
+/**
+ * type ---> 1:已完成 2：未完成 0：全部
+ */
+interface EntAddonsServer{
+    @FormUrlEncoded
+    @POST("pi.php/addons/getentaddons")
+    fun getEntAddons(
+        @Field(SysNetConfig.Token) token: String,
+        @Field(SysNetConfig.Page) page: Int,
+        @Field(SysNetConfig.Type) type: Int
+    ): Call<BaseBean>
+}

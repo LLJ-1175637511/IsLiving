@@ -63,26 +63,21 @@ class MainAdAdapter(private val mainVM: MainFragmentVM) :
             R.layout.dialog_webview
         )
         mainVM.commonLaunch(Dispatchers.Main) {
-            buildCoroutineDialog(parent,  addView.root,"新闻") {
-                delay(1000)
+            buildCoroutineDialog(parent, addView.root, "新闻") {
+                delay(500)
                 val newsBean = quickTokenRequest<NewsByIdBean> { token ->
                     SystemRepository.getNewsByIdRequest(token, newsId)
                 }
                 newsBean ?: throw Exception("data load failed")
-                val content = """<html>
-<body>
-
-<h1>My First Heading</h1>
-
-<p>My first paragraph.</p>
-
-</body>
-</html>"""
                 addView.apply {
-                    webView.loadData(content, WEB_FORMAT, null)
+                    webView.settings.apply {
+                        useWideViewPort = true
+                        loadWithOverviewMode = true
+                        setSupportZoom(true)
+                    }
+                    webView.loadData(newsBean.content, WEB_FORMAT, null)
                     webView.visibility = View.VISIBLE
                 }
-//                webViewBinding.webView.loadData(newsBean.content, WEB_FORMAT,null)
             }
         }
     }

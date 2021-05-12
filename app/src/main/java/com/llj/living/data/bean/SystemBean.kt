@@ -87,3 +87,13 @@ data class AdsBeanItem(
     val num: Int,
     val title: String
 )
+
+@Parcelize
+data class EntAddonsBean(
+    val addons_name: String,
+    val id: Int,
+    val people_count: Int,
+    val people_reput_count: Int,
+    val start_Time: String,
+    val endTme: String
+) : Parcelable

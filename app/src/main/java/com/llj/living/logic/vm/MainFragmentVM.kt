@@ -9,7 +9,7 @@ import androidx.paging.PagingConfig
 import com.llj.living.custom.ext.quickTokenRequest
 import com.llj.living.custom.ext.tryExceptionLaunch
 import com.llj.living.data.bean.AdsBeanItem
-import com.llj.living.data.datasource.EntInfoDataSource
+import com.llj.living.data.pagesource.EntInfoDataSource
 import com.llj.living.net.repository.SystemRepository
 
 class MainFragmentVM(application: Application, savedStateHandle: SavedStateHandle) :

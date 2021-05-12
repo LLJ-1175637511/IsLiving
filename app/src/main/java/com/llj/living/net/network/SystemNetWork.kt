@@ -22,6 +22,8 @@ object SystemNetWork {
 
     private val getAdsServer by lazy { RetrofitCreator.create<AdsServer>() }
 
+    private val getEntAddonsServer by lazy { RetrofitCreator.create<EntAddonsServer>() }
+
     suspend fun login(map: Map<String, String>) = loginServer.login(map).await()
 
     suspend fun loadAPK(url: String) = loadAPKServer.loadAPK(url).await()
@@ -30,12 +32,17 @@ object SystemNetWork {
 
     suspend fun getVersionTime(version: String) = getVersionServer.getVersion(version).await()
 
-    suspend fun getEntInfo(token: String,page:Int) = getEntInfoServer.getEntInfo(token,page).await()
+    suspend fun getEntInfo(token: String, page: Int) =
+        getEntInfoServer.getEntInfo(token, page).await()
 
     suspend fun getBaiduLL(x: Double, y: Double) = getBaiduLLServer.getBaiduLL(x = x, y = y).await()
 
-    suspend fun getNewsById(token: String, newsId: Int) = getNewsByIdServer.getNewsById(token, newsId).await()
+    suspend fun getNewsById(token: String, newsId: Int) =
+        getNewsByIdServer.getNewsById(token, newsId).await()
 
     suspend fun getAds(token: String) = getAdsServer.getAds(token).await()
+
+    suspend fun getEntAddons(token: String, page: Int, type: Int) =
+        getEntAddonsServer.getEntAddons(token, page, type).await()
 
 }
