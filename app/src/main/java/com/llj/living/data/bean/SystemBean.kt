@@ -4,6 +4,9 @@ import android.os.Parcelable
 import com.google.gson.JsonElement
 import kotlinx.android.parcel.Parcelize
 
+/**
+ * 所有借口结构基类
+ */
 data class BaseBean(
     val code: String,
     val msg: String,
@@ -66,4 +69,21 @@ data class EntInfoBean(
     val title: String
 )
 
+data class NewsByIdBean(
+    val content: String,
+    val dt: Any,
+    val news_id: Int,
+    val postuser: Any,
+    val rand: Any,
+    val title: String
+)
 
+/**
+ * 广告列表实体类（list）
+ */
+data class AdsBeanItem(
+    val ads_id: Int,
+    val img: String,
+    val num: Int,
+    val title: String
+)

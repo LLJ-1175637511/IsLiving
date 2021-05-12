@@ -45,3 +45,15 @@ interface EntInfoServer{
     @POST("pi.php/user/getnews")
     fun getEntInfo(@Field(SysNetConfig.Token) token: String,@Field(SysNetConfig.Page) page:Int): Call<BaseBean>
 }
+
+interface NewsByIdServer{
+    @FormUrlEncoded
+    @POST("pi.php/user/getnewsbyid")
+    fun getNewsById(@Field(SysNetConfig.Token) token: String,@Field(SysNetConfig.NewId) newsId:Int): Call<BaseBean>
+}
+
+interface AdsServer{
+    @FormUrlEncoded
+    @POST("pi.php/user/getads")
+    fun getAds(@Field(SysNetConfig.Token) token: String): Call<BaseBean>
+}

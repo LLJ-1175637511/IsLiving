@@ -137,7 +137,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
-            android:id="@+id/imageView8"
+            android:id="@+id/ivAdArea"
             android:layout_width="0dp"
             android:layout_height="150dp"
             android:gravity="center"

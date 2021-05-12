@@ -18,6 +18,10 @@ object SystemNetWork {
 
     private val getEntInfoServer by lazy { RetrofitCreator.create<EntInfoServer>() }
 
+    private val getNewsByIdServer by lazy { RetrofitCreator.create<NewsByIdServer>() }
+
+    private val getAdsServer by lazy { RetrofitCreator.create<AdsServer>() }
+
     suspend fun login(map: Map<String, String>) = loginServer.login(map).await()
 
     suspend fun loadAPK(url: String) = loadAPKServer.loadAPK(url).await()
@@ -29,5 +33,9 @@ object SystemNetWork {
     suspend fun getEntInfo(token: String,page:Int) = getEntInfoServer.getEntInfo(token,page).await()
 
     suspend fun getBaiduLL(x: Double, y: Double) = getBaiduLLServer.getBaiduLL(x = x, y = y).await()
+
+    suspend fun getNewsById(token: String, newsId: Int) = getNewsByIdServer.getNewsById(token, newsId).await()
+
+    suspend fun getAds(token: String) = getAdsServer.getAds(token).await()
 
 }

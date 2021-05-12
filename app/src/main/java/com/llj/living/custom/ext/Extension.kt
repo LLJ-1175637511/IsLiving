@@ -3,13 +3,8 @@ package com.llj.living.custom.ext
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.util.Base64
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -69,14 +64,37 @@ suspend fun <T> tryExceptionAsych(
     }
 }
 
-/**
- * isLogined:判断是否已经登录 未登录时 请求网络 不检测定位信息
- */
+
 suspend inline fun <reified T> quickRequest(
     crossinline block: suspend () -> BaseBean
 ): T? = withContext(Dispatchers.Default) {
     val beanPair = realRequest<T> {
         block()
+    }
+    val exception = beanPair.second
+    if (exception != null) {
+        withContext(Dispatchers.Main) {
+            ToastUtils.toastShort(exception.message.toString())
+        }
+        return@withContext null
+    }
+    beanPair.first
+}
+
+/**
+ * token:带有token的网络请求
+ */
+suspend inline fun <reified T> quickTokenRequest(
+    crossinline block: suspend (String) -> BaseBean
+): T? = withContext(Dispatchers.Default) {
+    val token =
+        ContextUtils.getInstance().getSP(Const.SPUser).getString(Const.SPUserTokenLogin, "")
+    if (token.isNullOrEmpty()){
+        ToastUtils.toastShort("token获取失败")
+        return@withContext null
+    }
+    val beanPair = realRequest<T> {
+        block(token)
     }
     val exception = beanPair.second
     if (exception != null) {
@@ -114,15 +132,6 @@ suspend inline fun <reified T> realRequest(crossinline block: suspend () -> Base
     return Pair(data, exc)
 }
 
-fun <DB : ViewDataBinding> inflateDataBinding(
-    parent: ViewGroup,
-    @LayoutRes layoutId: Int
-): DB = DataBindingUtil.inflate<DB>(
-    LayoutInflater.from(parent.context),
-    layoutId,
-    parent,
-    false
-)
 
 
 /*----------------------------------- activity 扩展函数 -------------------------------------------*/
@@ -201,7 +210,7 @@ fun AppCompatActivity.toastLong(msg: String) {
 fun ViewModel.commonLaunch(
     thread: CoroutineDispatcher = Dispatchers.Default,
     block: suspend () -> Unit
-) = viewModelScope.launch(thread) {
+) = this.viewModelScope.launch(thread) {
     block()
 }
 

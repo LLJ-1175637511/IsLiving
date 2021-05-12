@@ -3,6 +3,8 @@ package com.llj.living.ui.fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.llj.living.R
+import com.llj.living.custom.ext.baseObserver
+import com.llj.living.custom.ext.loadView
 import com.llj.living.databinding.FragmentNewMainBinding
 import com.llj.living.logic.vm.MainFragmentVM
 import com.llj.living.ui.adapter.MainAdAdapter
@@ -14,9 +16,9 @@ class MainFragment : NavBaseFragment<FragmentNewMainBinding>() {
 
     override fun getLayoutId(): Int = R.layout.fragment_new_main
 
-    private val adapter by lazy { MainAdAdapter() }
-
     private val mainVM by viewModels<MainFragmentVM>()
+
+    private val adapter by lazy { MainAdAdapter(mainVM) }
 
     override fun init() {
         getBinding().recyclerViewMain.adapter = adapter
@@ -28,9 +30,20 @@ class MainFragment : NavBaseFragment<FragmentNewMainBinding>() {
                 isRefreshing = false
             }
         }
+
+        mainVM.adsLiveData.baseObserver(this){
+            if (!it.isNullOrEmpty()){
+                loadView(it[0].img,getBinding().ivAdArea)
+            }
+        }
+
+        mainVM.loadAdsData()
         loadData()
     }
 
+    /**
+     * 获取新闻榜单数据
+     */
     private fun loadData() {
         lifecycleScope.launch {
             LogUtils.d("MainFragmentTest","suc finished")

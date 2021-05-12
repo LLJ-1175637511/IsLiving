@@ -16,5 +16,9 @@ object SystemRepository {
 
     suspend fun getEntInfoRequest(token: String,page:Int) = SystemNetWork.getEntInfo(token,page)
 
+    suspend fun getNewsByIdRequest(token: String,newsId:Int) = SystemNetWork.getNewsById(token,newsId)
+
+    suspend fun getAdsRequest(token: String) = SystemNetWork.getAds(token)
+
     suspend fun loadAPKRequest(url: String) = SystemNetWork.loadAPK(url)
 }

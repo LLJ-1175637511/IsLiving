@@ -3,7 +3,6 @@ package com.llj.living.ui.activity
 import androidx.activity.viewModels
 import androidx.navigation.Navigation
 import androidx.navigation.ui.setupWithNavController
-import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.llj.living.R
 import com.llj.living.custom.ext.*
@@ -51,7 +50,8 @@ class MainActivity : BaseActivity<ActivityNavMainBinding>() {
             lifecycleOwner = this@MainActivity
             vm = dbViewModel
             tryException(errTips = "头像") {
-                Glide.with(this@MainActivity).load(lb.avatar).into(getDataBinding().viewHeader.ivLogoMain)
+                //加载网络圆形图片
+                loadCircleView(lb.avatar,getDataBinding().viewHeader.ivLogoMain)
             }
         }
     }

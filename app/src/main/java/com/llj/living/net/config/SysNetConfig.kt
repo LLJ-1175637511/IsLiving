@@ -11,6 +11,7 @@ object SysNetConfig {
     const val Path = "path" //用户设备ID
     const val Token = "token" //用户token
     const val Page = "p" //新闻页数
+    const val NewId = "newid" //新闻页数
 
     fun buildLoginMap(
         user: String,
