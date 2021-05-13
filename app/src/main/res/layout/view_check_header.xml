@@ -2,11 +2,20 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+
+        <import type="com.llj.living.custom.ext.BdToolKt" />
+
+        <variable
+            name="entAddons"
+            type="com.llj.living.data.bean.EntAddonsBean" />
+    </data>
+
     <FrameLayout
-        android:background="@color/colorPrimaryDark"
-        android:layout_marginTop="2dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:background="@color/colorPrimaryDark">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
@@ -29,7 +38,7 @@
                 style="@style/CheckHeaderStrCommonText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2021-03-08"
+                android:text="@{BdToolKt.convertMyTimeStr(entAddons.start_at)}"
                 app:layout_constraintBottom_toBottomOf="@+id/textView6"
                 app:layout_constraintStart_toEndOf="@+id/textView6"
                 app:layout_constraintTop_toTopOf="@+id/textView6" />
@@ -51,7 +60,7 @@
                 style="@style/CheckHeaderStrCommonText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2021-03-10"
+                android:text="@{BdToolKt.convertMyTimeStr(entAddons.end_at)}"
                 app:layout_constraintBottom_toBottomOf="@+id/textView8"
                 app:layout_constraintStart_toEndOf="@+id/textView8"
                 app:layout_constraintTop_toTopOf="@+id/textView8"
@@ -73,7 +82,7 @@
                 style="@style/CheckHeaderStrCommonText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="68"
+                android:text="@{String.valueOf(entAddons.people_count-entAddons.people_reput_count)}"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_wait_str"
                 app:layout_constraintStart_toEndOf="@+id/tv_wait_str"
                 app:layout_constraintTop_toTopOf="@+id/tv_wait_str" />
@@ -96,7 +105,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
-                android:text="256"
+                android:text="@{String.valueOf(entAddons.people_reput_count)}"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_had_str"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/tv_had_str"

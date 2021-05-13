@@ -22,7 +22,10 @@ object SystemRepository {
     suspend fun getAdsRequest(token: String) = SystemNetWork.getAds(token)
 
     suspend fun getEntAddonsRequest(token: String, page: Int, type: Int) =
-        SystemNetWork.getEntAddons(token, page,type)
+        SystemNetWork.getEntAddons(token, page, type)
+
+    suspend fun getEntAddonsByIdRequest(token: String, page: Int, type: Int, id: Int) =
+        SystemNetWork.getEntAddonsById(token, page, type, id)
 
     suspend fun loadAPKRequest(url: String) = SystemNetWork.loadAPK(url)
 }

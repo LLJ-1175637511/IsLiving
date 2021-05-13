@@ -2,20 +2,16 @@ package com.llj.living.ui.activity
 
 import android.view.View
 import androidx.activity.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.llj.living.R
+import com.llj.living.data.bean.AddonsByEntIdBean
 import com.llj.living.data.bean.ToolbarConfig
-import com.llj.living.data.database.OldManInfoWait
 import com.llj.living.data.enums.IsShowedType
 import com.llj.living.data.enums.TakePhotoEnum
 import com.llj.living.databinding.ActivitySupplementInfoBinding
-import com.llj.living.logic.vm.DatabaseVM
 import com.llj.living.logic.vm.SuppleInfoVM
-import com.llj.living.ui.adapter.SuppleDoingAdapter
-import com.llj.living.ui.adapter.WaitSuppleAdapter
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
+import com.llj.living.ui.adapter.*
+import com.llj.living.utils.ToastUtils
 import kotlinx.coroutines.launch
 
 class ActivitySuppleInfo : BaseTPActivity<ActivitySupplementInfoBinding>() {
@@ -25,23 +21,27 @@ class ActivitySuppleInfo : BaseTPActivity<ActivitySupplementInfoBinding>() {
     private val isAllCompleted = mutableSetOf<Int>()
 
     private val viewModel by viewModels<SuppleInfoVM>()
-    private val dbViewModel by viewModels<DatabaseVM>()
-    private var oldManInfoWait: OldManInfoWait? = null
+//    private val dbViewModel by viewModels<DatabaseVM>()
+//    private var oldManInfoWait: OldManInfoWait? = null
+
+    private var id:Int = -1
 
     override fun init() {
         setToolbar(ToolbarConfig("补录信息", isShowBack = true, isShowMenu = false))
-        val id = WaitSuppleAdapter.id
-        dbViewModel.getOldManInfoById(id).observe(this, Observer {
-            if (it == null) return@Observer
-            oldManInfoWait = it
-            val idCard = "身份证：${it.idCard}"
-            getDataBinding().tvIdCardNumber.text = idCard
-            val name = "姓名：${it.name}"
-            getDataBinding().tvOldmanNameSuppleInfo.text = name
-        })
+        id = intent.getIntExtra(SupplementWaitTestAdapter.SUPPLE_ID_WAIT_FLAG, -1)
+
+        val addonsByIdBean =
+            intent.getParcelableExtra<AddonsByEntIdBean>(SupplementWaitTestAdapter.SUPPLE_BEAN_WAIT_FLAG)
+
+        if (id == -1 || addonsByIdBean == null) {
+            ToastUtils.toastShort("数据解析错误 请返回重试")
+            finish()
+            return
+        }
+
+        getDataBinding().oldmanBean = addonsByIdBean
 
         getDataBinding().apply {
-            lifecycleOwner = this@ActivitySuppleInfo
             asiVM = viewModel
             tvTakePhotoFace.setOnClickListener {
                 takePhoto(TakePhotoEnum.PersonFace)
@@ -53,6 +53,7 @@ class ActivitySuppleInfo : BaseTPActivity<ActivitySupplementInfoBinding>() {
             tvTakePhotoIdA.setOnClickListener {
                 takePhoto(TakePhotoEnum.IdcardFront)
             }
+
             reIdCardA.setOnClickListener {
                 takePhoto(TakePhotoEnum.IdcardFront)
             }
@@ -65,14 +66,14 @@ class ActivitySuppleInfo : BaseTPActivity<ActivitySupplementInfoBinding>() {
             }
 
             btFinishSuppleInfo.setOnClickListener { _ ->
-                oldManInfoWait?.let {
+                /*oldManInfoWait?.let {
                     lifecycleScope.launch(Dispatchers.IO) {
                         val suppleDoingId = SuppleDoingAdapter.id
                         dbViewModel.finishedOneInfo(it, suppleDoingId)
                         delay(500)
                         finish()
                     }
-                }
+                }*/
             }
         }
     }

@@ -6,9 +6,15 @@
 
         <import type="android.view.View" />
 
+        <import type="com.llj.living.custom.ext.BdToolKt"/>
+
         <variable
             name="asiVM"
             type="com.llj.living.logic.vm.SuppleInfoVM" />
+
+        <variable
+            name="oldmanBean"
+            type="com.llj.living.data.bean.AddonsByEntIdBean" />
 
         <variable
             name="types"
@@ -26,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="人名：赵某某"
+            android:text="@{BdToolKt.convertPeopleNameStr(oldmanBean.name)}"
             android:textSize="16sp" />
 
         <TextView
@@ -35,8 +41,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="10dp"
-            android:text="身份证：135135456864514656"
+            android:text="@{BdToolKt.convertIdNumberStr(oldmanBean.id_number)}"
             android:textSize="16sp" />
+
 
         <ScrollView
             android:layout_width="match_parent"

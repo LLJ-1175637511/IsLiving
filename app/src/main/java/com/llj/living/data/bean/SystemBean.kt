@@ -94,6 +94,16 @@ data class EntAddonsBean(
     val id: Int,
     val people_count: Int,
     val people_reput_count: Int,
-    val start_Time: String,
-    val endTme: String
+    val start_at: String,
+    val end_at: String
 ) : Parcelable
+
+@Parcelize
+data class AddonsByEntIdBean(
+    val id: Int,
+    val id_number: String,
+    val name: String,
+    val photo: String,
+    val sex: String
+): Parcelable
+

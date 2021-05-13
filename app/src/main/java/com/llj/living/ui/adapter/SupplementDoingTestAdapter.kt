@@ -39,8 +39,11 @@ class SupplementDoingTestAdapter :
             binding.btOperas.setOnClickListener { view ->
                 view.context.also {
                     SuppleDoingAdapter.id = bean.id
-                    LogUtils.d("SuppleDoingAdapter", "id:${SuppleDoingAdapter.id}")
-                    it.startActivity(Intent(it, ActivitySupplement::class.java))
+                    LogUtils.d(TAG, "id:${SuppleDoingAdapter.id}")
+                    it.startActivity(Intent(it, ActivitySupplement::class.java).apply {
+                        putExtra(SUPPLE_ID_FLAG, bean.id)
+                        putExtra(SUPPLE_BEAN_FLAG, bean)
+                    })
                 }
             }
         }
@@ -68,6 +71,9 @@ class SupplementDoingTestAdapter :
     }
 
     companion object {
+
+        const val SUPPLE_ID_FLAG = "supple_id_flag"
+        const val SUPPLE_BEAN_FLAG = "supple_bean_flag"
 
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<EntAddonsBean>() {
             override fun areItemsTheSame(oldItem: EntAddonsBean, newItem: EntAddonsBean) =

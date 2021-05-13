@@ -70,3 +70,17 @@ interface EntAddonsServer{
         @Field(SysNetConfig.Type) type: Int
     ): Call<BaseBean>
 }
+
+/**
+ * type ---> 1:已完成 2：未完成 0：全部
+ */
+interface EntAddonsByIdServer{
+    @FormUrlEncoded
+    @POST("pi.php/addons/getentaddonsbyentid")
+    fun getEntAddonsById(
+        @Field(SysNetConfig.Token) token: String,
+        @Field(SysNetConfig.Page) page: Int,
+        @Field(SysNetConfig.Type) type: Int,
+        @Field(SysNetConfig.AddonsId) id: Int
+    ): Call<BaseBean>
+}

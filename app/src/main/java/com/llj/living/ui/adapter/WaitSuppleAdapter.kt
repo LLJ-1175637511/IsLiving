@@ -46,13 +46,11 @@ class WaitSuppleAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bindData(data: OldManInfoWait?) {
             if (data == null) return
-
             binding.apply {
                 tvName.text = data.name
                 tvIdNum.text = data.idCard
                 tvSex.text = data.sex
                 btOperas.setOnClickListener {
-                    id = data.id
                     it.context.startActivity(Intent(it.context, ActivitySuppleInfo::class.java))
                 }
             }

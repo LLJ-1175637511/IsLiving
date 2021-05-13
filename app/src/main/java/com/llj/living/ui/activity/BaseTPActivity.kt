@@ -62,9 +62,9 @@ abstract class BaseTPActivity<DB : ViewDataBinding> : BaseActivity<DB>() {
     private suspend fun buildUri(type: TakePhotoEnum) =
         withContext(lifecycleScope.coroutineContext + Dispatchers.IO) {
             val path = when (type) {
-                TakePhotoEnum.PersonFace -> "PersonFace.jpg"
-                TakePhotoEnum.IdcardFront -> "IdcardFront.jpg"
-                TakePhotoEnum.IdcardBehind -> "IdcardFront.jpg"
+                TakePhotoEnum.PersonFace -> "${TakePhotoEnum.PersonFace.name}.jpg"
+                TakePhotoEnum.IdcardFront -> "${TakePhotoEnum.IdcardFront.name}.jpg"
+                TakePhotoEnum.IdcardBehind -> "${TakePhotoEnum.IdcardBehind.name}.jpg"
             }
             val outputImageFile =
                 File(externalCacheDir, path) //设置图片路径 包含文件后缀 xx.jpg

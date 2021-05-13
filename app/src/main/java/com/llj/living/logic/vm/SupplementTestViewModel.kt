@@ -1,5 +1,6 @@
 package com.llj.living.logic.vm
 
+import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -11,7 +12,7 @@ import com.llj.living.data.bean.EntAddonsBean
 import com.llj.living.data.enums.TypeEnums
 import com.llj.living.data.pagesource.EntAddonsDataSource
 
-class SupplementTestViewModel(application: MyApplication, savedStateHandle: SavedStateHandle) :
+class SupplementTestViewModel(application: Application, savedStateHandle: SavedStateHandle) :
     BaseViewModel(application, savedStateHandle) {
 
     //获取补录中流式数据
@@ -23,6 +24,5 @@ class SupplementTestViewModel(application: MyApplication, savedStateHandle: Save
     fun getFinishedData() = Pager(PagingConfig(pageSize = 1)) {
         EntAddonsDataSource(TypeEnums.FINISHED)
     }.flow
-
 
 }

@@ -24,6 +24,8 @@ object SystemNetWork {
 
     private val getEntAddonsServer by lazy { RetrofitCreator.create<EntAddonsServer>() }
 
+    private val getEntAddonsByIdServer by lazy { RetrofitCreator.create<EntAddonsByIdServer>() }
+
     suspend fun login(map: Map<String, String>) = loginServer.login(map).await()
 
     suspend fun loadAPK(url: String) = loadAPKServer.loadAPK(url).await()
@@ -44,5 +46,8 @@ object SystemNetWork {
 
     suspend fun getEntAddons(token: String, page: Int, type: Int) =
         getEntAddonsServer.getEntAddons(token, page, type).await()
+
+    suspend fun getEntAddonsById(token: String, page: Int, type: Int,id:Int) =
+        getEntAddonsByIdServer.getEntAddonsById(token, page, type,id).await()
 
 }

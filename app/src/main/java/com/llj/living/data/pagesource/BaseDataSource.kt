@@ -39,7 +39,7 @@ abstract class BaseDataSource<T : Any> : PagingSource<Int, T>() {
 
     suspend inline fun <reified T : Any> pageTryException(
         errTips: String = "",
-        crossinline block: suspend () -> PagingSource.LoadResult<Int, T>
+        crossinline block: suspend () -> LoadResult<Int, T>
     ): LoadResult<Int, T> {
         return try {
             block()

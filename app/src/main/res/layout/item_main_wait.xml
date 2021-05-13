@@ -2,6 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <variable
+            name="addonsByEntIdBean"
+            type="com.llj.living.data.bean.AddonsByEntIdBean" />
+    </data>
+
     <androidx.cardview.widget.CardView
         android:layout_marginTop="8dp"
         android:layout_width="match_parent"
@@ -51,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
-                android:text="褚某某0"
+                android:text="@{addonsByEntIdBean.name}"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="16sp"
@@ -78,7 +84,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:text="男"
+                android:text="@{addonsByEntIdBean.sex}"
                 style="@style/ItemDataCommonText"
                 app:layout_constraintBottom_toBottomOf="@+id/tvVersionId"
                 app:layout_constraintEnd_toStartOf="@+id/bt_operas"
@@ -92,7 +98,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="8dp"
-                android:text="35135135135"
+                android:text="@{addonsByEntIdBean.id_number}"
                 app:layout_constraintBottom_toBottomOf="@+id/textView4"
                 app:layout_constraintEnd_toStartOf="@+id/bt_operas"
                 app:layout_constraintHorizontal_bias="0.0"

@@ -13,6 +13,7 @@ object SysNetConfig {
     const val Page = "p" //新闻页数
     const val NewId = "newid" //新闻页数
     const val Type = "type" //新闻页数
+    const val AddonsId = "addons_id" //补录人员详细
 
     fun buildLoginMap(
         user: String,

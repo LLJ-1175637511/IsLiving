@@ -55,7 +55,6 @@ class SupplementFinishedTestAdapter :
     }
 
     companion object {
-
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<EntAddonsBean>() {
             override fun areItemsTheSame(oldItem: EntAddonsBean, newItem: EntAddonsBean) =
                 oldItem.id == newItem.id

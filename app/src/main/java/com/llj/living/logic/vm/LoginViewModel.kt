@@ -113,9 +113,9 @@ class LoginViewModel(application: Application, savedStateHandle: SavedStateHandl
     private fun getImei(): String? {
         val mTelephonyMgr =
             getApplication<MyApplication>().getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        val imei = if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+        val imei = "999"/*if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
             mTelephonyMgr.imei
-        } else mTelephonyMgr.deviceId
+        } else mTelephonyMgr.deviceId*/
         if (imei == null) setToast("获取设备编号失败 请返回重试")
         return imei
     }

@@ -3,6 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
+        <import type="com.llj.living.custom.ext.BdToolKt"/>
+
         <variable
             name="entAddons"
             type="com.llj.living.data.bean.EntAddonsBean" />
@@ -64,7 +67,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:text="@{entAddons.start_Time}"
+                android:text="@{BdToolKt.convertMyTimeStr(entAddons.start_at)}"
                 app:layout_constraintBottom_toTopOf="@+id/textView15"
                 app:layout_constraintEnd_toStartOf="@+id/bt_operas"
                 app:layout_constraintStart_toEndOf="@+id/textView14"
@@ -75,7 +78,7 @@
                 style="@style/ItemDataDarkText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@{entAddons.endTme}"
+                android:text="@{BdToolKt.convertMyTimeStr(entAddons.end_at)}"
                 app:layout_constraintBottom_toBottomOf="@+id/textView15"
                 app:layout_constraintEnd_toEndOf="@+id/tvStartTime"
                 app:layout_constraintStart_toEndOf="@+id/textView15"
@@ -98,7 +101,7 @@
                 style="@style/ItemDataCommonText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{String.valueOf(entAddons.people_count)}"
+                android:text="@{String.valueOf(entAddons.people_count-entAddons.people_reput_count)}"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_wait_type_str"
                 app:layout_constraintStart_toEndOf="@+id/tv_wait_type_str"
                 app:layout_constraintTop_toTopOf="@+id/tv_wait_type_str" />
