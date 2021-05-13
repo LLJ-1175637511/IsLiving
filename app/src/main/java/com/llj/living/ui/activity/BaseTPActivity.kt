@@ -116,7 +116,7 @@ abstract class BaseTPActivity<DB : ViewDataBinding> : BaseActivity<DB>() {
         }
 
     fun buildLaunch(block: (bitmap: Bitmap?) -> Unit) =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
             try {
                 imageUri?.let {
                     bitmap =
@@ -134,7 +134,7 @@ abstract class BaseTPActivity<DB : ViewDataBinding> : BaseActivity<DB>() {
         }
 
     fun buildVideoLaunch(block: (uri: Uri) -> Unit) =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
             try {
                 videoUri?.let {
                     block(it)

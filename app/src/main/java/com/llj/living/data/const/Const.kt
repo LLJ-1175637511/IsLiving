@@ -14,6 +14,9 @@ object Const {
     const val SPUserRememberPwdLogin = "sp_user_remember_pwd_login"
     const val SPUserTokenLogin = "sp_user_token_login"
 
+    const val SPAddons = "sp_addons"
+    const val SPAddonsReputId = "sp_addons_reput_id"
+
     const val SPBaiduToken = "sp_baidu_token"
     const val SPBaiduTokenPeriod = "sp_baidu_token_period"
     const val SPBaiduTokenString = "sp_baidu_token_string"

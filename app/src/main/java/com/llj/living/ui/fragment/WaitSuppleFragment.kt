@@ -7,6 +7,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.llj.living.R
+import com.llj.living.custom.ext.getSP
+import com.llj.living.custom.ext.save
+import com.llj.living.data.const.Const
+import com.llj.living.data.const.Const.SPAddons
 import com.llj.living.data.database.OldManInfoWait
 import com.llj.living.databinding.FragmentWaitSuppleBinding
 import com.llj.living.logic.vm.DatabaseVM
@@ -26,15 +30,25 @@ class WaitSuppleFragment private constructor() : NavBaseFragment<FragmentWaitSup
 
     private val supplementVm by activityViewModels<SupplementTestVM>()
 
-    private val adapter by lazy { SupplementWaitTestAdapter() }
-
     private var addonsId: Int = -1
 
+    private val adapter by lazy { SupplementWaitTestAdapter() }
+
     override fun init() {
-        getBinding().recyclerviewWaitSupple.adapter = adapter
 
         addonsId =
             requireActivity().intent.getIntExtra(SupplementDoingTestAdapter.SUPPLE_ID_FLAG, -1)
+
+        if (addonsId == -1) {
+            ToastUtils.toastShort("id错误 请返回重试")
+            return
+        }
+
+        requireContext().getSP(Const.SPAddons).save {
+            putInt(Const.SPAddonsReputId,addonsId)
+        }
+
+        getBinding().recyclerviewWaitSupple.adapter = adapter
 
         getBinding().refreshWaitSupple.apply {
             setColorSchemeResources(R.color.qq_blue) //设置显示颜色
@@ -46,10 +60,7 @@ class WaitSuppleFragment private constructor() : NavBaseFragment<FragmentWaitSup
     }
 
     private fun loadData() {
-        if (addonsId == -1) {
-            ToastUtils.toastShort("id错误 请返回重试")
-            return
-        }
+
         getBinding().refreshWaitSupple.apply {
             lifecycleScope.launch {
                 isRefreshing = true
@@ -63,6 +74,7 @@ class WaitSuppleFragment private constructor() : NavBaseFragment<FragmentWaitSup
     }
 
     companion object {
+
         private var instance: WaitSuppleFragment? = null
         fun getInstance() = instance ?: WaitSuppleFragment().also {
             instance = it
