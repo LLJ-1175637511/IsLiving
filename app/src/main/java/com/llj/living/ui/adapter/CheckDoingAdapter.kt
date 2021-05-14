@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.llj.living.R
 import com.llj.living.data.database.CheckDoing
-import com.llj.living.databinding.ItemMainDoingBinding
+import com.llj.living.databinding.ItemCheckDoingBinding
 import com.llj.living.databinding.ItemReloadBinding
 import com.llj.living.logic.vm.DatabaseVM
 import com.llj.living.ui.activity.ActivityCheck
@@ -17,11 +17,11 @@ import com.llj.living.utils.LogUtils
 class CheckDoingAdapter(private val vm: DatabaseVM) :
     BaseReloadAdapter<CheckDoing>(DIFF_CALLBACK) {
 
-    override fun layoutId() = R.layout.item_main_doing
+    override fun layoutId() = R.layout.item_check_doing
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == layoutId()) {
-            val binding = DataBindingUtil.inflate<ItemMainDoingBinding>(
+            val binding = DataBindingUtil.inflate<ItemCheckDoingBinding>(
                 LayoutInflater.from(parent.context),
                 viewType, parent, false
             )
@@ -46,7 +46,7 @@ class CheckDoingAdapter(private val vm: DatabaseVM) :
         }
     }
 
-    inner class CheckDoingViewHolder(private val binding: ItemMainDoingBinding) :
+    inner class CheckDoingViewHolder(private val binding: ItemCheckDoingBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bindData(bean: CheckDoing?) {

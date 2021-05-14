@@ -2,16 +2,16 @@ package com.llj.living.data.pagesource
 
 import com.llj.living.custom.ext.quickRequest
 import com.llj.living.data.bean.EntAddonsBean
-import com.llj.living.data.bean.EntInfoBean
+import com.llj.living.data.bean.EntCheckBean
 import com.llj.living.data.enums.TypeEnums
 import com.llj.living.net.repository.SystemRepository
 import com.llj.living.utils.LogUtils
 
-class EntAddonsDataSource(private val typeEnums: TypeEnums) : BaseDataSource<EntAddonsBean>() {
+class EntCheckDataSource(private val typeEnums: TypeEnums) : BaseDataSource<EntCheckBean>() {
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, EntAddonsBean> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, EntCheckBean> {
         return baseFunction(params.key, errTips) { token, currentPage ->
-            quickRequest<List<EntAddonsBean>> {
+            quickRequest<List<EntCheckBean>> {
                 val requestType = when (typeEnums) {
                     TypeEnums.FINISHED -> 1
                     TypeEnums.DOING -> 2

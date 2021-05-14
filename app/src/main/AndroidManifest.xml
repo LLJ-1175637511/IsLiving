@@ -72,6 +72,9 @@
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"
             android:launchMode="singleTop"
             android:screenOrientation="locked" />
+        <activity android:name=".ui.activity.TestActivity" >
+
+        </activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"

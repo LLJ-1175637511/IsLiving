@@ -14,10 +14,7 @@ import com.llj.living.custom.ext.quickTokenRequest
 import com.llj.living.data.bean.EntAddonsBean
 import com.llj.living.data.bean.EntInfoBean
 import com.llj.living.data.bean.NewsByIdBean
-import com.llj.living.databinding.DialogWebviewBinding
-import com.llj.living.databinding.ItemAdContentBinding
-import com.llj.living.databinding.ItemMainDoingBinding
-import com.llj.living.databinding.ItemReloadBinding
+import com.llj.living.databinding.*
 import com.llj.living.logic.vm.MainFragmentVM
 import com.llj.living.logic.vm.SupplementTestViewModel
 import com.llj.living.net.repository.SystemRepository
@@ -32,7 +29,7 @@ class SupplementDoingTestAdapter :
     private val TAG = "SupplementDoingAdapter"
 
     inner class AdViewHolder(
-        private val binding: ItemMainDoingBinding
+        private val binding: ItemSuppleDoingBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bindData(bean: EntAddonsBean) {
             binding.entAddons = bean
@@ -51,9 +48,9 @@ class SupplementDoingTestAdapter :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdViewHolder {
         return AdViewHolder(
-            inflateDataBinding<ItemMainDoingBinding>(
+            inflateDataBinding<ItemSuppleDoingBinding>(
                 parent,
-                R.layout.item_main_doing
+                R.layout.item_supple_doing
             ).apply {
                 root.context.resources.let {
                     tvHadTypeStr.text = it.getString(R.string.had_supple_str)

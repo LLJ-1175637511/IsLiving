@@ -1,6 +1,9 @@
 package com.llj.living.net.repository
 
 import com.llj.living.net.network.SystemNetWork
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
 
 object SystemRepository {
 
@@ -24,8 +27,24 @@ object SystemRepository {
     suspend fun getEntAddonsRequest(token: String, page: Int, type: Int) =
         SystemNetWork.getEntAddons(token, page, type)
 
+
+    suspend fun getEntCheckRequest(token: String, page: Int, type: Int) =
+        SystemNetWork.getEntAddons(token, page, type)
+
     suspend fun getEntAddonsByIdRequest(token: String, page: Int, type: Int, id: Int) =
         SystemNetWork.getEntAddonsById(token, page, type, id)
+
+    suspend fun getEntUploadPictureInfoRequest(map: Map<String, RequestBody>,  fileList:List<MultipartBody.Part>) =
+        SystemNetWork.getEntUploadPicture(map,fileList)
+
+     suspend fun getTestRequest(
+         token: RequestBody,
+         reputId: RequestBody,
+         peopleId: RequestBody,
+         faceFile: MultipartBody.Part,
+         idaFile: MultipartBody.Part,
+         idbFile: MultipartBody.Part
+     ) = SystemNetWork.getTest(token,reputId,peopleId,faceFile,idaFile,idbFile)
 
     suspend fun loadAPKRequest(url: String) = SystemNetWork.loadAPK(url)
 }

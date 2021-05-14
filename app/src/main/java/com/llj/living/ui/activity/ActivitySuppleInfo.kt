@@ -1,21 +1,24 @@
 package com.llj.living.ui.activity
 
+import android.os.Build
 import android.view.View
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
 import com.llj.living.R
-import com.llj.living.custom.ext.getSP
-import com.llj.living.custom.ext.save
+import com.llj.living.custom.ext.*
 import com.llj.living.data.bean.AddonsByEntIdBean
 import com.llj.living.data.bean.ToolbarConfig
 import com.llj.living.data.const.Const
 import com.llj.living.data.enums.TakePhotoEnum
 import com.llj.living.databinding.ActivitySupplementInfoBinding
 import com.llj.living.logic.vm.SuppleInfoVM
+import com.llj.living.net.NetCode
 import com.llj.living.ui.adapter.*
-import com.llj.living.ui.fragment.WaitSuppleFragment
 import com.llj.living.utils.LogUtils
 import com.llj.living.utils.ToastUtils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class ActivitySuppleInfo : BaseTPActivity<ActivitySupplementInfoBinding>() {
@@ -29,11 +32,12 @@ class ActivitySuppleInfo : BaseTPActivity<ActivitySupplementInfoBinding>() {
     private var peopleId: Int = -1
     private var reputId: Int = -1
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun init() {
         setToolbar(ToolbarConfig("补录信息", isShowBack = true, isShowMenu = false))
 
         peopleId = intent.getIntExtra(SupplementWaitTestAdapter.SUPPLE_ID_WAIT_FLAG, -1)
-        reputId = getSP(Const.SPAddons).getInt(Const.SPAddonsReputId,-1)
+        reputId = getSP(Const.SPAddons).getInt(Const.SPAddonsReputId, -1)
 
         val addonsByIdBean =
             intent.getParcelableExtra<AddonsByEntIdBean>(SupplementWaitTestAdapter.SUPPLE_BEAN_WAIT_FLAG)
@@ -44,7 +48,7 @@ class ActivitySuppleInfo : BaseTPActivity<ActivitySupplementInfoBinding>() {
             return
         }
 
-        LogUtils.d(TAG,"peopleId:${peopleId} reputId:${reputId}")
+        LogUtils.d(TAG, "peopleId:${peopleId} reputId:${reputId}")
 
         getDataBinding().oldmanBean = addonsByIdBean
 
@@ -73,14 +77,23 @@ class ActivitySuppleInfo : BaseTPActivity<ActivitySupplementInfoBinding>() {
             }
 
             btFinishSuppleInfo.setOnClickListener { _ ->
-                /*oldManInfoWait?.let {
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        val suppleDoingId = SuppleDoingAdapter.id
-                        dbViewModel.finishedOneInfo(it, suppleDoingId)
-                        delay(500)
-                        finish()
+                tryExceptionLaunch (Dispatchers.Main) {
+                    buildActivityCoroutineDialog(layoutInflater, null) { bd, ld ->
+                        bd.tvSipsStr.text = "图片上传中"
+                        bd.close.visibility = View.GONE
+                        val result = viewModel.uploadPictureInfo(reputId, peopleId,proportion.value)
+                        if (result.code == NetCode.SUCCESS) {
+                            ld?.cancel()
+                            ToastUtils.toastShort("上传成功")
+                            delay(1000)
+                            finish()
+                        }else{
+                            ToastUtils.toastShort("上传失败")
+                            LogUtils.d("${TAG}_DEBUG","result:${result}")
+                        }
                     }
-                }*/
+
+                }
             }
         }
     }

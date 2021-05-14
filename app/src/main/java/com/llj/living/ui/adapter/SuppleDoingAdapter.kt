@@ -8,18 +8,18 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.llj.living.R
 import com.llj.living.data.database.SuppleDoing
-import com.llj.living.databinding.ItemMainDoingBinding
 import com.llj.living.databinding.ItemReloadBinding
+import com.llj.living.databinding.ItemSuppleDoingBinding
 import com.llj.living.ui.activity.ActivitySupplement
 import com.llj.living.utils.LogUtils
 
 class SuppleDoingAdapter : BaseReloadAdapter<SuppleDoing>(DIFF_ITEM_CALLBACK) {
 
-    override fun layoutId(): Int = R.layout.item_main_doing
+    override fun layoutId(): Int = R.layout.item_check_doing
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == layoutId()) {
-            val binding = DataBindingUtil.inflate<ItemMainDoingBinding>(
+            val binding = DataBindingUtil.inflate<ItemSuppleDoingBinding>(
                 LayoutInflater.from(parent.context),
                 viewType, parent, false
             )
@@ -43,7 +43,7 @@ class SuppleDoingAdapter : BaseReloadAdapter<SuppleDoing>(DIFF_ITEM_CALLBACK) {
         }
     }
 
-    inner class SuppleDoingViewHolder(private val binding: ItemMainDoingBinding) :
+    inner class SuppleDoingViewHolder(private val binding: ItemSuppleDoingBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bindData(bean: SuppleDoing?) {

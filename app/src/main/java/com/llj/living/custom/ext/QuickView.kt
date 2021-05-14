@@ -31,6 +31,16 @@ fun <DB : ViewDataBinding> inflateDataBinding(
     false
 )
 
+fun <DB : ViewDataBinding> inflateDataBinding(
+    li: LayoutInflater,
+    @LayoutRes layoutId: Int
+): DB = DataBindingUtil.inflate<DB>(
+    li,
+    layoutId,
+    null,
+    false
+)
+
 
 /**
  * 在主线程调用加载UI
@@ -90,23 +100,55 @@ suspend fun buildCoroutineDialog(
     }
 }
 
-fun AppCompatActivity.loadCircleView(url:String,imgView:ImageView){
+/**
+ * Activity生成dialog
+ * 在主线程调用加载UI
+ */
+@MainThread
+suspend fun buildActivityCoroutineDialog(
+    li: LayoutInflater,
+    addView: View? = null,
+    errTips: String = "",
+    block: suspend (DialogBaseBinding, AlertDialog?) -> Unit
+) {
+    var ad: AlertDialog? = null
+    try {
+        val baseBinding = inflateDataBinding<DialogBaseBinding>(li, R.layout.dialog_base)
+        ad = AlertDialog.Builder(li.context).setCancelable(false).create().apply {
+            baseBinding.close.setOnClickListener {
+                this.cancel()
+            }
+            setView(baseBinding.root)
+        }
+        ad.show()
+        block(baseBinding, ad)
+        addView?.let {
+            baseBinding.baseFL.addView(it)
+        }
+    } catch (e: Exception) {
+        ToastUtils.toastShort("${errTips}失败")
+        LogUtils.d(TAG, "AlertDialog:${e.message}")
+        ad?.cancel()
+    }
+}
+
+fun AppCompatActivity.loadCircleView(url: String, imgView: ImageView) {
     Glide.with(this).load(url)
         .apply(RequestOptions.bitmapTransform(CircleCrop()))
         .into(imgView)
 }
 
-fun AppCompatActivity.loadView(url:String,imgView:ImageView){
+fun AppCompatActivity.loadView(url: String, imgView: ImageView) {
     Glide.with(this).load(url).into(imgView)
 }
 
-fun Fragment.loadCircleView(url:String,imgView:ImageView){
+fun Fragment.loadCircleView(url: String, imgView: ImageView) {
     Glide.with(this).load(url)
         .apply(RequestOptions.bitmapTransform(CircleCrop()))
         .into(imgView)
 }
 
-fun Fragment.loadView(url:String,imgView:ImageView){
+fun Fragment.loadView(url: String, imgView: ImageView) {
     Glide.with(this).load(url).into(imgView)
 }
 

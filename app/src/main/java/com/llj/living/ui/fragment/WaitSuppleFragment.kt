@@ -1,24 +1,15 @@
 package com.llj.living.ui.fragment
 
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.LivePagedListBuilder
-import androidx.paging.PagedList
 import com.llj.living.R
 import com.llj.living.custom.ext.getSP
 import com.llj.living.custom.ext.save
 import com.llj.living.data.const.Const
-import com.llj.living.data.const.Const.SPAddons
-import com.llj.living.data.database.OldManInfoWait
 import com.llj.living.databinding.FragmentWaitSuppleBinding
-import com.llj.living.logic.vm.DatabaseVM
 import com.llj.living.logic.vm.SupplementTestVM
-import com.llj.living.ui.activity.ActivitySupplement
 import com.llj.living.ui.adapter.SupplementDoingTestAdapter
 import com.llj.living.ui.adapter.SupplementWaitTestAdapter
-import com.llj.living.ui.adapter.WaitSuppleAdapter
 import com.llj.living.utils.LogUtils
 import com.llj.living.utils.ToastUtils
 import kotlinx.coroutines.flow.collectLatest
@@ -71,6 +62,7 @@ class WaitSuppleFragment private constructor() : NavBaseFragment<FragmentWaitSup
                 }
             }
         }
+
     }
 
     companion object {

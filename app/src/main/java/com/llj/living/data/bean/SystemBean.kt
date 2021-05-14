@@ -107,3 +107,12 @@ data class AddonsByEntIdBean(
     val sex: String
 ): Parcelable
 
+@Parcelize
+data class EntCheckBean(
+    val addons_name: String,
+    val id: Int,
+    val people_count: Int,
+    val people_check_count: Int,
+    val start_at: String,
+    val end_at: String
+) : Parcelable

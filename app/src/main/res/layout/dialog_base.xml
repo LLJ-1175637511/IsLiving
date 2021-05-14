@@ -25,6 +25,7 @@
                 style="@style/AVLoadingIndicatorView" />
 
             <TextView
+                android:id="@+id/tvSipsStr"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 android:layout_gravity="center"

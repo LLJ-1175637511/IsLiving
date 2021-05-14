@@ -5,6 +5,7 @@ import com.llj.living.custom.exception.TokenErrException
 import com.llj.living.custom.ext.getSP
 import com.llj.living.data.const.Const
 import com.llj.living.utils.ContextUtils
+import com.llj.living.utils.LogUtils
 import com.llj.living.utils.ToastUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -21,12 +22,14 @@ abstract class BaseDataSource<T : Any> : PagingSource<Int, T>() {
         if (token.isNullOrEmpty()) throw TokenErrException()
         //页码未定义置为1
         val currentPage = paramsKey ?: 1
+
         val beanList = block(token, currentPage)
-        val nextPage = if (!beanList.isNullOrEmpty()) { //当前页码 小于 总页码 页面加1
+        val nextPage = if (!beanList.isNullOrEmpty()) { //当前请求集合返回集合为空
             currentPage + 1
         } else {//没有更多数据
             null
         }
+        LogUtils.d("EntAddonsDataSource_TTT","nextPage:${nextPage}")
         beanList ?: throw Exception()
         LoadResult.Page(data = beanList, prevKey = null, nextKey = nextPage)
     } catch (e: Exception) {
@@ -35,7 +38,6 @@ abstract class BaseDataSource<T : Any> : PagingSource<Int, T>() {
         }
         LoadResult.Error(e)
     }
-
 
     suspend inline fun <reified T : Any> pageTryException(
         errTips: String = "",

@@ -9,6 +9,8 @@ import android.provider.MediaStore
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import com.llj.living.data.enums.TakePhotoEnum
 import com.llj.living.utils.LogUtils
@@ -26,11 +28,15 @@ abstract class BaseTPActivity<DB : ViewDataBinding> : BaseActivity<DB>() {
     private var imageUri: Uri? = null
     private var videoUri: Uri? = null
 
+    private val _proportion = MutableLiveData<Float>()
+    val proportion: LiveData<Float> = _proportion
+
     init {
         ops.apply {
             inSampleSize = 6 //设置缩放比例（必须为2的倍数）
             inPremultiplied = true //设置可回收
-            inPreferredConfig = Bitmap.Config.ARGB_8888 //设置编码方式 普通一像素2字节 默认为当前4字节
+//            inPreferredConfig = Bitmap.Config.ARGB_8888 //设置编码方式 普通一像素2字节 默认为当前4字节
+            inPreferredConfig = Bitmap.Config.ALPHA_8 //设置编码方式 普通一像素2字节 默认为当前4字节
         }
     }
 
@@ -40,10 +46,9 @@ abstract class BaseTPActivity<DB : ViewDataBinding> : BaseActivity<DB>() {
     suspend fun getPhotoIntent(type: TakePhotoEnum): Intent {
         buildUri(type)
         LogUtils.d(TAG, "imageUri is null:${imageUri == null}")
-        return Intent("android.media.action.IMAGE_CAPTURE").putExtra(
-            MediaStore.EXTRA_OUTPUT,
-            imageUri
-        )
+        return Intent("android.media.action.IMAGE_CAPTURE").apply {
+            putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+        }
     }
 
     suspend fun getVideoIntent(path: String): Intent {
@@ -118,9 +123,12 @@ abstract class BaseTPActivity<DB : ViewDataBinding> : BaseActivity<DB>() {
     fun buildLaunch(block: (bitmap: Bitmap?) -> Unit) =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
             try {
-                imageUri?.let {
+                imageUri?.let { uri ->
                     bitmap =
-                        BitmapFactory.decodeStream(contentResolver.openInputStream(it), null, ops)
+                        BitmapFactory.decodeStream(contentResolver.openInputStream(uri), null, ops)
+                    bitmap?.let {
+                        _proportion.postValue(it.height.toFloat()/it.width)
+                    }
                     block(bitmap)
                 }
             } catch (e: OutOfMemoryError) {

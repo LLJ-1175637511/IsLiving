@@ -3,6 +3,8 @@ package com.llj.living.net.server
 import com.llj.living.data.bean.BaiduLLBean
 import com.llj.living.data.bean.BaseBean
 import com.llj.living.net.config.SysNetConfig
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
@@ -16,7 +18,7 @@ interface LoginServer {
 interface LoadAPKServer {
     @Streaming
     @GET("upd/{${SysNetConfig.Path}}")
-    fun loadAPK(@Path(SysNetConfig.Path) path:String): Call<ResponseBody>
+    fun loadAPK(@Path(SysNetConfig.Path) path: String): Call<ResponseBody>
 }
 
 interface SysTimeServer {
@@ -40,19 +42,25 @@ interface VersionServer {
     fun getVersion(@Field(SysNetConfig.CurrentVersion) currentVersion: String): Call<BaseBean>
 }
 
-interface EntInfoServer{
+interface EntInfoServer {
     @FormUrlEncoded
     @POST("pi.php/user/getnews")
-    fun getEntInfo(@Field(SysNetConfig.Token) token: String,@Field(SysNetConfig.Page) page:Int): Call<BaseBean>
+    fun getEntInfo(
+        @Field(SysNetConfig.Token) token: String,
+        @Field(SysNetConfig.Page) page: Int
+    ): Call<BaseBean>
 }
 
-interface NewsByIdServer{
+interface NewsByIdServer {
     @FormUrlEncoded
     @POST("pi.php/user/getnewsbyid")
-    fun getNewsById(@Field(SysNetConfig.Token) token: String,@Field(SysNetConfig.NewId) newsId:Int): Call<BaseBean>
+    fun getNewsById(
+        @Field(SysNetConfig.Token) token: String,
+        @Field(SysNetConfig.NewId) newsId: Int
+    ): Call<BaseBean>
 }
 
-interface AdsServer{
+interface AdsServer {
     @FormUrlEncoded
     @POST("pi.php/user/getads")
     fun getAds(@Field(SysNetConfig.Token) token: String): Call<BaseBean>
@@ -61,7 +69,7 @@ interface AdsServer{
 /**
  * type ---> 1:已完成 2：未完成 0：全部
  */
-interface EntAddonsServer{
+interface EntAddonsServer {
     @FormUrlEncoded
     @POST("pi.php/addons/getentaddons")
     fun getEntAddons(
@@ -74,7 +82,7 @@ interface EntAddonsServer{
 /**
  * type ---> 1:已完成 2：未完成 0：全部
  */
-interface EntAddonsByIdServer{
+interface EntAddonsByIdServer {
     @FormUrlEncoded
     @POST("pi.php/addons/getentaddonsbyentid")
     fun getEntAddonsById(
@@ -83,4 +91,56 @@ interface EntAddonsByIdServer{
         @Field(SysNetConfig.Type) type: Int,
         @Field(SysNetConfig.AddonsId) id: Int
     ): Call<BaseBean>
+}
+
+/**
+ * 上传补录人员照片信息
+ */
+interface EntUploadPictureServer {
+
+    @Multipart
+    @POST("pi.php/addons/addonsbyid")
+    fun getEntUploadPicture(
+        @PartMap map: Map<String, @JvmSuppressWildcards RequestBody>,
+        @Part fileList:List<MultipartBody.Part>
+    ): Call<BaseBean>
+
+}
+
+/**
+ * 上传补录人员照片信息
+ */
+interface TestServer {
+
+    @Multipart
+    @POST("pi.php/addons/addonsbyid")
+    fun getTest(
+        @Part(SysNetConfig.Token) token: RequestBody,
+        @Part(SysNetConfig.ReputId) reputId: RequestBody,
+        @Part(SysNetConfig.PeopleId) peopleId: RequestBody,
+        @Part faceFile: MultipartBody.Part,
+        @Part idaFile: MultipartBody.Part,
+        @Part idbFile: MultipartBody.Part
+    ): Call<BaseBean>
+
+}
+
+/**
+ * 获取审核批次信息
+ */
+interface EntCheckServer {
+
+    @Multipart
+
+    @POST("pi.php/check/getentcheck")
+    fun getcheck(
+        @Header("multipart/form-data")
+        @Part(SysNetConfig.Token) token: RequestBody,
+        @Part(SysNetConfig.ReputId) reputId: RequestBody,
+        @Part(SysNetConfig.PeopleId) peopleId: RequestBody,
+        @Part(SysNetConfig.Face) faceFile: RequestBody,
+        @Part(SysNetConfig.Ida) idaFile: RequestBody,
+        @Part(SysNetConfig.Idb) idbFile: RequestBody
+    ): Call<BaseBean>
+
 }

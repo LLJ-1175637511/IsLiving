@@ -1,8 +1,13 @@
 package com.llj.living.net.network
 
 import com.llj.living.net.RetrofitCreator
+import com.llj.living.net.config.SysNetConfig
 import com.llj.living.net.server.*
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.await
+import retrofit2.http.Part
 
 object SystemNetWork {
 
@@ -26,6 +31,10 @@ object SystemNetWork {
 
     private val getEntAddonsByIdServer by lazy { RetrofitCreator.create<EntAddonsByIdServer>() }
 
+    private val getEntUploadPictureServer by lazy { RetrofitCreator.create<EntUploadPictureServer>() }
+
+    private val getTestServer by lazy { RetrofitCreator.create<TestServer>() }
+
     suspend fun login(map: Map<String, String>) = loginServer.login(map).await()
 
     suspend fun loadAPK(url: String) = loadAPKServer.loadAPK(url).await()
@@ -47,7 +56,22 @@ object SystemNetWork {
     suspend fun getEntAddons(token: String, page: Int, type: Int) =
         getEntAddonsServer.getEntAddons(token, page, type).await()
 
-    suspend fun getEntAddonsById(token: String, page: Int, type: Int,id:Int) =
-        getEntAddonsByIdServer.getEntAddonsById(token, page, type,id).await()
+    suspend fun getEntCheck(token: String, page: Int, type: Int) =
+        getEntAddonsServer.getEntAddons(token, page, type).await()
+
+    suspend fun getEntAddonsById(token: String, page: Int, type: Int, id: Int) =
+        getEntAddonsByIdServer.getEntAddonsById(token, page, type, id).await()
+
+    suspend fun getEntUploadPicture(map: Map<String,RequestBody>, fileList:List<MultipartBody.Part>) =
+        getEntUploadPictureServer.getEntUploadPicture(map,fileList).await()
+
+    suspend fun getTest(
+        token: RequestBody,
+        reputId: RequestBody,
+        peopleId: RequestBody,
+        faceFile: MultipartBody.Part,
+        idaFile: MultipartBody.Part,
+        idbFile: MultipartBody.Part
+    ) = getTestServer.getTest(token, reputId, peopleId, faceFile, idaFile, idbFile).await()
 
 }
