@@ -94,6 +94,20 @@ interface EntAddonsByIdServer {
 }
 
 /**
+ * type ---> 1:已完成 2：未完成 0：全部
+ */
+interface EntCheckByIdServer {
+    @FormUrlEncoded
+    @POST("pi.php/check/getentcheckbyentid")
+    fun getEntCheckById(
+        @Field(SysNetConfig.Token) token: String,
+        @Field(SysNetConfig.Page) page: Int,
+        @Field(SysNetConfig.Type) type: Int,
+        @Field(SysNetConfig.CheckId) id: Int
+    ): Call<BaseBean>
+}
+
+/**
  * 上传补录人员照片信息
  */
 interface EntUploadPictureServer {
@@ -130,17 +144,12 @@ interface TestServer {
  */
 interface EntCheckServer {
 
-    @Multipart
-
+    @FormUrlEncoded
     @POST("pi.php/check/getentcheck")
     fun getcheck(
-        @Header("multipart/form-data")
-        @Part(SysNetConfig.Token) token: RequestBody,
-        @Part(SysNetConfig.ReputId) reputId: RequestBody,
-        @Part(SysNetConfig.PeopleId) peopleId: RequestBody,
-        @Part(SysNetConfig.Face) faceFile: RequestBody,
-        @Part(SysNetConfig.Ida) idaFile: RequestBody,
-        @Part(SysNetConfig.Idb) idbFile: RequestBody
+        @Field(SysNetConfig.Token) token: String,
+        @Field(SysNetConfig.Page) page: Int,
+        @Field(SysNetConfig.Type) type: Int
     ): Call<BaseBean>
 
 }

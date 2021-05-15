@@ -1,16 +1,5 @@
 package com.llj.living.custom.ext
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
-import android.widget.TextView
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.databinding.BindingAdapter
-import androidx.databinding.BindingConversion
-import androidx.databinding.BindingMethod
-import androidx.databinding.BindingMethods
-import com.llj.living.R
-
 /*
 
 //这里BindMethods可以放在任何的类上面，重点在于内部属性声明

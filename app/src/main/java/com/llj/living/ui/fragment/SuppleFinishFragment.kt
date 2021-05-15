@@ -4,8 +4,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.llj.living.R
 import com.llj.living.databinding.FragmentSuppleFinishedBinding
-import com.llj.living.logic.vm.SupplementTestViewModel
-import com.llj.living.ui.adapter.SupplementFinishedTestAdapter
+import com.llj.living.logic.vm.SupplementEntVM
+import com.llj.living.ui.adapter.SupplementFinishedAdapter
 import com.llj.living.utils.LogUtils
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -14,9 +14,9 @@ class SuppleFinishFragment private constructor() : NavBaseFragment<FragmentSuppl
 
     override fun getLayoutId() = R.layout.fragment_supple_finished
 
-    private val suppleFinishedVM by activityViewModels<SupplementTestViewModel>()
+    private val suppleFinishedVM by activityViewModels<SupplementEntVM>()
 
-    private val adapterTest by lazy { SupplementFinishedTestAdapter() }
+    private val adapterTest by lazy { SupplementFinishedAdapter() }
 
     override fun init() {
         getBinding().recyclerviewSuppleFinished.adapter = adapterTest

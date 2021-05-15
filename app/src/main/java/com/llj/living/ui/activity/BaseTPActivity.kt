@@ -33,7 +33,7 @@ abstract class BaseTPActivity<DB : ViewDataBinding> : BaseActivity<DB>() {
 
     init {
         ops.apply {
-            inSampleSize = 6 //设置缩放比例（必须为2的倍数）
+            inSampleSize = 8 //设置缩放比例（必须为2的倍数）
             inPremultiplied = true //设置可回收
 //            inPreferredConfig = Bitmap.Config.ARGB_8888 //设置编码方式 普通一像素2字节 默认为当前4字节
             inPreferredConfig = Bitmap.Config.ALPHA_8 //设置编码方式 普通一像素2字节 默认为当前4字节
@@ -138,7 +138,7 @@ abstract class BaseTPActivity<DB : ViewDataBinding> : BaseActivity<DB>() {
                 e.printStackTrace()
                 LogUtils.d(TAG, e.message.toString())
             }
-//            base64 = PhotoUtils.bitmapToBase64(bitmap).toString()
+
         }
 
     fun buildVideoLaunch(block: (uri: Uri) -> Unit) =
@@ -154,7 +154,6 @@ abstract class BaseTPActivity<DB : ViewDataBinding> : BaseActivity<DB>() {
                 e.printStackTrace()
                 LogUtils.d(TAG, e.message.toString())
             }
-//            base64 = PhotoUtils.bitmapToBase64(bitmap).toString()
         }
 
     override fun onDestroy() {

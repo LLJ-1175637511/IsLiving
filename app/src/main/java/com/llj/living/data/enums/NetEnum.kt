@@ -19,7 +19,7 @@ enum class ImageType {
     BASE64, FACE_TOKEN, URL
 }
 
-enum class ActionType {
+enum class ActionEnums {
     APPEND, REPLACE, UPDATE
 }
 

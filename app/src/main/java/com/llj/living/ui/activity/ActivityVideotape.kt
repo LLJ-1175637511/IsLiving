@@ -5,16 +5,13 @@ import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.view.View
 import androidx.activity.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.llj.living.R
 import com.llj.living.custom.ext.toastShort
 import com.llj.living.data.bean.ToolbarConfig
 import com.llj.living.data.database.OldManInfoWait
 import com.llj.living.databinding.ActivityVideotapeBinding
-import com.llj.living.logic.vm.DatabaseVM
-import com.llj.living.ui.adapter.CheckDoingAdapter
-import com.llj.living.ui.adapter.WaitCheckAdapter
+import com.llj.living.logic.vm.DatabaseTestVM
 import com.llj.living.utils.LogUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -27,11 +24,11 @@ class ActivityVideotape : BaseTPActivity<ActivityVideotapeBinding>() {
     private var path = ""
     private lateinit var uri: Uri
     private var bean: OldManInfoWait? = null
-    private val dbViewModel by viewModels<DatabaseVM>()
+    private val dbViewModel by viewModels<DatabaseTestVM>()
 
     override fun init() {
         setToolbar(ToolbarConfig("视频核查", isShowBack = true, isShowMenu = false))
-        path = intent.getStringExtra(WaitCheckAdapter.VIDEO_PATH_ID).toString()
+//        path = intent.getStringExtra(WaitCheckAdapter.VIDEO_PATH_ID).toString()
         getDataBinding().btPreview.setOnClickListener {
             if (getDataBinding().tvVideoSavedTips.visibility == View.INVISIBLE) {
                 toastShort("请先录制视频")
@@ -54,12 +51,12 @@ class ActivityVideotape : BaseTPActivity<ActivityVideotapeBinding>() {
             }
         }
 
-        val id = WaitCheckAdapter.id
+/*        val id = WaitCheckAdapter.id
         dbViewModel.getOldManInfoById(id).observe(this, Observer { data ->
             data?.let {
                 bean = it
             }
-        })
+        })*/
 
         getDataBinding().btMakeSure.setOnClickListener {
             lifecycleScope.launch(Dispatchers.IO) {
@@ -71,9 +68,9 @@ class ActivityVideotape : BaseTPActivity<ActivityVideotapeBinding>() {
     }
 
     private fun updateData() {
-        bean?.let {
+       /* bean?.let {
             dbViewModel.finishedOneHad(it, CheckDoingAdapter.id)
-        }
+        }*/
     }
 
     private fun getNextActivityOrientationIsVertical(): Boolean? {
@@ -109,5 +106,8 @@ class ActivityVideotape : BaseTPActivity<ActivityVideotapeBinding>() {
     companion object {
         const val VIDEO_URI = "checkVideoUri"
         const val PREVIEW_ORIENTATION_VERTICAL = "preview_orientation_vertical"
+
+        const val INTENT_ID_CHECK_FLAG = "intent_id_check_video_flag"
+        const val INTENT_BEAN_CHECK_FLAG = "intent_bean_check_video_flag"
     }
 }

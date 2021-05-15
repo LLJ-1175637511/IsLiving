@@ -1,11 +1,6 @@
 package com.llj.living.data.const
 
 object Const {
-    //region livedata login
-    const val UserNameLogin = "user_name_login"
-    const val UserPwdLogin = "user_pwd_login"
-    const val UserRememberPwdLogin = "user_remember_pwd_login"
-    //endregion
 
     //region sharePreference flag
     const val SPUser = "sp_user"
@@ -13,16 +8,18 @@ object Const {
     const val SPUserPwdLogin = "sp_user_pwd_login"
     const val SPUserRememberPwdLogin = "sp_user_remember_pwd_login"
     const val SPUserTokenLogin = "sp_user_token_login"
+    const val SPUserEntId = "sp_user_ent_id_login"
 
     const val SPAddons = "sp_addons"
     const val SPAddonsReputId = "sp_addons_reput_id"
 
-    const val SPBaiduToken = "sp_baidu_token"
-    const val SPBaiduTokenPeriod = "sp_baidu_token_period"
+    const val SPCheck = "sp_check"
+    const val SPCheckReputId = "sp_check_reput_id"
+
+    const val SPBaidu = "sp_baidu"
     const val SPBaiduTokenString = "sp_baidu_token_string"
 
     //endregion
-
 
     //region mySql
     const val SPMySqlNet = "sp_mysql_net"
@@ -30,12 +27,6 @@ object Const {
     const val SPMySqlTodayReminderUpdate = "sp_mysql_today_reminder_update"
     const val SPMySqlTodayReminderUpdateTime = "sp_mysql_today_reminder_update_time"
     //endregion
-
-
-    //region livedata token
-    const val TokenFaceAuth = "token_face_auth"
-    //endregion
-
 
     //region livedata FaceAuth
     const val FaceAuthPhoto = "face_auth_photo"

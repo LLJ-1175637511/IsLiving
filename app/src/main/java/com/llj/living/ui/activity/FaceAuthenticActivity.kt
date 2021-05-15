@@ -1,38 +1,13 @@
 package com.llj.living.ui.activity
 
-import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
-import android.os.Build
-import android.provider.MediaStore
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
-import androidx.core.content.FileProvider
-import androidx.lifecycle.lifecycleScope
 import com.llj.living.R
-import com.llj.living.custom.ext.toastShort
-import com.llj.living.data.bean.MatchFaceData
-import com.llj.living.data.bean.ToolbarConfig
-import com.llj.living.data.enums.ActionType
-import com.llj.living.data.enums.ImageType
-import com.llj.living.data.enums.ModifyFaceType
 import com.llj.living.databinding.ActivityFaceAuthBinding
-import com.llj.living.logic.vm.FaceAuthViewModel
-import com.llj.living.net.config.BadiduNetConfig
-import com.llj.living.utils.LogUtils
-import com.llj.living.utils.PhotoUtils
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.File
-import java.io.IOException
 
 class FaceAuthenticActivity : BaseActivity<ActivityFaceAuthBinding>() {
 
     override fun getLayoutId(): Int = R.layout.activity_face_auth
 
-    private val viewMode by viewModels<FaceAuthViewModel>()
+    /*private val viewMode by viewModels<FaceAuthViewModel>()
     private var bitmap: Bitmap? = null
     private val ops = BitmapFactory.Options()
 
@@ -112,9 +87,9 @@ class FaceAuthenticActivity : BaseActivity<ActivityFaceAuthBinding>() {
         }
     }
 
-    /**
+    *//**
      * 注册或更新人脸
-     */
+     *//*
     private fun setBaiduFace(type: ModifyFaceType) {
         if (base64.isEmpty()) return
         val map = BadiduNetConfig.buildRegisterOrUpdateFaceMap(
@@ -160,9 +135,9 @@ class FaceAuthenticActivity : BaseActivity<ActivityFaceAuthBinding>() {
         viewMode.matchFace(list)
     }
 
-    /**
+    *//**
      * 删除对应face_token的人脸
-     */
+     *//*
     private fun deleteBaiduFace() {
         val id = viewMode.getPhotoIdLiveData().value
         if (id.isNullOrEmpty()) return
@@ -233,5 +208,5 @@ class FaceAuthenticActivity : BaseActivity<ActivityFaceAuthBinding>() {
                 bitmap = null
             }
         }
-    }
+    }*/
 }

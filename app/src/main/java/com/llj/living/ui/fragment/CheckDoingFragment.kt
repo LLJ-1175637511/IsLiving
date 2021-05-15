@@ -1,20 +1,11 @@
 package com.llj.living.ui.fragment
 
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.LivePagedListBuilder
-import androidx.paging.PagedList
 import com.llj.living.R
-import com.llj.living.custom.ext.baseObserver
-import com.llj.living.custom.ext.loadView
-import com.llj.living.data.database.CheckDoing
 import com.llj.living.databinding.FragmentCheckDoingBinding
-import com.llj.living.logic.vm.CheckTestViewModel
-import com.llj.living.logic.vm.DatabaseVM
+import com.llj.living.logic.vm.CheckEntVM
 import com.llj.living.ui.adapter.CheckDoingAdapter
-import com.llj.living.ui.adapter.CheckDoingTestAdapter
 import com.llj.living.utils.LogUtils
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -23,10 +14,12 @@ class CheckDoingFragment : NavBaseFragment<FragmentCheckDoingBinding>() {
 
     override fun getLayoutId() = R.layout.fragment_check_doing
 
-    private val checkVM by activityViewModels<CheckTestViewModel>()
-    private val adapter by lazy { CheckDoingTestAdapter() }
+    private val checkVM by activityViewModels<CheckEntVM>()
+
+    private val adapter by lazy { CheckDoingAdapter() }
 
     override fun init() {
+
         getBinding().recyclerviewCheckDoing.adapter = adapter
 
         getBinding().refreshCheckDoing.apply {
@@ -40,10 +33,10 @@ class CheckDoingFragment : NavBaseFragment<FragmentCheckDoingBinding>() {
     }
 
     /**
-     * 获取补录进行列表
+     * 获取核查进行列表
      */
     private fun loadData(){
-        /*getBinding().refreshCheckDoing.apply {
+        getBinding().refreshCheckDoing.apply {
             lifecycleScope.launch {
                 isRefreshing = true
                 checkVM.getDoingData().collectLatest {
@@ -52,7 +45,7 @@ class CheckDoingFragment : NavBaseFragment<FragmentCheckDoingBinding>() {
                     adapter.submitData(it)
                 }
             }
-        }*/
+        }
     }
 
 }

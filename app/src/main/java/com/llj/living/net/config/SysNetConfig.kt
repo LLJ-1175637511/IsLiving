@@ -26,11 +26,15 @@ object SysNetConfig {
     const val NewId = "newid" //新闻页数
     const val Type = "type" //新闻页数
     const val AddonsId = "addons_id" //补录人员详细
+    const val CheckId = "check_id" //补录人员详细
     const val PeopleId = "people_id" //补录人员id
     const val ReputId = "reput_id" //补录批次id
     const val Face = "face" //补录批次id
     const val Ida = "ida" //补录批次id
     const val Idb = "idb" //补录批次id
+
+    const val MULTIPART_TEXT = "text/plain"
+    const val MULTIPART_FILE = "multipart/form-data"
 
     fun buildLoginMap(
         user: String,
@@ -48,7 +52,7 @@ object SysNetConfig {
         reput_id: String,
         people_id: String
     ): Map<String, RequestBody> {
-        val tmt = MediaType.parse("text/plain")
+        val tmt = MediaType.parse(MULTIPART_TEXT)
         val tokenBody = RequestBody.create(tmt, token)
         val reputIdBody = RequestBody.create(tmt, reput_id)
         val peopleIdBody = RequestBody.create(tmt, people_id)
@@ -59,7 +63,7 @@ object SysNetConfig {
      * 构造补录上传图片的文件map
      */
     @RequiresApi(Build.VERSION_CODES.R)
-    suspend fun buildUploadSuppleFileMap(
+    fun buildUploadSuppleFileMap(
         context: Context,
         proportion: Float?
     ): List<MultipartBody.Part> {
@@ -88,7 +92,7 @@ object SysNetConfig {
             "face：${resultPath1.length()} idCardA：${resultPath2.length()} idCardB：${resultPath3.length()}"
         )
 
-        val fmt = MediaType.parse("multipart/form-data")
+        val fmt = MediaType.parse(MULTIPART_FILE)
 
         val faceRequest = RequestBody.create(fmt, resultPath1)
         val idCardARequest = RequestBody.create(fmt, resultPath2)

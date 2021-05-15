@@ -30,7 +30,8 @@ data class LoginBean(
     val ent_people: Int,
     val nickname: String,
     val token: String,
-    val user_id: Int
+    val user_id: Int,
+    val ent_data:String
 ) : Parcelable
 
 /**
@@ -99,7 +100,7 @@ data class EntAddonsBean(
 ) : Parcelable
 
 @Parcelize
-data class AddonsByEntIdBean(
+data class InfoByEntIdBean(
     val id: Int,
     val id_number: String,
     val name: String,
@@ -109,7 +110,7 @@ data class AddonsByEntIdBean(
 
 @Parcelize
 data class EntCheckBean(
-    val addons_name: String,
+    val check_name: String,
     val id: Int,
     val people_count: Int,
     val people_check_count: Int,

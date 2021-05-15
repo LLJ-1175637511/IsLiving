@@ -1,18 +1,5 @@
 package com.llj.living.net.repository
 
-import com.google.gson.reflect.TypeToken
-import com.llj.living.custom.ext.isMsgSuc
-import com.llj.living.custom.ext.stringToBean
-import com.llj.living.data.bean.CommonDataBean
-import com.llj.living.data.bean.MatchFaceData
-import com.llj.living.data.bean.RegisterOrUpdateFaceBean
-import com.llj.living.data.bean.TokenBean
-import com.llj.living.data.enums.ModifyFaceType
-import com.llj.living.net.network.FaceAuthNetwork
-import com.llj.living.utils.LogUtils
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-
 object FaceAuthRepository {
 
     private const val TokenErrFlag = "error_description"
@@ -20,7 +7,7 @@ object FaceAuthRepository {
 
     private val TAG = this.javaClass.simpleName
 
-    suspend fun sendTokenRequest(): TokenBean.DataBean {
+   /* suspend fun sendTokenRequest(): TokenBean.DataBean {
         val strResult = withContext(Dispatchers.IO) {//获取response
             FaceAuthNetwork.getToken().string()
         }
@@ -80,16 +67,16 @@ object FaceAuthRepository {
         val result = FaceAuthNetwork.searchFaceInZn(token, map)//获取response
         val data = result.string()
         LogUtils.d(TAG, data)
-        /*if (result.error_code.isCodeSuc() && result.error_msg.isMsgSuc()) {
+        *//*if (result.error_code.isCodeSuc() && result.error_msg.isMsgSuc()) {
             val faceToken = result.result.toString()
             if (result.result.user_list[0].score > 80) CommonDataBean(true, faceToken)
             else CommonDataBean(false, faceToken)
-        } else CommonDataBean(false, result.error_msg)*/
+        } else CommonDataBean(false, result.error_msg)*//*
     }
 
-    /**
+    *//**
      * 响应的string 转化 RegisterFace 对象
-     */
+     *//*
     private fun convertRegisterOrUpdateData(result: String): CommonDataBean = try {
         if (!result.contains(registerOrUpdateSucFlag)) { //请求错误 json转化错误的数据类
             val type = object : TypeToken<RegisterOrUpdateFaceBean.Failed>() {}.type
@@ -104,9 +91,9 @@ object FaceAuthRepository {
         CommonDataBean(false, e.message.toString())
     }
 
-    /**
+    *//**
      * 响应的string转化token对象
-     */
+     *//*
     private fun convertTokenData(result: String): TokenBean.DataBean = try {
         if (result.contains(TokenErrFlag)) { //请求错误 json转化错误的数据类
             val type = object : TypeToken<TokenBean.TokenErr>() {}.type
@@ -120,5 +107,6 @@ object FaceAuthRepository {
         }
     } catch (e: Exception) {
         TokenBean.DataBean(false, e.message.toString(), -1)
-    }
+    }*/
+
 }

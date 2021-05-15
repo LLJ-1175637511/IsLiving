@@ -1,16 +1,11 @@
 package com.llj.living.ui.fragment
 
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.llj.living.R
-import com.llj.living.data.database.CheckDoing
-import com.llj.living.logic.vm.DatabaseVM
-import com.llj.living.utils.LogUtils
 
 class CheckFragment : BaseFragment() {
 
@@ -18,7 +13,7 @@ class CheckFragment : BaseFragment() {
 
     lateinit var tabLayout: TabLayout
     lateinit var viewPager2: ViewPager2
-    private val dbViewModel by activityViewModels<DatabaseVM>()
+
     override fun init() {
         tabLayout = requireView().findViewById(R.id.tab_layout_check)
         viewPager2 = requireView().findViewById(R.id.viewpager2_check)
@@ -39,21 +34,5 @@ class CheckFragment : BaseFragment() {
             else tab.text = resources.getString(R.string.finished)
         }.attach()
 
-        dbViewModel.getSuppleFinishedLD().observe(this, Observer { suppleFinished ->
-            val tempList = mutableListOf<CheckDoing>()
-            suppleFinished?.forEach {
-                LogUtils.d("CheckFragment", it.toString())
-                tempList.add(
-                    CheckDoing(
-                        title = it.title,
-                        endTime = it.endTime,
-                        startTime = it.startTime,
-                        hadDealWith = it.waitDealWith,
-                        waitDealWith = it.hadDealWith
-                    )
-                )
-            }
-            dbViewModel.insertCheckDoing(tempList)
-        })
     }
 }

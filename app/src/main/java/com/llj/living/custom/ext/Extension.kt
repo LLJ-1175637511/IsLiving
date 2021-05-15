@@ -254,7 +254,11 @@ fun stringToBean(body: String, type: Type): Any = try {
 
 fun String.isMsgSuc(): Boolean = this == "success"
 
+fun String.isBaiduMsgSuc(): Boolean = this == "SUCCESS"
+
 fun String.isCodeSuc(): Boolean = this == "000"
+
+fun Int.isBaiduCodeSuc(): Boolean = this == 0
 
 fun String.versionToInt(): Int? {
     if (this.contains('.')) {

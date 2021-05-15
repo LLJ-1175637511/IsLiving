@@ -1,85 +1,62 @@
 package com.llj.living.ui.adapter
 
 import android.content.Intent
-import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.llj.living.R
-import com.llj.living.data.database.CheckDoing
+import com.llj.living.custom.ext.inflateDataBinding
+import com.llj.living.data.bean.EntCheckBean
 import com.llj.living.databinding.ItemCheckDoingBinding
-import com.llj.living.databinding.ItemReloadBinding
-import com.llj.living.logic.vm.DatabaseVM
 import com.llj.living.ui.activity.ActivityCheck
-import com.llj.living.utils.LogUtils
 
-class CheckDoingAdapter(private val vm: DatabaseVM) :
-    BaseReloadAdapter<CheckDoing>(DIFF_CALLBACK) {
+class CheckDoingAdapter :
+    PagingDataAdapter<EntCheckBean, CheckDoingAdapter.AdViewHolder>(DIFF_CALLBACK) {
 
-    override fun layoutId() = R.layout.item_check_doing
+    private val TAG = "CheckDoingAdapter"
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return if (viewType == layoutId()) {
-            val binding = DataBindingUtil.inflate<ItemCheckDoingBinding>(
-                LayoutInflater.from(parent.context),
-                viewType, parent, false
-            )
-            binding.ivImg.setImageResource(R.drawable.ic_baseline_how_to_reg_24)
-            CheckDoingViewHolder(binding)
-        } else {
-            val binding = DataBindingUtil.inflate<ItemReloadBinding>(
-                LayoutInflater.from(parent.context),
-                viewType, parent, false
-            )
-            FooterViewHolder(binding)
-        }
-    }
-
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder.itemViewType == layoutId()) (holder as CheckDoingViewHolder).bindData(
-            getItem(position)
-        ) else (holder as BaseReloadAdapter<*>.FooterViewHolder).bindData().also {
-            holder.itemView.setOnClickListener {
-//                vm.doingFactory.retryLoadData()
-            }
-        }
-    }
-
-    inner class CheckDoingViewHolder(private val binding: ItemCheckDoingBinding) :
+    inner class AdViewHolder(private val binding: ItemCheckDoingBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
-        fun bindData(bean: CheckDoing?) {
-            if (bean == null) return
-            binding.apply {
-                tvTittle.text = bean.title
-                tvStartTime.text = bean.startTime
-                tvEndTime.text = bean.endTime
-                tvItemWait.text = bean.waitDealWith.toString()
-                tvItemHad.text = bean.hadDealWith.toString()
-                btOperas.setOnClickListener { view ->
-                    view.context.let {
-                        id = bean.id
-                        LogUtils.d("CheckDoingAdapter", "id:${bean.id}")
-                        it.startActivity(Intent(it, ActivityCheck::class.java))
-                    }
+        fun bindData(bean: EntCheckBean) {
+            binding.entAddons = bean
+            binding.btOperas.setOnClickListener { view ->
+                view.context.also {
+                    it.startActivity(Intent(it, ActivityCheck::class.java).apply {
+                        putExtra(CHECK_ID_FLAG, bean.id)
+                        putExtra(CHECK_BEAN_FLAG, bean)
+                    })
                 }
             }
         }
     }
 
-    companion object {
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<CheckDoing>() {
-            override fun areItemsTheSame(
-                oldItem: CheckDoing,
-                newItem: CheckDoing
-            ): Boolean = oldItem.id == newItem.id
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdViewHolder {
+        return AdViewHolder(
+            inflateDataBinding<ItemCheckDoingBinding>(
+                parent,
+                R.layout.item_check_doing
+            )
+        )
+    }
 
-            override fun areContentsTheSame(
-                oldItem: CheckDoing,
-                newItem: CheckDoing
-            ): Boolean = oldItem == newItem
+    override fun onBindViewHolder(holder: AdViewHolder, position: Int) {
+        getItem(position)?.let {
+            holder.bindData(it)
         }
-        var id = -1
+    }
+
+    companion object {
+
+        const val CHECK_ID_FLAG = "check_id_flag"
+        const val CHECK_BEAN_FLAG = "check_bean_flag"
+
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<EntCheckBean>() {
+            override fun areItemsTheSame(oldItem: EntCheckBean, newItem: EntCheckBean) =
+                oldItem.id == newItem.id
+
+            override fun areContentsTheSame(oldItem: EntCheckBean, newItem: EntCheckBean) =
+                oldItem == newItem
+        }
     }
 }

@@ -1,41 +1,57 @@
 package com.llj.living.ui.activity
 
-import android.widget.TextView
-import androidx.activity.viewModels
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.llj.living.R
+import com.llj.living.data.bean.EntCheckBean
 import com.llj.living.data.bean.ToolbarConfig
-import com.llj.living.data.database.CheckDoing
 import com.llj.living.databinding.ActivityCheckBinding
-import com.llj.living.logic.vm.DatabaseVM
+import com.llj.living.databinding.ViewCheckHeaderBinding
 import com.llj.living.ui.adapter.CheckDoingAdapter
-import com.llj.living.ui.fragment.HadCheckFragment
-import com.llj.living.ui.fragment.WaitCheckFragment
-import com.llj.living.utils.LogUtils
+import com.llj.living.ui.fragment.CheckHadFragment
+import com.llj.living.ui.fragment.CheckWaitFragment
+import com.llj.living.utils.StringUtils
+import com.llj.living.utils.ToastUtils
 
 class ActivityCheck : BaseActivity<ActivityCheckBinding>() {
 
     override fun getLayoutId(): Int = R.layout.activity_check
 
-
-    private val dbViewModel by viewModels<DatabaseVM>()
-
-    private lateinit var pagedListLives: LiveData<CheckDoing>
-
     override fun init() {
         setToolbar(ToolbarConfig("核查信息", isShowBack = true, isShowMenu = true))
+
+        val checkId = intent.getIntExtra(CheckDoingAdapter.CHECK_ID_FLAG, -1)
+
+        val checkBean =
+            intent.getParcelableExtra<EntCheckBean>(CheckDoingAdapter.CHECK_BEAN_FLAG)
+
+        if (checkId == -1 || checkBean == null) {
+            ToastUtils.toastShort("数据解析错误 请返回重试")
+            finish()
+            return
+        }
+
+        val headerBinding =
+            DataBindingUtil.findBinding<ViewCheckHeaderBinding>(getDataBinding().root.findViewById(R.id.header))
+
+        headerBinding?.apply {
+            tvWaitStr.text = resources.getString(R.string.wait_supple_count)
+            tvHadStr.text = resources.getString(R.string.had_supple_count)
+            startTime = StringUtils.convertMyTimeStr(checkBean.start_at)
+            endTime = StringUtils.convertMyTimeStr(checkBean.end_at)
+            waitCount = (checkBean.people_count - checkBean.people_check_count).toString()
+            hadCount = checkBean.people_check_count.toString()
+        }
 
         getDataBinding().viewPager2.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount() = 2
 
             override fun createFragment(position: Int): Fragment {
-                return if (position == 0) WaitCheckFragment.getInstance()
-                else HadCheckFragment.getInstance()
+                return if (position == 0) CheckWaitFragment.getInstance()
+                else CheckHadFragment.getInstance()
             }
         }
 
@@ -46,27 +62,6 @@ class ActivityCheck : BaseActivity<ActivityCheckBinding>() {
                 else tab.text = resources.getString(R.string.had_check)
             }.attach()
         }
-
-        pagedListLives = dbViewModel.getCheckDoingItemById(CheckDoingAdapter.id)
-
-        pagedListLives.observe(this, Observer { data ->
-            LogUtils.d("ActivitySupplement", "observe:--->")
-            data?.let {
-                waitSuppleCount = it.waitDealWith
-                hadSuppleCount = it.hadDealWith
-                LogUtils.d("ActivitySupplement", "data:--->")
-                getDataBinding().root.findViewById<TextView>(R.id.tvStartTime).text = it.startTime
-                getDataBinding().root.findViewById<TextView>(R.id.tvEndTime).text = it.endTime
-                getDataBinding().root.findViewById<TextView>(R.id.tvHeaderWait).text =
-                    it.waitDealWith.toString()
-                getDataBinding().root.findViewById<TextView>(R.id.tvHeaderHad).text =
-                    it.hadDealWith.toString()
-            }
-        })
     }
 
-    companion object {
-        var waitSuppleCount = -1
-        var hadSuppleCount = -1
-    }
 }

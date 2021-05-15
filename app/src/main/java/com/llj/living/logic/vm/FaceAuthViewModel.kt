@@ -2,19 +2,11 @@ package com.llj.living.logic.vm
 
 import android.app.Application
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
-import com.llj.living.custom.ext.isMsgSuc
-import com.llj.living.data.bean.MatchFaceData
-import com.llj.living.data.const.Const
-import com.llj.living.data.enums.ModifyFaceType
-import com.llj.living.net.repository.FaceAuthRepository
-import com.llj.living.utils.LogUtils
-import kotlinx.coroutines.launch
 
 class FaceAuthViewModel(application: Application, savedStateHandle: SavedStateHandle) :
     BaseViewModel(application, savedStateHandle) {
 
-    fun getContentLiveData() = getLiveDataForKey<String>(Const.FaceAuthContent)
+    /*fun getContentLiveData() = getLiveDataForKey<String>(Const.FaceAuthContent)
 
     fun getPhotoLiveData() = getLiveDataForKey<String>(Const.FaceAuthPhoto)
 
@@ -68,10 +60,10 @@ class FaceAuthViewModel(application: Application, savedStateHandle: SavedStateHa
     fun searchFaceInZn(map: Map<String, String>) = viewModelScope.launch {
         checkBaiduTokenRequest { token ->
             FaceAuthRepository.sendSearchInZnRequest(token, map)
-            /* val result = FaceAuthRepository.sendSearchInZnRequest(token, map)
+            *//* val result = FaceAuthRepository.sendSearchInZnRequest(token, map)
              if (result.isSuc) getContentLiveData().postValue("搜索成功，${result.data}")
-             else getContentLiveData().postValue("比对失败，${result.data}")*/
+             else getContentLiveData().postValue("比对失败，${result.data}")*//*
         }
-    }
+    }*/
 
 }

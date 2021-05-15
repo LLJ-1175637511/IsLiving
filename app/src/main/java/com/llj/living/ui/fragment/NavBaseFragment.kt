@@ -7,9 +7,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.SavedStateViewModelFactory
-import androidx.lifecycle.ViewModelProvider
 
 abstract class NavBaseFragment<DB : ViewDataBinding> : Fragment() {
 
@@ -27,7 +24,8 @@ abstract class NavBaseFragment<DB : ViewDataBinding> : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         mDataBinding = DataBindingUtil.inflate<DB>(inflater, getLayoutId(), container, false)
-        mDataBinding.lifecycleOwner = this
+        mDataBinding.lifecycleOwner = if (setLifeOwnerIsActivity()) requireActivity()
+        else this
         return mDataBinding.root
     }
 
@@ -36,26 +34,7 @@ abstract class NavBaseFragment<DB : ViewDataBinding> : Fragment() {
         init()
     }
 
-
     abstract fun init()
-
-    /**
-     * 便捷初始化viewModel
-     */
-    fun <VM : AndroidViewModel> initViewModel(vm: Class<VM>) =
-        if (setLifeOwnerIsActivity()) { //设置viewModel持有者是activity还是fragment
-            ViewModelProvider(
-                this,
-                SavedStateViewModelFactory(requireActivity().application, requireActivity())
-            )[vm]
-        } else {
-            ViewModelProvider(
-                this,
-                SavedStateViewModelFactory(requireActivity().application, this)
-            )[vm]
-        }
-
-    inline fun <reified VM : AndroidViewModel> initViewModel() = initViewModel(VM::class.java)
 
     open fun setLifeOwnerIsActivity() = false
 

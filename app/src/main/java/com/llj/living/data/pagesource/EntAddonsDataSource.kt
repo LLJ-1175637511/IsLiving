@@ -2,7 +2,6 @@ package com.llj.living.data.pagesource
 
 import com.llj.living.custom.ext.quickRequest
 import com.llj.living.data.bean.EntAddonsBean
-import com.llj.living.data.bean.EntInfoBean
 import com.llj.living.data.enums.TypeEnums
 import com.llj.living.net.repository.SystemRepository
 import com.llj.living.utils.LogUtils

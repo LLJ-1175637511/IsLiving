@@ -5,7 +5,7 @@
     <data>
         <variable
             name="addonsByEntIdBean"
-            type="com.llj.living.data.bean.AddonsByEntIdBean" />
+            type="com.llj.living.data.bean.InfoByEntIdBean" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="4dp"
-                android:text="@{addonsByEntIdBean.sex}"
+                android:text="@{addonsByEntIdBean.name}"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 app:layout_constraintStart_toEndOf="@+id/iv_img"

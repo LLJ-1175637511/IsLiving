@@ -1,6 +1,5 @@
 package com.llj.living.ui.activity
 
-import android.content.Intent
 import androidx.activity.viewModels
 import androidx.navigation.Navigation
 import androidx.navigation.ui.setupWithNavController
@@ -13,14 +12,14 @@ import com.llj.living.data.database.OldManInfoWait
 import com.llj.living.data.database.SuppleDoing
 import com.llj.living.data.database.SuppleFinished
 import com.llj.living.databinding.ActivityNavMainBinding
-import com.llj.living.logic.vm.DatabaseVM
+import com.llj.living.logic.vm.DatabaseTestVM
 import kotlinx.coroutines.delay
 
 class MainActivity : BaseActivity<ActivityNavMainBinding>() {
 
     override fun getLayoutId(): Int = R.layout.activity_nav_main
 
-    private val dbViewModel by viewModels<DatabaseVM>()
+    private val dbViewModel by viewModels<DatabaseTestVM>()
 
     override fun init() {
         buildToolbar()

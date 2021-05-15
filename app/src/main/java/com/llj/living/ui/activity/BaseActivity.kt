@@ -24,6 +24,7 @@ import com.llj.living.custom.ext.baseObserver
 import com.llj.living.custom.view.NetDialog
 import com.llj.living.data.bean.ToolbarConfig
 import com.llj.living.databinding.ToolbarBaseBinding
+import com.llj.living.utils.ToastUtils
 
 abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity() {
 
@@ -50,11 +51,17 @@ abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val filter = IntentFilter().apply {
-            addAction("android.net.conn.CONNECTIVITY_CHANGE")
+        try {
+            val filter = IntentFilter().apply {
+                addAction("android.net.conn.CONNECTIVITY_CHANGE")
+            }
+            registerReceiver(myNetworkChangeReceiver, filter)
+            initView()
+        }catch (e:Exception){
+            e.printStackTrace()
+            ToastUtils.toastShort("初始化错误")
+            finish()
         }
-        registerReceiver(myNetworkChangeReceiver, filter)
-        initView()
     }
 
     protected fun getToolbar() = toolbarDB?.toolbarBase

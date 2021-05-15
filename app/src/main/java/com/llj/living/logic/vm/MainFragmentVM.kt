@@ -23,7 +23,6 @@ class MainFragmentVM(application: Application, savedStateHandle: SavedStateHandl
         EntInfoDataSource()
     }.flow
 
-
     /**
      * 获取广告数据
      */

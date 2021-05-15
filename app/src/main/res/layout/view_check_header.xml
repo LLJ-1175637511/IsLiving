@@ -4,11 +4,21 @@
 
     <data>
 
-        <import type="com.llj.living.custom.ext.BdToolKt" />
+        <variable
+            name="startTime"
+            type="String" />
 
         <variable
-            name="entAddons"
-            type="com.llj.living.data.bean.EntAddonsBean" />
+            name="endTime"
+            type="String" />
+
+        <variable
+            name="waitCount"
+            type="String" />
+
+        <variable
+            name="hadCount"
+            type="String" />
     </data>
 
     <FrameLayout
@@ -38,7 +48,7 @@
                 style="@style/CheckHeaderStrCommonText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{BdToolKt.convertMyTimeStr(entAddons.start_at)}"
+                android:text="@{startTime}"
                 app:layout_constraintBottom_toBottomOf="@+id/textView6"
                 app:layout_constraintStart_toEndOf="@+id/textView6"
                 app:layout_constraintTop_toTopOf="@+id/textView6" />
@@ -60,7 +70,7 @@
                 style="@style/CheckHeaderStrCommonText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{BdToolKt.convertMyTimeStr(entAddons.end_at)}"
+                android:text="@{endTime}"
                 app:layout_constraintBottom_toBottomOf="@+id/textView8"
                 app:layout_constraintStart_toEndOf="@+id/textView8"
                 app:layout_constraintTop_toTopOf="@+id/textView8"
@@ -82,7 +92,7 @@
                 style="@style/CheckHeaderStrCommonText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{String.valueOf(entAddons.people_count-entAddons.people_reput_count)}"
+                android:text="@{waitCount}"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_wait_str"
                 app:layout_constraintStart_toEndOf="@+id/tv_wait_str"
                 app:layout_constraintTop_toTopOf="@+id/tv_wait_str" />
@@ -105,7 +115,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
-                android:text="@{String.valueOf(entAddons.people_reput_count)}"
+                android:text="@{hadCount}"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_had_str"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/tv_had_str"

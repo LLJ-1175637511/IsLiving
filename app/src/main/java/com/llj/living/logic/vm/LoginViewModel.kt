@@ -2,7 +2,6 @@ package com.llj.living.logic.vm
 
 import android.app.Application
 import android.content.Context
-import android.os.Build
 import android.os.Environment
 import android.telephony.TelephonyManager
 import androidx.lifecycle.LiveData
@@ -103,11 +102,15 @@ class LoginViewModel(application: Application, savedStateHandle: SavedStateHandl
                 buildLoginMap(userNameLiveData.value!!, passWordLiveData.value!!, currentImei!!,lat,lng)
             SystemRepository.loginRequest(map)
         } ?: return@tryExceptionLaunch
+
         MyApplication.setEntLocation(Pair(loginBean.ent_lng, loginBean.ent_lat))
         //地理位置验证 登录后默认 isLogined = true 请求网络时自动验证
         checkLocation() ?: return@tryExceptionLaunch
+        getSP(Const.SPBaidu).save {
+            putString(Const.SPBaiduTokenString,loginBean.ent_data)
+        }
         _loginLiveData.postValue(loginBean)
-        savedUserSp(loginBean.token)
+        savedUserSp(loginBean.token,loginBean.ent_id)
     }
 
     private fun getImei(): String? {
@@ -123,10 +126,11 @@ class LoginViewModel(application: Application, savedStateHandle: SavedStateHandl
     /**
      * 保存用户名 密码
      */
-    private fun savedUserSp(token: String) = getSP(Const.SPUser).save {
+    private fun savedUserSp(token: String, entId: Int) = getSP(Const.SPUser).save {
         putString(Const.SPUserPwdLogin, passWordLiveData.value)
         putString(Const.SPUserNameLogin, userNameLiveData.value)
         putString(Const.SPUserTokenLogin, token)
+        putInt(Const.SPUserEntId, entId)
         putBoolean(Const.SPUserRememberPwdLogin, rememberPwdLiveData.value!!)
     }
 

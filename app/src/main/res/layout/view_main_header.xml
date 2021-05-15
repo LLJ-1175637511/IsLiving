@@ -6,7 +6,7 @@
     <data>
         <variable
             name="vm"
-            type="com.llj.living.logic.vm.DatabaseVM" />
+            type="com.llj.living.logic.vm.DatabaseTestVM" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -10,11 +10,11 @@
 
         <variable
             name="asiVM"
-            type="com.llj.living.logic.vm.SuppleInfoVM" />
+            type="com.llj.living.logic.vm.SuppleDetailsVM" />
 
         <variable
             name="oldmanBean"
-            type="com.llj.living.data.bean.AddonsByEntIdBean" />
+            type="com.llj.living.data.bean.InfoByEntIdBean" />
 
         <variable
             name="types"
