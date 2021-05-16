@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.llj.living.custom.exception.PictureLackException
+import com.llj.living.custom.ext.TAG
 import com.llj.living.data.enums.TakePhotoEnum
 import com.llj.living.utils.LogUtils
 import id.zelory.compressor.Compressor
@@ -29,9 +30,13 @@ object SysNetConfig {
     const val CheckId = "check_id" //补录人员详细
     const val PeopleId = "people_id" //补录人员id
     const val ReputId = "reput_id" //补录批次id
-    const val Face = "face" //补录批次id
-    const val Ida = "ida" //补录批次id
-    const val Idb = "idb" //补录批次id
+    const val Face = "face"
+    const val Video = "video"
+    const val Ida = "ida"
+    const val Idb = "idb"
+    const val Status = "status" //客户端照片审核结果
+
+    const val STATUS_SUC = "ok" //客户端照片审核 成功标志
 
     const val MULTIPART_TEXT = "text/plain"
     const val MULTIPART_FILE = "multipart/form-data"
@@ -56,7 +61,7 @@ object SysNetConfig {
         val tokenBody = RequestBody.create(tmt, token)
         val reputIdBody = RequestBody.create(tmt, reput_id)
         val peopleIdBody = RequestBody.create(tmt, people_id)
-        return mapOf(Token to tokenBody, PeopleId to reputIdBody, ReputId to peopleIdBody)
+        return mapOf(Token to tokenBody, ReputId to reputIdBody, PeopleId to peopleIdBody)
     }
 
     /**
@@ -77,7 +82,7 @@ object SysNetConfig {
         val cp = Compressor(context).setQuality(25)
         proportion?.let {
             val t = (500 * proportion).toInt()
-            LogUtils.d("SysNetConfig_TT","pro:${t}")
+            LogUtils.d("SysNetConfig_TT", "pro:${t}")
             cp.setMaxWidth(500).setMaxHeight(t)
         }
         //压缩后图片的保存路径
@@ -105,6 +110,45 @@ object SysNetConfig {
             MultipartBody.Part.createFormData(Idb, resultPath3.name, idCardBRequest)
 
         return listOf(faceMultipart, idCardAMultipart, idCardBMultipart)
+    }
+
+    /**
+     * 构造补录上传图片的普通map
+     */
+    fun buildVerifyCheckMap(
+        token: String,
+        check_id: String,
+        people_id: String
+    ): Map<String, String> =
+        mapOf(Token to token, CheckId to check_id, PeopleId to people_id, Status to STATUS_SUC)
+
+    /**
+     * 构造核查上传图片的普通map
+     */
+    fun buildUploadVideoMap(
+        token: String,
+        check_id: String,
+        people_id: String
+    ): Map<String, RequestBody> {
+        val tmt = MediaType.parse(MULTIPART_TEXT)
+        val tokenBody = RequestBody.create(tmt, token)
+        val checkIdBody = RequestBody.create(tmt, check_id)
+        val peopleIdBody = RequestBody.create(tmt, people_id)
+        val statusBody = RequestBody.create(tmt, STATUS_SUC)
+        return mapOf(
+            Token to tokenBody,
+            CheckId to checkIdBody,
+            PeopleId to peopleIdBody,
+            Status to statusBody
+        )
+    }
+
+    fun buildVideoPart(path:String):MultipartBody.Part{
+        val fmt = MediaType.parse(MULTIPART_FILE)
+        val file = File(path)
+        LogUtils.d("${TAG}_TTT",file.length().toString())
+        val videoRequest = RequestBody.create(fmt, file)
+        return MultipartBody.Part.createFormData(Video, file.name, videoRequest)
     }
 
 }

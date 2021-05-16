@@ -20,11 +20,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.MutableLiveData
 import com.llj.living.R
+import com.llj.living.application.MyApplication
 import com.llj.living.custom.ext.baseObserver
+import com.llj.living.custom.ext.startCommonFinishedActivity
 import com.llj.living.custom.view.NetDialog
 import com.llj.living.data.bean.ToolbarConfig
 import com.llj.living.databinding.ToolbarBaseBinding
 import com.llj.living.utils.ToastUtils
+import kotlinx.android.synthetic.main.toolbar_base.*
 
 abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity() {
 
@@ -37,8 +40,6 @@ abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity() {
 
     private var toolbarDB: ToolbarBaseBinding? = null
 
-    private val mToolbarConfig by lazy { ToolbarConfig() }
-
     private val netLiveData = MutableLiveData<Boolean>()
 
     private val dialog by lazy { NetDialog(this) }
@@ -49,8 +50,12 @@ abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity() {
 
     open fun isScreenFull(): Boolean = false
 
+    open fun isLoginActivity():Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        checkTokenIsInvalid()
+
         try {
             val filter = IntentFilter().apply {
                 addAction("android.net.conn.CONNECTIVITY_CHANGE")
@@ -64,6 +69,17 @@ abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity() {
         }
     }
 
+    private fun checkTokenIsInvalid() {
+        if (!isLoginActivity()){
+            MyApplication.tokenInvalidLiveData.baseObserver(this){
+                if (it) {
+                    startCommonFinishedActivity<LoginActivity>()
+                    MyApplication.setTokenInvalid(false)
+                }
+            }
+        }
+    }
+
     protected fun getToolbar() = toolbarDB?.toolbarBase
 
     protected fun getDataBinding() = mDataBinding
@@ -71,13 +87,7 @@ abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity() {
     /**
      * 初始化toolbar参数
      */
-    fun setToolbar(toolbarConfig: ToolbarConfig) {
-        mToolbarConfig.apply {
-            title = toolbarConfig.title
-            isShowBack = toolbarConfig.isShowBack
-            isShowMenu = toolbarConfig.isShowMenu
-        }
-    }
+    open fun setToolbar():ToolbarConfig = ToolbarConfig("",false,false)
 
     private fun initView() {
         mDataBinding = DataBindingUtil.setContentView<DB>(this, getLayoutId())
@@ -98,9 +108,9 @@ abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity() {
 
     private fun initToolbar() {
         toolbarDB?.let {
-            title = mToolbarConfig.title
+            toolbar_base_title.text = setToolbar().title
             it.toolbarBase.apply {
-                if (mToolbarConfig.isShowMenu) {
+                if (setToolbar().isShowMenu) {
                     inflateMenu(R.menu.toolbar_menu)
                     setOnMenuItemClickListener { item ->
                         when (item.itemId) {
@@ -109,15 +119,15 @@ abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity() {
                                 startActivity(i)
                                 finish()
                             }
-                            R.id.more_takePhoto -> {
+                            /*R.id.more_takePhoto -> {
                                 val i = Intent(this@BaseActivity, FaceAuthenticActivity::class.java)
                                 startActivity(i)
-                            }
+                            }*/
                         }
                         false
                     }
                 }
-                if (mToolbarConfig.isShowBack) {
+                if (setToolbar().isShowBack) {
                     setNavigationOnClickListener {
                         finish()
                     }

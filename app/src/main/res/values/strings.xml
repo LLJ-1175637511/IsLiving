@@ -55,6 +55,7 @@
     <string name="click_reload">点击重试</string>
     <string name="make_sure">确\t认</string>
     <string name="completed">完\t成</string>
+    <string name="retry">重\t试</string>
     <string name="click_take_photo">点击拍照</string>
     <string name="click_picture_take_photo">点击图案拍照</string>
     <string name="check_detail">核查详情</string>

@@ -92,6 +92,8 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
             finish()
         }
     }
+
+
 }
 
 

@@ -14,7 +14,7 @@ object Const {
     const val SPAddonsReputId = "sp_addons_reput_id"
 
     const val SPCheck = "sp_check"
-    const val SPCheckReputId = "sp_check_reput_id"
+    const val SPCheckCheckId = "sp_check_check_id"
 
     const val SPBaidu = "sp_baidu"
     const val SPBaiduTokenString = "sp_baidu_token_string"

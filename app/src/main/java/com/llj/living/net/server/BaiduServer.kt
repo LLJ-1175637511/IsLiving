@@ -2,7 +2,6 @@ package com.llj.living.net.server
 
 import com.llj.living.data.bean.BaseBaiduBean
 import com.llj.living.net.config.TestNetConfig
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -23,5 +22,5 @@ interface SearchFaceServer {
         @Header(TestNetConfig.ContentType) contentType: String,
         @Query(TestNetConfig.AccessToken) accessToken: String,
         @FieldMap map: Map<String, String>
-    ): Call<ResponseBody>
+    ): Call<BaseBaiduBean>
 }

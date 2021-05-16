@@ -7,8 +7,8 @@ object RetrofitCreator {
 
     private const val faceUrl = "https://aip.baidubce.com/"
     private const val baiduLLUrl = "http://api.map.baidu.com/"
-    private const val mysqlUrl = "https://p.zhuohang.tech/"
-
+//    private const val mysqlUrl = "https://p.zhuohang.tech/"
+    private const val mysqlUrl = "https://y.yanglaonet.com/"
 
     private val retrofit by lazy {
         Retrofit.Builder()

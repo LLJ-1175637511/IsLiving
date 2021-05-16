@@ -2,6 +2,7 @@ package com.llj.living.ui.fragment
 
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.filter
 import com.llj.living.R
 import com.llj.living.custom.ext.getSP
 import com.llj.living.custom.ext.save
@@ -63,7 +64,6 @@ class SuppleWaitFragment private constructor() : NavBaseFragment<FragmentWaitSup
                 }
             }
         }
-
     }
 
     companion object {

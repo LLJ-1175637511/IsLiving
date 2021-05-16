@@ -1,5 +1,6 @@
 package com.llj.living.ui.activity
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -53,11 +54,11 @@ abstract class BaseTPActivity<DB : ViewDataBinding> : BaseActivity<DB>() {
 
     suspend fun getVideoIntent(path: String): Intent {
         buildUri("VID_${path}.mp4")
-        LogUtils.d(TAG, "videoUri is null:${videoUri == null}")
+        LogUtils.d(TAG, "videoUri :${videoUri}")
         return Intent(MediaStore.ACTION_VIDEO_CAPTURE).apply {
             putExtra(MediaStore.EXTRA_OUTPUT, videoUri)
             putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1)
-            putExtra(MediaStore.EXTRA_DURATION_LIMIT, 15)
+            putExtra(MediaStore.EXTRA_DURATION_LIMIT, 10)
         }
     }
 
@@ -121,7 +122,7 @@ abstract class BaseTPActivity<DB : ViewDataBinding> : BaseActivity<DB>() {
         }
 
     fun buildLaunch(block: (bitmap: Bitmap?) -> Unit) =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {_->
             try {
                 imageUri?.let { uri ->
                     bitmap =
@@ -138,14 +139,15 @@ abstract class BaseTPActivity<DB : ViewDataBinding> : BaseActivity<DB>() {
                 e.printStackTrace()
                 LogUtils.d(TAG, e.message.toString())
             }
-
         }
 
-    fun buildVideoLaunch(block: (uri: Uri) -> Unit) =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
+    fun buildVideoLaunch(block: (uri: Uri?) -> Unit) =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { ar->
             try {
-                videoUri?.let {
-                    block(it)
+                if (ar.resultCode== Activity.RESULT_OK){
+                    block(videoUri)
+                }else{
+                    block(null)
                 }
             } catch (e: OutOfMemoryError) {
                 e.printStackTrace()

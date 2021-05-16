@@ -13,7 +13,6 @@ import com.llj.living.data.const.Const
 import com.llj.living.data.enums.TakePhotoEnum
 import com.llj.living.databinding.ActivitySupplementInfoBinding
 import com.llj.living.logic.vm.SuppleDetailsVM
-import com.llj.living.net.NetCode
 import com.llj.living.utils.LogUtils
 import com.llj.living.utils.PhotoUtils
 import com.llj.living.utils.ToastUtils
@@ -25,6 +24,8 @@ class ActivitySuppleDetails : BaseTPActivity<ActivitySupplementInfoBinding>() {
 
     override fun getLayoutId(): Int = R.layout.activity_supplement_info
 
+    override fun setToolbar() = (ToolbarConfig("补录信息", isShowBack = true, isShowMenu = false))
+
     private val isAllCompleted = mutableSetOf<Int>()
 
     private val viewModel by viewModels<SuppleDetailsVM>()
@@ -34,7 +35,6 @@ class ActivitySuppleDetails : BaseTPActivity<ActivitySupplementInfoBinding>() {
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun init() {
-        setToolbar(ToolbarConfig("补录信息", isShowBack = true, isShowMenu = false))
 
         peopleId = intent.getIntExtra(INTENT_ID_SUPPLE_FLAG, -1)
         reputId = getSP(Const.SPAddons).getInt(Const.SPAddonsReputId, -1)
@@ -57,6 +57,7 @@ class ActivitySuppleDetails : BaseTPActivity<ActivitySupplementInfoBinding>() {
             tvTakePhotoFace.setOnClickListener {
                 takePhoto(TakePhotoEnum.PersonFace)
             }
+
             reFace.setOnClickListener {
                 takePhoto(TakePhotoEnum.PersonFace)
             }
@@ -72,6 +73,7 @@ class ActivitySuppleDetails : BaseTPActivity<ActivitySupplementInfoBinding>() {
             tvTakePhotoIdB.setOnClickListener {
                 takePhoto(TakePhotoEnum.IdcardBehind)
             }
+
             reIdCardB.setOnClickListener {
                 takePhoto(TakePhotoEnum.IdcardBehind)
             }
@@ -89,11 +91,11 @@ class ActivitySuppleDetails : BaseTPActivity<ActivitySupplementInfoBinding>() {
         buildActivityCoroutineDialog(layoutInflater, null) { bd, ld ->
             try {
                 bd.close.text = "取消"
-                bd.tvSipsStr.text = "百度图片验证中"
-                val baiduResult = viewModel.uploadBaiduInfo(idNumber)
+                bd.tvTipsStr.text = "百度图片验证中"
+                val baiduResult = viewModel.uploadBaiduInfo(idNumber,peopleId)
                 LogUtils.d("${TAG}_TT", baiduResult.toString())
                 if (baiduResult.error_code.isBaiduCodeSuc() && baiduResult.error_msg.isBaiduMsgSuc()) {
-                    bd.tvSipsStr.text = "服务器图片上传中"
+                    bd.tvTipsStr.text = "服务器图片上传中"
                 } else {
                     viewModel.setErrToast("人脸库注册失败:${baiduResult.error_msg}")
                     throw Exception("人脸库注册失败")
@@ -103,8 +105,8 @@ class ActivitySuppleDetails : BaseTPActivity<ActivitySupplementInfoBinding>() {
                     peopleId,
                     proportion.value
                 )
-                if (myResult.code == NetCode.SUCCESS) {
-                    bd.tvSipsStr.text = "上传成功"
+                if (myResult.code.isCodeSuc()&&myResult.msg.isMsgSuc()) {
+                    bd.tvTipsStr.text = "上传成功"
                     delay(1000)
                     ld?.cancel()
                     finish()
@@ -135,8 +137,8 @@ class ActivitySuppleDetails : BaseTPActivity<ActivitySupplementInfoBinding>() {
             bitmap?.let {
                 getDataBinding().apply {
                     ivFaceSuppleInfo.setImageBitmap(it)
-                    val str = PhotoUtils.bitmapToBase64(it)
-                    viewModel.setBase64Str(str)
+                    val base64str = PhotoUtils.bitmapToBase64(it)
+                    viewModel.setBase64Str(base64str)
                     viewModel.setPictureShow()
                 }
                 checkIsCompleted(1)

@@ -28,25 +28,26 @@ import kotlinx.coroutines.launch
 class ActivityVideoPreview : AppCompatActivity() {
 
     private val viewModel by viewModels<VideoPreviewVM>()
+
     private lateinit var uri: Uri
     private var userOperasTime = 0
+
     private lateinit var binding: ActivityVideoPreviewBinding
+
     private var isVertical = false
 
     private val TAG = this.javaClass.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         hideSystemUi() //隐藏系统顶部状态栏
         initOrientation() //初始化屏幕方向
+
         super.onCreate(savedInstanceState)
+
         val tempUri = intent.getParcelableExtra<Uri>(ActivityVideotape.VIDEO_URI)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_video_preview)
         if (tempUri == null) {
-            lifecycleScope.launch {
-                toastLong("未获取到视频路径 请返回重试")
-                delay(2000)
-                finish()
-            }
+            finish()
             return
         } else uri = tempUri
 
@@ -66,6 +67,7 @@ class ActivityVideoPreview : AppCompatActivity() {
     }
 
     private fun initUi() {
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_video_preview)
         binding.apply {
             tvVideoName.text = uri.path.toString().getVideoName()
             surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
@@ -197,24 +199,27 @@ class ActivityVideoPreview : AppCompatActivity() {
     }
 
     private fun hideSystemUi() {
-        //沉浸式效果
-        // LOLLIPOP解决方案
-        window.statusBarColor = Color.TRANSPARENT//状态栏设置为透明色
-        window.navigationBarColor = Color.TRANSPARENT
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.setDecorFitsSystemWindows(false)
-            window.insetsController?.let {
-                it.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-                it.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        try {
+            //沉浸式效果
+            window.statusBarColor = Color.TRANSPARENT//状态栏设置为透明色
+            window.navigationBarColor = Color.TRANSPARENT
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                window.setDecorFitsSystemWindows(false)
+                window.insetsController?.let {
+                    it.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
+                    it.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                }
+            } else {
+                @Suppress("DEPRECATION")
+                window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_FULLSCREEN
+                        or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION)
             }
-        } else {
-            @Suppress("DEPRECATION")
-            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_FULLSCREEN
-                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION)
+        }catch (e:Exception){
+            e.printStackTrace()
         }
     }
 

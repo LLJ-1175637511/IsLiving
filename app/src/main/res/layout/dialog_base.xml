@@ -4,8 +4,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:minHeight="500dp"
+        android:layout_height="wrap_content"
+        android:minHeight="350dp"
         android:orientation="vertical">
 
         <FrameLayout
@@ -25,7 +25,7 @@
                 style="@style/AVLoadingIndicatorView" />
 
             <TextView
-                android:id="@+id/tvSipsStr"
+                android:id="@+id/tv_tips_str"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 android:layout_gravity="center"

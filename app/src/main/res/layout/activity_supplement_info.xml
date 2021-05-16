@@ -24,14 +24,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="8dp"
         android:orientation="vertical">
+
+        <include android:id="@+id/toolbar" layout="@layout/toolbar_base" />
 
         <TextView
             android:id="@+id/tv_oldman_name_supple_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:text="@{BdToolKt.convertPeopleNameStr(oldmanBean.name)}"
             android:textSize="16sp" />
 
@@ -43,7 +45,6 @@
             android:layout_marginTop="10dp"
             android:text="@{BdToolKt.convertIdNumberStr(oldmanBean.id_number)}"
             android:textSize="16sp" />
-
 
         <ScrollView
             android:layout_width="match_parent"

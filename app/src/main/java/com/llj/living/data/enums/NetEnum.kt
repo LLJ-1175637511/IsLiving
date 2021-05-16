@@ -43,5 +43,5 @@ enum class NetStatus {
 }
 
 enum class TypeEnums(num: Int) {
-    FINISHED(1),DOING(2),ALL(0),
+    FINISHED(1), DOING(2), ALL(0)
 }

@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.llj.living.application.MyApplication
+import com.llj.living.data.bean.BaseBaiduBean
 import com.llj.living.data.bean.BaseBean
 import com.llj.living.data.const.Const
 import com.llj.living.utils.ContextUtils
@@ -32,6 +34,13 @@ suspend inline fun <reified T> baseBeanConverter(bb: BaseBean): T = withContext(
     val type = object : TypeToken<T>() {}.type
     gson.fromJson(bb.result, type) as T
 }
+
+suspend inline fun <reified T> baseBaiduBeanConverter(bb: BaseBaiduBean): T =
+    withContext(Dispatchers.IO) {
+        val gson = Gson()
+        val type = object : TypeToken<T>() {}.type
+        gson.fromJson(bb.result, type) as T
+    }
 
 fun CoroutineScope.tryExceptionLaunch(
     thread: CoroutineDispatcher = Dispatchers.Default,
@@ -89,7 +98,7 @@ suspend inline fun <reified T> quickTokenRequest(
 ): T? = withContext(Dispatchers.Default) {
     val token =
         ContextUtils.getInstance().getSP(Const.SPUser).getString(Const.SPUserTokenLogin, "")
-    if (token.isNullOrEmpty()){
+    if (token.isNullOrEmpty()) {
         ToastUtils.toastShort("token获取失败")
         return@withContext null
     }
@@ -98,8 +107,12 @@ suspend inline fun <reified T> quickTokenRequest(
     }
     val exception = beanPair.second
     if (exception != null) {
-        withContext(Dispatchers.Main) {
-            ToastUtils.toastShort(exception.message.toString())
+        if (exception.message=="tokenErr"){
+            MyApplication.setTokenInvalid(true)
+        }else{
+            withContext(Dispatchers.Main) {
+                ToastUtils.toastShort(exception.message.toString())
+            }
         }
         return@withContext null
     }
@@ -121,6 +134,9 @@ suspend inline fun <reified T> realRequest(crossinline block: suspend () -> Base
                     putString(Const.SPMySqlToken, token)
                 }
             }
+        } else if (baseBean.code.isTokenInvalid()) {
+            exc = Exception("tokenErr")
+
         } else {
             exc = Exception("错误--> errCode:${baseBean.code} errMsg:${baseBean.msg}")
         }
@@ -131,7 +147,6 @@ suspend inline fun <reified T> realRequest(crossinline block: suspend () -> Base
     }
     return Pair(data, exc)
 }
-
 
 
 /*----------------------------------- activity 扩展函数 -------------------------------------------*/
@@ -258,6 +273,8 @@ fun String.isBaiduMsgSuc(): Boolean = this == "SUCCESS"
 
 fun String.isCodeSuc(): Boolean = this == "000"
 
+fun String.isTokenInvalid(): Boolean = this == "010"
+
 fun Int.isBaiduCodeSuc(): Boolean = this == 0
 
 fun String.versionToInt(): Int? {
@@ -284,4 +301,4 @@ fun String.getVideoName(): String {
 }
 
 @SuppressLint("SimpleDateFormat")
-fun Long.toSimpleTime(): String = SimpleDateFormat("yyyy-MM-dd").format(this)
+fun Long.toSimpleTime(): String = SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(this)

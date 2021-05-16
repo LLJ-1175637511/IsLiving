@@ -31,7 +31,8 @@ data class LoginBean(
     val nickname: String,
     val token: String,
     val user_id: Int,
-    val ent_data:String
+    val ent_data:String,
+    val ent_degree:Int
 ) : Parcelable
 
 /**
@@ -117,3 +118,4 @@ data class EntCheckBean(
     val start_at: String,
     val end_at: String
 ) : Parcelable
+

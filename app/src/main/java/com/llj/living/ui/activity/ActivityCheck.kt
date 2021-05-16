@@ -20,8 +20,9 @@ class ActivityCheck : BaseActivity<ActivityCheckBinding>() {
 
     override fun getLayoutId(): Int = R.layout.activity_check
 
+    override fun setToolbar() = ToolbarConfig("核查信息", isShowBack = true, isShowMenu = true)
+
     override fun init() {
-        setToolbar(ToolbarConfig("核查信息", isShowBack = true, isShowMenu = true))
 
         val checkId = intent.getIntExtra(CheckDoingAdapter.CHECK_ID_FLAG, -1)
 

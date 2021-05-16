@@ -1,6 +1,8 @@
 package com.llj.living.application
 
 import android.app.Application
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.llj.living.utils.ContextUtils
 
 class MyApplication : Application() {
@@ -11,8 +13,6 @@ class MyApplication : Application() {
     }
 
     companion object {
-        const val ApiKey = "f05CbSUbz4fpk5EFMfwNzgdh"
-        const val SecretKey = "jFRKm4I4RAZ7YS7svK3xOQkuhfTcrf4e"
 
         const val CURRENT_VERSION = "1.0.1"
 
@@ -28,6 +28,19 @@ class MyApplication : Application() {
         fun getLocation() = location
         fun setLocation(locPair: Pair<Double, Double>) {
             location = locPair
+        }
+
+        private var distance = 0
+        fun setDistance(d: Int) {
+            distance = d
+        }
+
+        fun getDistance() = distance
+
+        private val _tokenInvalidLiveData = MutableLiveData<Boolean>()
+        val tokenInvalidLiveData: LiveData<Boolean> = _tokenInvalidLiveData
+        fun setTokenInvalid(boolean: Boolean) {
+            _tokenInvalidLiveData.postValue(boolean)
         }
     }
 

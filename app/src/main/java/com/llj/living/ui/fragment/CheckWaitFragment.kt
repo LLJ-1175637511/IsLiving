@@ -36,7 +36,7 @@ class CheckWaitFragment : NavBaseFragment<FragmentWaitCheckBinding>() {
         }
 
         requireContext().getSP(Const.SPCheck).save {
-            putInt(Const.SPCheckReputId,reputId)
+            putInt(Const.SPCheckCheckId,reputId)
         }
 
         getBinding().recyclerviewWaitCheck.adapter = adapter

@@ -30,6 +30,10 @@ class LoginActivity : BaseBLActivity<ActivityLoginBinding>() {
 
     override fun getLayoutId(): Int = R.layout.activity_login
 
+    override fun setToolbar() =  ToolbarConfig(title = "用户登录", isShowBack = false, isShowMenu = false)
+
+    override fun isLoginActivity() = true
+
     private val viewModel by viewModels<LoginViewModel>()
 
     private var dialog: AlertDialog? = null //提示更新、强制更新 dialog
@@ -48,7 +52,6 @@ class LoginActivity : BaseBLActivity<ActivityLoginBinding>() {
     }
 
     override fun init() {
-        setToolbar(ToolbarConfig(title = "用户登录", isShowBack = false, isShowMenu = false))
         initVM()
         initLD()
     }

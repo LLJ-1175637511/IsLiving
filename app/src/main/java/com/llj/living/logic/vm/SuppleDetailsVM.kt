@@ -37,7 +37,6 @@ class SuppleDetailsVM(application: Application, savedStateHandle: SavedStateHand
     @RequiresApi(Build.VERSION_CODES.R)
     suspend fun uploadPictureInfo(reputId: Int, peopleId: Int, proportion: Float?) = withContext(Dispatchers.Default)  {
         val token = getSP(Const.SPUser).getString(Const.SPUserTokenLogin, "")
-        base64Str ?: throw FaceLackException()
         token ?: throw TokenErrException()
         val map = SysNetConfig.buildUploadSuppleMap(token, reputId.toString(), peopleId.toString())
         val fileList = SysNetConfig.buildUploadSuppleFileMap(
@@ -46,12 +45,13 @@ class SuppleDetailsVM(application: Application, savedStateHandle: SavedStateHand
         SystemRepository.getEntUploadPictureInfoRequest(map, fileList)
     }
 
-    suspend fun uploadBaiduInfo(idNumber: String) = withContext(Dispatchers.Default) {
+    suspend fun uploadBaiduInfo(idNumber: String, peopleId: Int) = withContext(Dispatchers.Default) {
         val entId = getSP(Const.SPUser).getInt(Const.SPUserEntId, -1)
+        base64Str ?: throw FaceLackException()
         if (entId == -1) throw EntIdException()
         val baiduToken = getSP(Const.SPBaidu).getString(Const.SPBaiduTokenString, "")
         baiduToken ?: throw BaiduTokenErrException()
-        val baiduPeopleId = "${entId}_${idNumber}"
+        val baiduPeopleId = "${peopleId}_${idNumber}"
         val baiduMap = BaiduNetConfig.buildRegisterFaceMap(
             base64Str!!,
             ImageType.BASE64,
@@ -60,7 +60,6 @@ class SuppleDetailsVM(application: Application, savedStateHandle: SavedStateHand
         )
         BaiduRepository.sendRegisterFaceRequest(baiduToken, baiduMap)
     }
-
 
     fun setPictureShow() {
         _ivFaceCoverIsShowLiveData.postValue(true)

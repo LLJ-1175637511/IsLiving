@@ -38,56 +38,20 @@ abstract class BaseViewModel(
             setToast("获取本机定位信息失败 请返回重试")
             return null
         }
-        /* if (entLoc.first == 0.0 || entLoc.second == 0.0) {
-             setToast("获取服务器定位参数错误")
-             return null
-         }*/
+        if (entLoc.first == 0.0 || entLoc.second == 0.0) {
+            setToast("获取服务器定位参数错误")
+            return null
+        }
         //获取两坐标点距离（米）
         val distance = LonLatUtils.getDistance(entLoc, loc)
         LogUtils.d(TAG, "distance:${distance}")
-        /* if (distance > 2000) { //如果 当前定位 到 规定定位 的距离 大于2公里
-             setToast("超出服务范围")
-             return null
-         }*/
+        val degree = MyApplication.getDistance()
+        if (distance > degree) { //如果 当前定位 到 规定定位 的距离 大于2公里
+            setToast("超出服务范围")
+            return null
+        }
         return true
     }
-
-    /*suspend fun getToken() = withContext<String>(Dispatchers.IO) {
-        val sp = getSP(Const.SPBaidu)
-        if (sp.contains(Const.SPBaiduTokenPeriod)) {
-            val periodTime = sp.getLong(Const.SPBaiduTokenPeriod, 0L)
-            val currentTime = System.currentTimeMillis() / 1000
-            LogUtils.d(TAG, "periodTime:${periodTime} currentTime:${currentTime}")
-            if (periodTime - 60 * 60 * 24 * 2 > currentTime) { //最后两天过期的情况下 请求新的token
-                return@withContext sp.getString(Const.SPBaiduTokenString, "").toString()//如果未过期 则不需要请求token
-            }
-        }
-        val tokenBean = FaceAuthRepository.sendTokenRequest()
-        LogUtils.d(TAG, "suc:${tokenBean}")
-        if (tokenBean.isSuc) { //请求成功则保存到sp中
-            val savedSp = sp.save {
-                putString(Const.SPBaiduTokenString, tokenBean.data)
-                val periodTime = System.currentTimeMillis() / 1000 + tokenBean.expiresIn
-                putLong(Const.SPBaiduTokenPeriod, periodTime)
-            }
-            return@withContext if (savedSp) { tokenBean.data } else { false.toString() }
-        } else {
-            LogUtils.d(TAG, "err:${tokenBean}")
-            return@withContext false.toString()
-        }
-    }
-
-    suspend fun checkBaiduTokenRequest(block: suspend (token: String) -> Unit) {
-        val token = getToken()
-        if (token == false.toString()) {
-            withContext(Dispatchers.Main) {
-                setToast("token get failed")
-            }
-            return
-        } else {
-            block(token)
-        }
-    }*/
 
     /**
      * isLogined:判断是否已经登录 未登录时 请求网络 不检测定位信息
@@ -95,7 +59,7 @@ abstract class BaseViewModel(
     suspend inline fun <reified T> quickRequest(
         isLogined: Boolean = true,
         crossinline block: suspend () -> BaseBean
-    ): T? = viewModelScope.async{
+    ): T? = viewModelScope.async {
         if (isLogined) {
             checkLocation() ?: return@async null
         }
@@ -109,7 +73,6 @@ abstract class BaseViewModel(
         }
         beanPair.first
     }.await()
-
 
     fun getSavedHandle() = savedStateHandle
 

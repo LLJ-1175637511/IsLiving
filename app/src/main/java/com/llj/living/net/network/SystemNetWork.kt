@@ -34,6 +34,10 @@ object SystemNetWork {
 
     private val getEntUploadPictureServer by lazy { RetrofitCreator.create<EntUploadPictureServer>() }
 
+    private val getPeopleCheckSucServer by lazy { RetrofitCreator.create<PeopleCheckSucServer>() }
+
+    private val getUploadServer by lazy { RetrofitCreator.create<UploadVideoServer>() }
+
     private val getTestServer by lazy { RetrofitCreator.create<TestServer>() }
 
     suspend fun login(map: Map<String, String>) = loginServer.login(map).await()
@@ -66,8 +70,21 @@ object SystemNetWork {
     suspend fun getEntCheckById(token: String, page: Int, type: Int, id: Int) =
         getEntCheckByIdServer.getEntCheckById(token, page, type, id).await()
 
-    suspend fun getEntUploadPicture(map: Map<String,RequestBody>, fileList:List<MultipartBody.Part>) =
-        getEntUploadPictureServer.getEntUploadPicture(map,fileList).await()
+    suspend fun getEntUploadPicture(
+        map: Map<String, RequestBody>,
+        fileList: List<MultipartBody.Part>
+    ) = getEntUploadPictureServer.getEntUploadPicture(map, fileList).await()
+
+    suspend fun getPeopleCheckSuc(
+        map: Map<String, String>
+    ) = getPeopleCheckSucServer.getcheckSuc(map).await()
+
+
+    suspend fun getUploadVideo(
+        map: Map<String, RequestBody>,
+        file: MultipartBody.Part
+    ) = getUploadServer.getUploadVideo(map, file).await()
+
 
     suspend fun getTest(
         token: RequestBody,

@@ -1,8 +1,18 @@
 package com.llj.living.utils
 
+import android.annotation.TargetApi
+import android.content.ContentResolver
+import android.content.ContentUris
+import android.content.Context
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import android.net.Uri
+import android.os.Build
+import android.os.Environment
+import android.provider.DocumentsContract
+import android.provider.MediaStore
 import android.util.Base64
 import java.io.ByteArrayOutputStream
 import java.io.IOException

@@ -11,15 +11,15 @@ data class BaseBaiduBean(
     val timestamp: Int
 )
 
-data class BaiduRegisterBean(
+data class SearchFaceBean(
     val face_token: String,
-    val location: Location
-)
+    val user_list: List<User>
+){
+    data class User(
+        val group_id: String,
+        val score: Double,
+        val user_id: String,
+        val user_info: String
+    )
+}
 
-data class Location(
-    val height: Int,
-    val left: Double,
-    val rotation: Int,
-    val top: Double,
-    val width: Int
-)

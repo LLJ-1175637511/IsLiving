@@ -1,15 +1,19 @@
 package com.llj.living.ui.activity
 
+import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.llj.living.R
+import com.llj.living.custom.ext.baseObserver
 import com.llj.living.data.bean.EntAddonsBean
 import com.llj.living.data.bean.ToolbarConfig
 import com.llj.living.databinding.ActivitySupplementBinding
 import com.llj.living.databinding.ViewCheckHeaderBinding
+import com.llj.living.logic.vm.SupplementPeopleVM
 import com.llj.living.ui.adapter.SupplementDoingAdapter
 import com.llj.living.ui.fragment.SuppleHadFragment
 import com.llj.living.ui.fragment.SuppleWaitFragment
@@ -20,8 +24,11 @@ class ActivitySupplement : BaseActivity<ActivitySupplementBinding>() {
 
     override fun getLayoutId(): Int = R.layout.activity_supplement
 
+    override fun setToolbar() = ToolbarConfig("补录信息", isShowBack = true, isShowMenu = false)
+
+//    private val supplementVm by viewModels<SupplementPeopleVM>()
+
     override fun init() {
-        setToolbar(ToolbarConfig("补录信息", isShowBack = true, isShowMenu = false))
 
         val addonsId = intent.getIntExtra(SupplementDoingAdapter.SUPPLE_ID_FLAG, -1)
 
@@ -41,11 +48,19 @@ class ActivitySupplement : BaseActivity<ActivitySupplementBinding>() {
             tvHadStr.text = resources.getString(R.string.had_supple_count)
             startTime = StringUtils.convertMyTimeStr(addonsBean.start_at)
             endTime = StringUtils.convertMyTimeStr(addonsBean.end_at)
-            waitCount = (addonsBean.people_count - addonsBean.people_reput_count).toString()
             hadCount = addonsBean.people_reput_count.toString()
+            waitCount = (addonsBean.people_count).toString()
+         /*   supplementVm.setPeopleCount(addonsBean.people_count)
+            supplementVm.setPeopleReCount(addonsBean.people_reput_count)*/
+        }
+/*
+        supplementVm.peopleCount.baseObserver(this) {
+            headerBinding?.waitCount = (addonsBean.people_count).toString()
         }
 
-
+        supplementVm.peopleReCount.baseObserver(this) {
+            headerBinding?.hadCount = addonsBean.people_reput_count.toString()
+        }*/
         getDataBinding().viewPager2.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount() = 2
 

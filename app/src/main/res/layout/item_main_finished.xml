@@ -100,7 +100,7 @@
                 style="@style/ItemDataCommonText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{String.valueOf(entAddons.people_count-entAddons.people_reput_count)}"
+                android:text="@{String.valueOf(entAddons.people_count)}"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_wait_type_str"
                 app:layout_constraintStart_toEndOf="@+id/tv_wait_type_str"
                 app:layout_constraintTop_toTopOf="@+id/tv_wait_type_str" />

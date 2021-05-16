@@ -153,3 +153,30 @@ interface EntCheckServer {
     ): Call<BaseBean>
 
 }
+
+/**
+ * 获取审核批次信息
+ */
+interface PeopleCheckSucServer {
+
+    @FormUrlEncoded
+    @POST("pi.php/check/checkbyface")
+    fun getcheckSuc(
+        @FieldMap map: Map<String, String>
+    ): Call<BaseBean>
+
+}
+
+/**
+ * 上传补录人员照片信息
+ */
+interface UploadVideoServer {
+
+    @Multipart
+    @POST("pi.php/check/checkbyvideo")
+    fun getUploadVideo(
+        @PartMap map: Map<String, @JvmSuppressWildcards RequestBody>,
+        @Part videoFile: MultipartBody.Part
+    ): Call<BaseBean>
+
+}

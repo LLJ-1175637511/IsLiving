@@ -2,6 +2,7 @@ package com.llj.living.logic.vm
 
 import android.app.Application
 import android.content.Context
+import android.os.Build
 import android.os.Environment
 import android.telephony.TelephonyManager
 import androidx.lifecycle.LiveData
@@ -99,28 +100,35 @@ class LoginViewModel(application: Application, savedStateHandle: SavedStateHandl
             val lat = MyApplication.getLocation().second.toString()
             val lng = MyApplication.getLocation().first.toString()
             val map =
-                buildLoginMap(userNameLiveData.value!!, passWordLiveData.value!!, currentImei!!,lat,lng)
+                buildLoginMap(
+                    userNameLiveData.value!!,
+                    passWordLiveData.value!!,
+                    currentImei!!,
+                    lat,
+                    lng
+                )
             SystemRepository.loginRequest(map)
         } ?: return@tryExceptionLaunch
-
+        MyApplication.setDistance(loginBean.ent_degree)
         MyApplication.setEntLocation(Pair(loginBean.ent_lng, loginBean.ent_lat))
         //地理位置验证 登录后默认 isLogined = true 请求网络时自动验证
         checkLocation() ?: return@tryExceptionLaunch
         getSP(Const.SPBaidu).save {
-            putString(Const.SPBaiduTokenString,loginBean.ent_data)
+            putString(Const.SPBaiduTokenString, loginBean.ent_data)
         }
         _loginLiveData.postValue(loginBean)
-        savedUserSp(loginBean.token,loginBean.ent_id)
+        savedUserSp(loginBean.token, loginBean.ent_id)
     }
 
-    private fun getImei(): String? {
+    private fun getImei() = try {
         val mTelephonyMgr =
             getApplication<MyApplication>().getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        val imei = "999"/*if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
             mTelephonyMgr.imei
-        } else mTelephonyMgr.deviceId*/
-        if (imei == null) setToast("获取设备编号失败 请返回重试")
-        return imei
+        } else mTelephonyMgr.deviceId
+    } catch (e: Exception) {
+        e.printStackTrace()
+        "000000000000000"
     }
 
     /**
@@ -160,7 +168,7 @@ class LoginViewModel(application: Application, savedStateHandle: SavedStateHandl
                 val response = SystemRepository.loadAPKRequest(apkName)
                 val ios = response.byteStream()
                 val apkLength = response.contentLength()
-                LogUtils.d(TAG,"apkLength:${apkLength}")
+                LogUtils.d(TAG, "apkLength:${apkLength}")
                 var readLength = 0
                 val tempFile = File(extrasFile, apkName)
                 if (tempFile.exists()) {
@@ -173,7 +181,7 @@ class LoginViewModel(application: Application, savedStateHandle: SavedStateHandl
                 while (ios.read(bytes).also { readLength = it } != -1) {
                     currentLength += readLength
                     fos.write(bytes, 0, readLength)
-                    _loadApkProgressLD.postValue((currentLength * 100 / apkLength ).toInt())
+                    _loadApkProgressLD.postValue((currentLength * 100 / apkLength).toInt())
                 }
                 fos.flush()
                 fos.close()
@@ -189,7 +197,7 @@ class LoginViewModel(application: Application, savedStateHandle: SavedStateHandl
         }
     }
 
-    fun cancelLoadApk(){
+    fun cancelLoadApk() {
         if (this::downLoadJob.isInitialized) { //如果下载任务已经开始 则自动取消
             downLoadJob.cancel()
         }

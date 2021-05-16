@@ -39,8 +39,7 @@ object SystemRepository {
     suspend fun getEntUploadPictureInfoRequest(
         map: Map<String, RequestBody>,
         fileList: List<MultipartBody.Part>
-    ) =
-        SystemNetWork.getEntUploadPicture(map, fileList)
+    ) = SystemNetWork.getEntUploadPicture(map, fileList)
 
     suspend fun getTestRequest(
         token: RequestBody,
@@ -50,6 +49,16 @@ object SystemRepository {
         idaFile: MultipartBody.Part,
         idbFile: MultipartBody.Part
     ) = SystemNetWork.getTest(token, reputId, peopleId, faceFile, idaFile, idbFile)
+
+    suspend fun getCheckSucRequest(
+        map: Map<String, String>
+    ) = SystemNetWork.getPeopleCheckSuc(map)
+
+    suspend fun getUploadVideoRequest(
+        map: Map<String, RequestBody>,
+        file: MultipartBody.Part
+    ) = SystemNetWork.getUploadVideo(map, file)
+
 
     suspend fun loadAPKRequest(url: String) = SystemNetWork.loadAPK(url)
 }

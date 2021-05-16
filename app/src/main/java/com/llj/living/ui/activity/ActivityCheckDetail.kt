@@ -1,18 +1,21 @@
 package com.llj.living.ui.activity
 
+import android.os.Build
 import android.view.View
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
 import com.llj.living.R
-import com.llj.living.custom.ext.baseObserver
-import com.llj.living.custom.ext.getSP
-import com.llj.living.custom.ext.toSimpleTime
+import com.llj.living.custom.ext.*
 import com.llj.living.data.bean.InfoByEntIdBean
+import com.llj.living.data.bean.SearchFaceBean
 import com.llj.living.data.bean.ToolbarConfig
 import com.llj.living.data.const.Const
 import com.llj.living.data.enums.TakePhotoEnum
 import com.llj.living.databinding.ActivityCheckDetailBinding
 import com.llj.living.logic.vm.CheckDetailsVM
+import com.llj.living.utils.LogUtils
+import com.llj.living.utils.PhotoUtils
 import com.llj.living.utils.ToastUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -22,37 +25,34 @@ class ActivityCheckDetail : BaseTPActivity<ActivityCheckDetailBinding>() {
 
     override fun getLayoutId(): Int = R.layout.activity_check_detail
 
+    override fun setToolbar() = ToolbarConfig("核查详情", isShowBack = true, isShowMenu = false)
+
     private val checkDetailVM by viewModels<CheckDetailsVM>()
 
     private var peopleId: Int = -1
-    private var reputId: Int = -1
+    private var checkId: Int = -1
+
+    private var checkByIdBean: InfoByEntIdBean? = null
 
     override fun init() {
-        setToolbar(
-            ToolbarConfig(
-                getString(R.string.check_detail),
-                isShowBack = true,
-                isShowMenu = false
-            )
-        )
 
         peopleId = intent.getIntExtra(INTENT_ID_CHECK_FLAG, -1)
-        reputId = getSP(Const.SPCheck).getInt(Const.SPCheckReputId, -1)
+        checkId = getSP(Const.SPCheck).getInt(Const.SPCheckCheckId, -1)
 
-        val checkByIdBean =
-            intent.getParcelableExtra<InfoByEntIdBean>(ActivitySuppleDetails.INTENT_BEAN_SUPPLE_FLAG)
+        checkByIdBean =
+            intent.getParcelableExtra<InfoByEntIdBean>(INTENT_BEAN_CHECK_FLAG)
 
-        if (peopleId == -1 || reputId == -1 || checkByIdBean == null) {
+        if (peopleId == -1 || checkId == -1 || checkByIdBean == null) {
             ToastUtils.toastShort("数据解析错误 请返回重试")
             finish()
             return
         }
 
-        checkDetailVM.photoInfo.baseObserver(this) {
-
-        }
-
         getDataBinding().apply {
+
+            lifecycleOwner = this@ActivityCheckDetail
+
+            checkVm = checkDetailVM
 
             peopleBean = checkByIdBean
 
@@ -63,23 +63,47 @@ class ActivityCheckDetail : BaseTPActivity<ActivityCheckDetailBinding>() {
             }
 
             btCompleted.setOnClickListener {
-                lifecycleScope.launch(Dispatchers.IO) {
-
-                    delay(500)
-                    finish()
+                lifecycleScope.launch {
+                    launchOldManPhoto.launch(getPhotoIntent(TakePhotoEnum.PersonFace))
                 }
             }
         }
     }
 
-    private fun getFacePhoto() {
-        lifecycleScope.launch {
-            getDataBinding().apply {
-                btCompleted.visibility = View.VISIBLE
-                tvTipsTakePhoto.visibility = View.INVISIBLE
-                tvTips.visibility = View.INVISIBLE
-                tvCheckTime.text = System.currentTimeMillis().toSimpleTime()
-//                toastShort("识别成功")
+    @RequiresApi(Build.VERSION_CODES.R)
+    private suspend fun getFacePhoto() {
+        buildActivityCoroutineDialog(layoutInflater, null) { bd, ld ->
+            try {
+                bd.close.text = "取消"
+                bd.tvTipsStr.text = "人脸搜索中"
+                val baiduResult = checkDetailVM.searchBaiduInfo()
+                LogUtils.d("${TAG}_TT", baiduResult.toString())
+                if (baiduResult.error_code.isBaiduCodeSuc() && baiduResult.error_msg.isBaiduMsgSuc()) {
+                    val searchFaceBean = baseBaiduBeanConverter<SearchFaceBean>(baiduResult)
+                    val isSameList =
+                        searchFaceBean.user_list.filter { it.user_id.split("_")[1] == checkByIdBean!!.id_number && it.score >= 80 }
+                    if (isSameList.isNotEmpty()) {
+                        bd.tvTipsStr.text = "服务器验证中"
+                        getDataBinding().tvCheckTime.text =
+                            System.currentTimeMillis().toSimpleTime()
+                        val result = checkDetailVM.verifyIdNumber(checkId, peopleId)
+                        if (result.code.isCodeSuc() && result.msg.isMsgSuc()) {
+                            ToastUtils.toastShort("匹配成功")
+                            checkDetailVM.setPhotoInfo(true)
+                            ld?.cancel()
+                            delay(1000)
+                            finish()
+                        } else throw Exception("服务器验证失败")
+                    } else throw Exception("人脸匹配失败")
+                } else {
+                    throw Exception("人脸库操作失败:${baiduResult.error_msg}")
+                }
+            } catch (e: Exception) {
+                getDataBinding().tvTips.visibility = View.INVISIBLE
+                getDataBinding().btCompleted.visibility = View.VISIBLE //确认已拍照后 显示“重试”按钮
+                ToastUtils.toastShort(e.message.toString())
+                e.printStackTrace()
+                ld?.cancel()
             }
         }
     }
@@ -91,8 +115,11 @@ class ActivityCheckDetail : BaseTPActivity<ActivityCheckDetailBinding>() {
         buildLaunch {
             it?.let { bp ->
                 getDataBinding().ivOldManPhoto.setImageBitmap(bp)
-                /*val base64 = PhotoUtils.bitmapToBase64(bp).toString()*/
-                getFacePhoto()
+                val base64str = PhotoUtils.bitmapToBase64(bp)
+                checkDetailVM.setBase64Str(base64str)
+                commonLaunch(Dispatchers.Main) {
+                    getFacePhoto()
+                }
             }
         }
     }

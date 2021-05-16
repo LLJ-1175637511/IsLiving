@@ -3,9 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="checkVm"
+            type="com.llj.living.logic.vm.CheckDetailsVM" />
+
         <variable
             name="peopleBean"
             type="com.llj.living.data.bean.InfoByEntIdBean" />
+
         <variable
             name="time"
             type="String" />
@@ -16,12 +24,16 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar_base" />
+
         <FrameLayout
             android:id="@+id/takePhotoFragment"
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/ivOldManPhoto"
@@ -33,13 +45,14 @@
 
             <TextView
                 android:id="@+id/tvTips"
-                android:gravity="center"
-                android:textSize="14sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
+                android:gravity="center"
                 android:paddingBottom="40dp"
                 android:text="@string/click_picture_take_photo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:textSize="14sp"
+                android:visibility="@{checkVm.peopleInfoShowLiveData?View.INVISIBLE:View.VISIBLE}" />
         </FrameLayout>
 
 
@@ -75,6 +88,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:gravity="center"
                 android:text="@string/full_name"
                 android:textColor="@color/black"
                 android:textSize="16sp"
@@ -119,11 +133,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
+                android:gravity="center"
                 android:text="@string/sex"
                 app:layout_constraintBottom_toBottomOf="@+id/textView10"
-                app:layout_constraintStart_toEndOf="@+id/tvFullName"
-                app:layout_constraintTop_toTopOf="@+id/textView10"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintStart_toEndOf="@id/tvFullName"
+                app:layout_constraintTop_toTopOf="@+id/textView10" />
 
             <TextView
                 android:id="@+id/tvSex"
@@ -144,7 +158,7 @@
                 android:text="拍照获取信息"
                 android:textColor="@color/qq_red_dark"
                 android:textSize="18sp"
-                android:visibility="visible"
+                android:visibility="@{checkVm.peopleInfoShowLiveData?View.INVISIBLE:View.VISIBLE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -161,7 +175,7 @@
             android:layout_marginEnd="30dp"
             android:layout_marginBottom="28dp"
             android:background="@drawable/btn_login"
-            android:text="@string/completed"
+            android:text="@string/retry"
             android:textColor="@color/white"
             android:textSize="22sp"
             android:visibility="invisible" />

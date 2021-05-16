@@ -8,7 +8,7 @@
         android:layout_height="?actionBarSize"
         android:id="@+id/toolbar_base"
         android:background="@color/colorPrimary"
-        app:contentInsetEnd="120dp"
+        app:contentInsetEnd="60dp"
         app:contentInsetStart="60dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ToolbarPopupTheme"
@@ -16,18 +16,11 @@
         app:titleMarginStart="20dp"
         app:titleTextColor="@color/white">
 
-        <ImageView
-            android:id="@+id/toolbar_base_img"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginRight="10dp"
-            android:gravity="center" />
-
         <TextView
             android:id="@+id/toolbar_base_title"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:text="@string/app_name"
             android:textStyle="bold"
             android:textColor="@color/white"
