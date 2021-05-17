@@ -4,11 +4,6 @@ package com.llj.living.net.config
 import com.llj.living.data.enums.ImageType
 
 object TestNetConfig {
-    //token
-    const val AccessToken = "access_token"
-
-    //header
-    const val ContentType = "Content-Type"
 
     // region addFace params
     private const val Image = "image"

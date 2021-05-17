@@ -76,8 +76,9 @@ object SystemNetWork {
     ) = getEntUploadPictureServer.getEntUploadPicture(map, fileList).await()
 
     suspend fun getPeopleCheckSuc(
-        map: Map<String, String>
-    ) = getPeopleCheckSucServer.getcheckSuc(map).await()
+        map: Map<String, RequestBody>,
+        checkFile: MultipartBody.Part
+    ) = getPeopleCheckSucServer.getcheckSuc(map,checkFile).await()
 
 
     suspend fun getUploadVideo(

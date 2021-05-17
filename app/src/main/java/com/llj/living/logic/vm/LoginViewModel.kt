@@ -1,5 +1,6 @@
 package com.llj.living.logic.vm
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.os.Build
@@ -39,7 +40,7 @@ class LoginViewModel(application: Application, savedStateHandle: SavedStateHandl
     val loginLiveData: LiveData<LoginBean> = _loginLiveData
 
     private var checkVersionIsOk = false
-    private var currentImei: String? = null
+    private var currentImei: String = ""
 
     private val _loadApkProgressLD = MutableLiveData<Int>(0)
     val loadApkProgressLD: LiveData<Int> = _loadApkProgressLD
@@ -54,7 +55,6 @@ class LoginViewModel(application: Application, savedStateHandle: SavedStateHandl
 
     fun checkVersion() = commonLaunch {
         currentImei = getImei()
-        currentImei ?: return@commonLaunch
         if (!checkVersionIsOk) {
             //获取版本
             val versionBean = quickRequest<VersionBean>(isLogined = false) {
@@ -103,7 +103,7 @@ class LoginViewModel(application: Application, savedStateHandle: SavedStateHandl
                 buildLoginMap(
                     userNameLiveData.value!!,
                     passWordLiveData.value!!,
-                    currentImei!!,
+                    currentImei,
                     lat,
                     lng
                 )
@@ -120,6 +120,7 @@ class LoginViewModel(application: Application, savedStateHandle: SavedStateHandl
         savedUserSp(loginBean.token, loginBean.ent_id)
     }
 
+    @SuppressLint("HardwareIds")
     private fun getImei() = try {
         val mTelephonyMgr =
             getApplication<MyApplication>().getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager

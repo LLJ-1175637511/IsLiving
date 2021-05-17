@@ -9,7 +9,7 @@ import com.llj.living.data.const.Const
 import com.llj.living.databinding.FragmentWaitCheckBinding
 import com.llj.living.logic.vm.CheckPeopleVM
 import com.llj.living.ui.adapter.CheckDoingAdapter
-import com.llj.living.ui.adapter.CheckWaitTestAdapter
+import com.llj.living.ui.adapter.CheckWaitAdapter
 import com.llj.living.utils.LogUtils
 import com.llj.living.utils.ToastUtils
 import kotlinx.coroutines.flow.collectLatest
@@ -23,7 +23,7 @@ class CheckWaitFragment : NavBaseFragment<FragmentWaitCheckBinding>() {
 
     private var reputId: Int = -1
 
-    private val adapter by lazy { CheckWaitTestAdapter() }
+    private val adapter by lazy { CheckWaitAdapter() }
 
     override fun init() {
 

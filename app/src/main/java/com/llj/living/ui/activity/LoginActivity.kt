@@ -30,7 +30,8 @@ class LoginActivity : BaseBLActivity<ActivityLoginBinding>() {
 
     override fun getLayoutId(): Int = R.layout.activity_login
 
-    override fun setToolbar() =  ToolbarConfig(title = "用户登录", isShowBack = false, isShowMenu = false)
+    override fun setToolbar() =
+        ToolbarConfig(title = "用户登录", isShowBack = false, isShowMenu = false)
 
     override fun isLoginActivity() = true
 
@@ -177,10 +178,10 @@ class LoginActivity : BaseBLActivity<ActivityLoginBinding>() {
             }
             startActivity(intent)
         } else {
-            val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider",apkFile)
+            val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", apkFile)
             intent.apply {
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                LogUtils.d(TAG,"$apkFile")
+                LogUtils.d(TAG, "$apkFile")
                 setDataAndType(uri, type)
             }
             try {

@@ -6,10 +6,13 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
 import com.llj.living.R
+import com.llj.living.custom.exception.IdcardBErrException
+import com.llj.living.custom.exception.IdcardFErrException
 import com.llj.living.custom.ext.*
 import com.llj.living.data.bean.InfoByEntIdBean
 import com.llj.living.data.bean.ToolbarConfig
 import com.llj.living.data.const.Const
+import com.llj.living.data.enums.ImageStatusEnum
 import com.llj.living.data.enums.TakePhotoEnum
 import com.llj.living.databinding.ActivitySupplementInfoBinding
 import com.llj.living.logic.vm.SuppleDetailsVM
@@ -19,6 +22,7 @@ import com.llj.living.utils.ToastUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ActivitySuppleDetails : BaseTPActivity<ActivitySupplementInfoBinding>() {
 
@@ -91,13 +95,38 @@ class ActivitySuppleDetails : BaseTPActivity<ActivitySupplementInfoBinding>() {
         buildActivityCoroutineDialog(layoutInflater, null) { bd, ld ->
             try {
                 bd.close.text = "取消"
-                bd.tvTipsStr.text = "百度图片验证中"
-                val baiduResult = viewModel.uploadBaiduInfo(idNumber,peopleId)
+                bd.tvTipsStr.text = "身份证核验中"
+                val idARequest = viewModel.checkIDCardAFront()
+                val idBRequest = viewModel.checkIDCardBack()
+                val idAResult = idARequest.await()
+                val idBResult = idBRequest.await()
+                LogUtils.d(
+                    "${TAG}_TT",
+                    "idAResult:${idAResult.image_status} idBResult:${idBResult.image_status}"
+                )
+                LogUtils.d("${TAG}_TT", "idAResult:${idAResult} idBResult:${idBResult.toString()}")
+
+                when (idAResult.image_status) {
+                    ImageStatusEnum.non_idcard.name, ImageStatusEnum.other_type_card.name, ImageStatusEnum.unknown.name -> {
+                        throw IdcardFErrException()
+                    }
+                    else -> {
+                    }
+                }
+                when (idBResult.image_status) {
+                    ImageStatusEnum.non_idcard.name, ImageStatusEnum.other_type_card.name, ImageStatusEnum.unknown.name -> {
+                        throw IdcardBErrException()
+                    }
+                    else -> {
+                    }
+                }
+
+                bd.tvTipsStr.text = "人脸信息注册中"
+                val baiduResult = viewModel.uploadBaiduInfo(idNumber, peopleId)
                 LogUtils.d("${TAG}_TT", baiduResult.toString())
                 if (baiduResult.error_code.isBaiduCodeSuc() && baiduResult.error_msg.isBaiduMsgSuc()) {
                     bd.tvTipsStr.text = "服务器图片上传中"
                 } else {
-                    viewModel.setErrToast("人脸库注册失败:${baiduResult.error_msg}")
                     throw Exception("人脸库注册失败")
                 }
                 val myResult = viewModel.uploadPictureInfo(
@@ -105,7 +134,7 @@ class ActivitySuppleDetails : BaseTPActivity<ActivitySupplementInfoBinding>() {
                     peopleId,
                     proportion.value
                 )
-                if (myResult.code.isCodeSuc()&&myResult.msg.isMsgSuc()) {
+                if (myResult.code.isCodeSuc() && myResult.msg.isMsgSuc()) {
                     bd.tvTipsStr.text = "上传成功"
                     delay(1000)
                     ld?.cancel()
@@ -128,6 +157,8 @@ class ActivitySuppleDetails : BaseTPActivity<ActivitySupplementInfoBinding>() {
                 TakePhotoEnum.PersonFace -> faceLaunch.launch(getPhotoIntent(personFace))
                 TakePhotoEnum.IdcardFront -> frontLaunch.launch(getPhotoIntent(personFace))
                 TakePhotoEnum.IdcardBehind -> behindLaunch.launch(getPhotoIntent(personFace))
+                else -> {
+                }
             }
         }
     }
@@ -151,6 +182,8 @@ class ActivitySuppleDetails : BaseTPActivity<ActivitySupplementInfoBinding>() {
             bitmap?.let {
                 getDataBinding().apply {
                     ivIdCardASuppleInfo.setImageBitmap(it)
+                    val base64str = PhotoUtils.bitmapToBase64(it)
+                    viewModel.setIdCardABase64Str(base64str)
                     viewModel.setPictureAShow()
                 }
                 checkIsCompleted(2)
@@ -163,6 +196,8 @@ class ActivitySuppleDetails : BaseTPActivity<ActivitySupplementInfoBinding>() {
             bitmap?.let {
                 getDataBinding().apply {
                     ivIdCardBSuppleInfo.setImageBitmap(it)
+                    val base64str = PhotoUtils.bitmapToBase64(it)
+                    viewModel.setIdCardBBase64Str(base64str)
                     viewModel.setPictureBShow()
                 }
                 checkIsCompleted(3)

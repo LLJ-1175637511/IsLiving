@@ -6,14 +6,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-      <!--  <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Button"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />-->
-
         <ImageView
             android:src="@mipmap/logo_main"
             android:layout_width="match_parent"
@@ -35,7 +27,7 @@
             android:paddingEnd="5dp"
             android:paddingTop="2dp"
             android:paddingBottom="2dp"
-            android:background="@drawable/btn_grey_normal"
+            android:background="@drawable/btn_splash_normal"
             android:text="5"
             android:enabled="false"
             android:textColor="@color/black"

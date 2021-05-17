@@ -1,6 +1,8 @@
 package com.llj.living.logic.vm
 
 import android.app.Application
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -26,6 +28,17 @@ class CheckDetailsVM(application: Application, savedStateHandle: SavedStateHandl
 
     private var base64Str: String? = null
 
+    suspend fun verifyFaceRealness() = withContext(Dispatchers.Default) {
+        val baiduToken = getSP(Const.SPBaidu).getString(Const.SPBaiduTokenString, "")
+        baiduToken ?: throw BaiduTokenErrException()
+        base64Str ?: throw FaceLackException()
+        val baiduMap = BaiduNetConfig.buildFaceRealnessJson(
+            base64Str!!,
+            ImageType.BASE64
+        )
+        BaiduRepository.sendFaceRealnessRequest(baiduToken, baiduMap)
+    }
+
     suspend fun searchBaiduInfo() = withContext(Dispatchers.Default) {
         val entId = getSP(Const.SPUser).getInt(Const.SPUserEntId, -1)
         if (entId == -1) throw EntIdException()
@@ -40,11 +53,25 @@ class CheckDetailsVM(application: Application, savedStateHandle: SavedStateHandl
         BaiduRepository.sendSearchRequest(baiduToken, baiduMap)
     }
 
-    suspend fun verifyIdNumber(checkId: Int, peopleId: Int) = withContext(Dispatchers.Default) {
+    @RequiresApi(Build.VERSION_CODES.R)
+    suspend fun verifyIdNumber(
+        checkId: Int,
+        peopleId: Int,
+        faceLivenessScore: Int,
+        sameScore: Int,
+        proportion: Float?
+    ) = withContext(Dispatchers.Default) {
         val token = getSP(Const.SPUser).getString(Const.SPUserTokenLogin, "")
         token ?: throw TokenErrException()
-        val map = SysNetConfig.buildVerifyCheckMap(token, checkId.toString(), peopleId.toString())
-        SystemRepository.getCheckSucRequest(map)
+        val map = SysNetConfig.buildVerifyCheckMap(
+            token,
+            checkId.toString(),
+            peopleId.toString(),
+            faceLivenessScore,
+            sameScore
+        )
+        val checkPhotoFilePart = SysNetConfig.buildVerifyCheckFileMap(getApplication(),proportion)
+        SystemRepository.getCheckSucRequest(map,checkPhotoFilePart)
     }
 
     fun setPhotoInfo(bool: Boolean) {

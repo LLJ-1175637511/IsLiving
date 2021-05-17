@@ -35,7 +35,9 @@ object SysNetConfig {
     const val Ida = "ida"
     const val Idb = "idb"
     const val Status = "status" //客户端照片审核结果
-
+    const val FaceLiveness = "face_liveness" //人脸真实性结果
+    const val SameScore = "same_score" //人脸真实性结果
+    const val CheckFace = "check_face"
     const val STATUS_SUC = "ok" //客户端照片审核 成功标志
 
     const val MULTIPART_TEXT = "text/plain"
@@ -113,17 +115,69 @@ object SysNetConfig {
     }
 
     /**
-     * 构造补录上传图片的普通map
+     * 构造核查上传图片的文本PartMap
      */
     fun buildVerifyCheckMap(
         token: String,
         check_id: String,
-        people_id: String
-    ): Map<String, String> =
-        mapOf(Token to token, CheckId to check_id, PeopleId to people_id, Status to STATUS_SUC)
+        people_id: String,
+        faceLivenessScore: Int,
+        sameScore: Int
+    ): Map<String, RequestBody> {
+        val tmt = MediaType.parse(MULTIPART_TEXT)
+        val tokenBody = RequestBody.create(tmt, token)
+        val checkIdBody = RequestBody.create(tmt, check_id)
+        val peopleIdBody = RequestBody.create(tmt, people_id)
+        val statusSucBody = RequestBody.create(tmt, STATUS_SUC)
+        val faceLivenessBody = RequestBody.create(tmt, faceLivenessScore.toString())
+        val sameScoreBody = RequestBody.create(tmt, sameScore.toString())
+        return mapOf(
+            Token to tokenBody,
+            CheckId to checkIdBody,
+            PeopleId to peopleIdBody,
+            Status to statusSucBody,
+            FaceLiveness to faceLivenessBody,
+            SameScore to sameScoreBody
+        )
+    }
 
     /**
-     * 构造核查上传图片的普通map
+     * 构造补录上传图片的文件map
+     */
+    @RequiresApi(Build.VERSION_CODES.R)
+    fun buildVerifyCheckFileMap(
+        context: Context,
+        proportion: Float?
+    ): MultipartBody.Part {
+
+        val faceFile = File(context.externalCacheDir, "${TakePhotoEnum.CheckFace.name}.jpg")
+        if (!faceFile.exists()) throw PictureLackException()
+
+        val cp = Compressor(context).setQuality(25)
+        proportion?.let {
+            val t = (500 * proportion).toInt()
+            LogUtils.d("SysNetConfig_TT", "pro:${t}")
+            cp.setMaxWidth(500).setMaxHeight(t)
+        }
+        //压缩后图片的保存路径
+        val resultFile = cp.compressToFile(faceFile)
+
+        LogUtils.d(
+            "SysNetConfig_TT",
+            "check face：${resultFile.length()} "
+        )
+
+        val fmt = MediaType.parse(MULTIPART_FILE)
+
+        val faceRequest = RequestBody.create(fmt, resultFile)
+
+        return MultipartBody.Part.createFormData(CheckFace, resultFile.name, faceRequest)
+    }
+
+
+
+    /**
+     * 构造核查上传视频的文本PartMap
      */
     fun buildUploadVideoMap(
         token: String,
@@ -143,10 +197,13 @@ object SysNetConfig {
         )
     }
 
-    fun buildVideoPart(path:String):MultipartBody.Part{
+    /**
+     * 构造核查上传视频的文件part
+     */
+    fun buildVideoPart(path: String): MultipartBody.Part {
         val fmt = MediaType.parse(MULTIPART_FILE)
         val file = File(path)
-        LogUtils.d("${TAG}_TTT",file.length().toString())
+        LogUtils.d("${TAG}_TTT", file.length().toString())
         val videoRequest = RequestBody.create(fmt, file)
         return MultipartBody.Part.createFormData(Video, file.name, videoRequest)
     }

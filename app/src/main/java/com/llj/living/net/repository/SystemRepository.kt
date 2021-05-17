@@ -51,8 +51,9 @@ object SystemRepository {
     ) = SystemNetWork.getTest(token, reputId, peopleId, faceFile, idaFile, idbFile)
 
     suspend fun getCheckSucRequest(
-        map: Map<String, String>
-    ) = SystemNetWork.getPeopleCheckSuc(map)
+        map: Map<String, RequestBody>,
+        checkFile: MultipartBody.Part
+    ) = SystemNetWork.getPeopleCheckSuc(map,checkFile)
 
     suspend fun getUploadVideoRequest(
         map: Map<String, RequestBody>,

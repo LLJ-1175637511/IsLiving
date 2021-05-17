@@ -7,9 +7,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
 import com.llj.living.R
 import com.llj.living.custom.ext.*
-import com.llj.living.data.bean.InfoByEntIdBean
-import com.llj.living.data.bean.SearchFaceBean
-import com.llj.living.data.bean.ToolbarConfig
+import com.llj.living.data.bean.*
 import com.llj.living.data.const.Const
 import com.llj.living.data.enums.TakePhotoEnum
 import com.llj.living.databinding.ActivityCheckDetailBinding
@@ -21,7 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class ActivityCheckDetail : BaseTPActivity<ActivityCheckDetailBinding>() {
+class ActivityCheckDetails : BaseTPActivity<ActivityCheckDetailBinding>() {
 
     override fun getLayoutId(): Int = R.layout.activity_check_detail
 
@@ -50,7 +48,7 @@ class ActivityCheckDetail : BaseTPActivity<ActivityCheckDetailBinding>() {
 
         getDataBinding().apply {
 
-            lifecycleOwner = this@ActivityCheckDetail
+            lifecycleOwner = this@ActivityCheckDetails
 
             checkVm = checkDetailVM
 
@@ -58,13 +56,13 @@ class ActivityCheckDetail : BaseTPActivity<ActivityCheckDetailBinding>() {
 
             takePhotoFragment.setOnClickListener {
                 lifecycleScope.launch {
-                    launchOldManPhoto.launch(getPhotoIntent(TakePhotoEnum.PersonFace))
+                    launchOldManPhoto.launch(getPhotoIntent(TakePhotoEnum.CheckFace))
                 }
             }
 
             btCompleted.setOnClickListener {
                 lifecycleScope.launch {
-                    launchOldManPhoto.launch(getPhotoIntent(TakePhotoEnum.PersonFace))
+                    launchOldManPhoto.launch(getPhotoIntent(TakePhotoEnum.CheckFace))
                 }
             }
         }
@@ -75,18 +73,36 @@ class ActivityCheckDetail : BaseTPActivity<ActivityCheckDetailBinding>() {
         buildActivityCoroutineDialog(layoutInflater, null) { bd, ld ->
             try {
                 bd.close.text = "取消"
+                bd.tvTipsStr.text = "照片真实性检测中"
+                val verifyResult = checkDetailVM.verifyFaceRealness()
+                LogUtils.d("${TAG}_TT", verifyResult.toString())
+
+                if (verifyResult.result.isJsonNull) throw Exception("非正常拍摄人脸")
+                val faceRealnessBean = baseBaiduBeanConverter<FaceRealBean>(verifyResult)
+                if (faceRealnessBean.face_liveness <= 0.8) {
+                    throw Exception("未检测到真实人脸")
+                }
+
                 bd.tvTipsStr.text = "人脸搜索中"
                 val baiduResult = checkDetailVM.searchBaiduInfo()
                 LogUtils.d("${TAG}_TT", baiduResult.toString())
                 if (baiduResult.error_code.isBaiduCodeSuc() && baiduResult.error_msg.isBaiduMsgSuc()) {
+                    if (baiduResult.result.isJsonNull) throw Exception("无相似人脸")
                     val searchFaceBean = baseBaiduBeanConverter<SearchFaceBean>(baiduResult)
-                    val isSameList =
-                        searchFaceBean.user_list.filter { it.user_id.split("_")[1] == checkByIdBean!!.id_number && it.score >= 80 }
-                    if (isSameList.isNotEmpty()) {
+                    val isSameUser =
+                        searchFaceBean.user_list.find { it.score >= 80 && it.user_id.split("_")[1] == checkByIdBean!!.id_number }
+                    if (isSameUser != null) {
+
                         bd.tvTipsStr.text = "服务器验证中"
                         getDataBinding().tvCheckTime.text =
                             System.currentTimeMillis().toSimpleTime()
-                        val result = checkDetailVM.verifyIdNumber(checkId, peopleId)
+                        val result = checkDetailVM.verifyIdNumber(
+                            checkId,
+                            peopleId,
+                            faceRealnessBean.face_liveness.toInt(),
+                            isSameUser.score.toInt(),
+                            proportion.value
+                        )
                         if (result.code.isCodeSuc() && result.msg.isMsgSuc()) {
                             ToastUtils.toastShort("匹配成功")
                             checkDetailVM.setPhotoInfo(true)
@@ -95,11 +111,8 @@ class ActivityCheckDetail : BaseTPActivity<ActivityCheckDetailBinding>() {
                             finish()
                         } else throw Exception("服务器验证失败")
                     } else throw Exception("人脸匹配失败")
-                } else {
-                    throw Exception("人脸库操作失败:${baiduResult.error_msg}")
-                }
+                } else throw Exception("人脸库操作失败:${baiduResult.error_msg}")
             } catch (e: Exception) {
-                getDataBinding().tvTips.visibility = View.INVISIBLE
                 getDataBinding().btCompleted.visibility = View.VISIBLE //确认已拍照后 显示“重试”按钮
                 ToastUtils.toastShort(e.message.toString())
                 e.printStackTrace()
@@ -114,6 +127,7 @@ class ActivityCheckDetail : BaseTPActivity<ActivityCheckDetailBinding>() {
     private val launchOldManPhoto by lazy {
         buildLaunch {
             it?.let { bp ->
+                getDataBinding().tvTips.visibility = View.INVISIBLE
                 getDataBinding().ivOldManPhoto.setImageBitmap(bp)
                 val base64str = PhotoUtils.bitmapToBase64(bp)
                 checkDetailVM.setBase64Str(base64str)

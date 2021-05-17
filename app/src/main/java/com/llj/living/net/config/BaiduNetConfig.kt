@@ -1,6 +1,7 @@
 package com.llj.living.net.config
 
 import com.llj.living.data.enums.ActionEnums
+import com.llj.living.data.enums.IdCardEnum
 import com.llj.living.data.enums.ImageType
 
 object BaiduNetConfig {
@@ -16,6 +17,7 @@ object BaiduNetConfig {
     private const val UserInfo = "user_info"
     private const val FaceToken = "face_token"
     private const val ActionType = "action_type"
+    private const val IdCardSide = "id_card_side"
 
     //endregion
 
@@ -34,11 +36,28 @@ object BaiduNetConfig {
         ActionType to ActionEnums.REPLACE.name //已注册则覆盖
     )
 
+    fun buildFaceRealnessJson(
+        image: String,
+        imageType: ImageType
+    ): Array<FaceRealnessParams> = arrayOf(FaceRealnessParams(image,imageType.name))
+
     fun buildSearchFaceMap(
         image: String,
         imageType: ImageType,
         groupIdList: String
     ): Map<String, String> =
         mapOf(Image to image, ImageType to imageType.name, GroupIdList to groupIdList)
+
+    fun buildIdCardRecognizeMap(
+        image: String,
+        idCardSide: IdCardEnum
+    ): Map<String, String> {
+        return mapOf(Image to image, IdCardSide to idCardSide.name)
+    }
+
+    data class FaceRealnessParams(
+        val image: String,
+        val image_type: String
+    )
 
 }

@@ -159,10 +159,11 @@ interface EntCheckServer {
  */
 interface PeopleCheckSucServer {
 
-    @FormUrlEncoded
+    @Multipart
     @POST("pi.php/check/checkbyface")
     fun getcheckSuc(
-        @FieldMap map: Map<String, String>
+        @PartMap map: Map<String, @JvmSuppressWildcards RequestBody>,
+        @Part checkPictureFile: MultipartBody.Part
     ): Call<BaseBean>
 
 }

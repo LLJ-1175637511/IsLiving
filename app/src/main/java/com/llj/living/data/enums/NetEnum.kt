@@ -23,8 +23,12 @@ enum class ActionEnums {
     APPEND, REPLACE, UPDATE
 }
 
-enum class ModifyFaceType {
-    Register, Update
+enum class IdCardEnum {
+    front, back
+}
+
+enum class ImageStatusEnum {
+    normal, reversed_side,non_idcard,blurred,other_type_card,over_exposure,over_dark,unknown
 }
 
 /**

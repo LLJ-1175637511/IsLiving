@@ -6,7 +6,7 @@ import com.llj.living.R
 import com.llj.living.databinding.FragmentHadSuppleBinding
 import com.llj.living.logic.vm.CheckPeopleVM
 import com.llj.living.ui.adapter.CheckDoingAdapter
-import com.llj.living.ui.adapter.CheckHadTestAdapter
+import com.llj.living.ui.adapter.CheckHadAdapter
 import com.llj.living.utils.LogUtils
 import com.llj.living.utils.ToastUtils
 import kotlinx.coroutines.flow.collectLatest
@@ -18,7 +18,7 @@ class CheckHadFragment private constructor() : NavBaseFragment<FragmentHadSupple
 
     private val checkVm by activityViewModels<CheckPeopleVM>()
 
-    private val adapter by lazy { CheckHadTestAdapter() }
+    private val adapter by lazy { CheckHadAdapter() }
 
     private var checkId: Int = -1
 

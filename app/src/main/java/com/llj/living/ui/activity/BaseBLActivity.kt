@@ -87,6 +87,7 @@ abstract class BaseBLActivity<DB : ViewDataBinding> : BaseActivity<DB>() {
                 locationProvider = LocationManager.PASSIVE_PROVIDER
             }
             else -> {
+                LogUtils.d("Test2", "else")
             }
         }
         startGetLocation()
@@ -170,7 +171,11 @@ abstract class BaseBLActivity<DB : ViewDataBinding> : BaseActivity<DB>() {
         private const val LOCATION_CODE = 301
         private val REQUIRED_PERMISSIONS = arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.INTERNET,
+            Manifest.permission.ACCESS_NETWORK_STATE,
+            Manifest.permission.CHANGE_WIFI_STATE,
+            Manifest.permission.ACCESS_WIFI_STATE,
             Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.READ_PHONE_STATE,

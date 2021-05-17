@@ -62,7 +62,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.activity.ActivitySuppleDetails" />
-        <activity android:name=".ui.activity.ActivityCheckDetail" />
+        <activity android:name=".ui.activity.ActivityCheckDetails" />
         <activity android:name=".ui.activity.ActivityCheck" />
         <activity
             android:name=".ui.activity.ActivityVideotape"

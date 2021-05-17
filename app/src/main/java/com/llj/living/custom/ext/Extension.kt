@@ -39,7 +39,8 @@ suspend inline fun <reified T> baseBaiduBeanConverter(bb: BaseBaiduBean): T =
     withContext(Dispatchers.IO) {
         val gson = Gson()
         val type = object : TypeToken<T>() {}.type
-        gson.fromJson(bb.result, type) as T
+        val result = bb.result
+        gson.fromJson(result, type) as T
     }
 
 fun CoroutineScope.tryExceptionLaunch(
@@ -107,9 +108,9 @@ suspend inline fun <reified T> quickTokenRequest(
     }
     val exception = beanPair.second
     if (exception != null) {
-        if (exception.message=="tokenErr"){
+        if (exception.message == "tokenErr") {
             MyApplication.setTokenInvalid(true)
-        }else{
+        } else {
             withContext(Dispatchers.Main) {
                 ToastUtils.toastShort(exception.message.toString())
             }

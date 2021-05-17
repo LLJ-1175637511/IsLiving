@@ -8,29 +8,24 @@ import androidx.recyclerview.widget.RecyclerView
 import com.llj.living.R
 import com.llj.living.custom.ext.inflateDataBinding
 import com.llj.living.data.bean.InfoByEntIdBean
-import com.llj.living.databinding.ItemMainHadBinding
-import com.llj.living.ui.activity.ActivityCheckDetail
-import com.llj.living.ui.activity.ActivitySuppleDetails
+import com.llj.living.databinding.ItemMainWaitBinding
+import com.llj.living.ui.activity.ActivityCheckDetails
 import com.llj.living.ui.activity.ActivityVideotape
 
-class CheckHadTestAdapter :
-    PagingDataAdapter<InfoByEntIdBean, CheckHadTestAdapter.AdViewHolder>(DIFF_CALLBACK) {
+class CheckWaitAdapter :
+    PagingDataAdapter<InfoByEntIdBean, CheckWaitAdapter.AdViewHolder>(DIFF_CALLBACK) {
 
-    private val TAG = "CheckHadAdapter"
+    private val TAG = "CheckWaitAdapter"
 
-    inner class AdViewHolder(private val binding: ItemMainHadBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    inner class AdViewHolder(private val binding: ItemMainWaitBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bindData(bean: InfoByEntIdBean) {
             binding.addonsByEntIdBean = bean
-            binding.root.setOnClickListener { view ->
-                view.context.also {
-                    it.startActivity(Intent(it, ActivityCheckDetail::class.java).apply {
-                        putExtra(ActivitySuppleDetails.INTENT_ID_SUPPLE_FLAG, bean.id)
-                        putExtra(ActivitySuppleDetails.INTENT_BEAN_SUPPLE_FLAG,bean)
-                    })
-                }
+            binding.root.setOnClickListener {
+                it.context.startActivity(Intent(it.context, ActivityCheckDetails::class.java).apply {
+                    putExtra(ActivityCheckDetails.INTENT_ID_CHECK_FLAG, bean.id)
+                    putExtra(ActivityCheckDetails.INTENT_BEAN_CHECK_FLAG,bean)
+                })
             }
-
             binding.btOperas.setOnClickListener { view ->
                 view.context.also {
                     it.startActivity(Intent(it, ActivityVideotape::class.java).apply {
@@ -44,8 +39,11 @@ class CheckHadTestAdapter :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdViewHolder {
         return AdViewHolder(
-            inflateDataBinding<ItemMainHadBinding>(parent, R.layout.item_main_had).apply {
-                btOperas.text = parent.context.resources.getString(R.string.re_check)
+            inflateDataBinding<ItemMainWaitBinding>(
+                parent,
+                R.layout.item_main_wait
+            ).apply {
+                btOperas.text = parent.context.resources.getString(R.string.video_check)
             }
         )
     }

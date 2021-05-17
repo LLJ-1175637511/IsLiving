@@ -71,6 +71,7 @@ abstract class BaseTPActivity<DB : ViewDataBinding> : BaseActivity<DB>() {
                 TakePhotoEnum.PersonFace -> "${TakePhotoEnum.PersonFace.name}.jpg"
                 TakePhotoEnum.IdcardFront -> "${TakePhotoEnum.IdcardFront.name}.jpg"
                 TakePhotoEnum.IdcardBehind -> "${TakePhotoEnum.IdcardBehind.name}.jpg"
+                TakePhotoEnum.CheckFace -> "${TakePhotoEnum.CheckFace.name}.jpg"
             }
             val outputImageFile =
                 File(externalCacheDir, path) //设置图片路径 包含文件后缀 xx.jpg

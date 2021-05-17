@@ -14,7 +14,7 @@ data class BaseBaiduBean(
 data class SearchFaceBean(
     val face_token: String,
     val user_list: List<User>
-){
+) {
     data class User(
         val group_id: String,
         val score: Double,
@@ -22,4 +22,19 @@ data class SearchFaceBean(
         val user_info: String
     )
 }
+
+data class IdCardBean(
+    val idcard_number_type: Int,
+    val image_status: String,
+    val log_id: Long,
+    val words_result: JsonElement,
+    val words_result_num: Int
+)
+
+
+data class FaceRealBean(
+    val face_list:JsonElement,
+    val face_liveness: Double,
+    val thresholds: JsonElement
+)
 

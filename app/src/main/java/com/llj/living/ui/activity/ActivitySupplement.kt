@@ -26,8 +26,6 @@ class ActivitySupplement : BaseActivity<ActivitySupplementBinding>() {
 
     override fun setToolbar() = ToolbarConfig("补录信息", isShowBack = true, isShowMenu = false)
 
-//    private val supplementVm by viewModels<SupplementPeopleVM>()
-
     override fun init() {
 
         val addonsId = intent.getIntExtra(SupplementDoingAdapter.SUPPLE_ID_FLAG, -1)
@@ -50,17 +48,9 @@ class ActivitySupplement : BaseActivity<ActivitySupplementBinding>() {
             endTime = StringUtils.convertMyTimeStr(addonsBean.end_at)
             hadCount = addonsBean.people_reput_count.toString()
             waitCount = (addonsBean.people_count).toString()
-         /*   supplementVm.setPeopleCount(addonsBean.people_count)
-            supplementVm.setPeopleReCount(addonsBean.people_reput_count)*/
-        }
-/*
-        supplementVm.peopleCount.baseObserver(this) {
-            headerBinding?.waitCount = (addonsBean.people_count).toString()
+
         }
 
-        supplementVm.peopleReCount.baseObserver(this) {
-            headerBinding?.hadCount = addonsBean.people_reput_count.toString()
-        }*/
         getDataBinding().viewPager2.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount() = 2
 

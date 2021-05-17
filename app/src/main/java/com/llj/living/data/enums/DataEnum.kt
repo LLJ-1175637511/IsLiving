@@ -5,5 +5,5 @@ enum class BaseDataEnum {
 }
 
 enum class TakePhotoEnum {
-    PersonFace, IdcardFront, IdcardBehind
+    PersonFace, IdcardFront, IdcardBehind,CheckFace
 }
