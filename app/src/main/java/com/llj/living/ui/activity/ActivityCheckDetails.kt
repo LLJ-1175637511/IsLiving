@@ -99,7 +99,7 @@ class ActivityCheckDetails : BaseTPActivity<ActivityCheckDetailBinding>() {
                         val result = checkDetailVM.verifyIdNumber(
                             checkId,
                             peopleId,
-                            faceRealnessBean.face_liveness.toInt(),
+                            (faceRealnessBean.face_liveness*100).toInt(),
                             isSameUser.score.toInt(),
                             proportion.value
                         )
