@@ -49,6 +49,10 @@ class SuppleWaitFragment private constructor() : NavBaseFragment<FragmentWaitSup
             }
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
         loadData()
     }
 
@@ -67,7 +71,6 @@ class SuppleWaitFragment private constructor() : NavBaseFragment<FragmentWaitSup
     }
 
     companion object {
-
         private var instance: SuppleWaitFragment? = null
         fun getInstance() = instance ?: SuppleWaitFragment().also {
             instance = it

@@ -14,7 +14,7 @@ class MyApplication : Application() {
 
     companion object {
 
-        const val CURRENT_VERSION = "1.0.1"
+        const val CURRENT_VERSION = "1.1.1"
 
         //养老院位置 lon lat
         private var entLocation = Pair(0.0, 0.0)

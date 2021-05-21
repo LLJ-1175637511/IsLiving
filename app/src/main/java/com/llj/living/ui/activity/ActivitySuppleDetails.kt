@@ -7,7 +7,9 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
 import com.llj.living.R
 import com.llj.living.custom.exception.IdcardBErrException
+import com.llj.living.custom.exception.IdcardBReversedException
 import com.llj.living.custom.exception.IdcardFErrException
+import com.llj.living.custom.exception.IdcardFReversedException
 import com.llj.living.custom.ext.*
 import com.llj.living.data.bean.InfoByEntIdBean
 import com.llj.living.data.bean.ToolbarConfig
@@ -110,12 +112,19 @@ class ActivitySuppleDetails : BaseTPActivity<ActivitySupplementInfoBinding>() {
                     ImageStatusEnum.non_idcard.name, ImageStatusEnum.other_type_card.name, ImageStatusEnum.unknown.name -> {
                         throw IdcardFErrException()
                     }
+                    ImageStatusEnum.reversed_side.name->{
+                        throw IdcardFReversedException()
+                    }
                     else -> {
                     }
                 }
+
                 when (idBResult.image_status) {
                     ImageStatusEnum.non_idcard.name, ImageStatusEnum.other_type_card.name, ImageStatusEnum.unknown.name -> {
                         throw IdcardBErrException()
+                    }
+                    ImageStatusEnum.reversed_side.name->{
+                        throw IdcardBReversedException()
                     }
                     else -> {
                     }

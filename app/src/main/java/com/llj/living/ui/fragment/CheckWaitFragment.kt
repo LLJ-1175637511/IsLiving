@@ -48,7 +48,10 @@ class CheckWaitFragment : NavBaseFragment<FragmentWaitCheckBinding>() {
                 loadData()
             }
         }
+    }
 
+    override fun onResume() {
+        super.onResume()
         loadData()
     }
 

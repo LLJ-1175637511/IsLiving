@@ -22,11 +22,24 @@ class MainActivity : BaseActivity<ActivityNavMainBinding>() {
         isShowMenu = true
     )
 
-    private val dbViewModel by viewModels<DatabaseTestVM>()
+    private val mainViewModel by viewModels<DatabaseTestVM>()
 
     override fun init() {
         buildBottomView()
         loadLoginBean()
+        mainViewModel.isAllowUseByLocation.baseObserver(this){
+            if (it==null){
+                commonLaunch {
+                    delay(500)
+                    startCommonFinishedActivity<LoginActivity>()
+                }
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mainViewModel.checkMainLocation()
     }
 
     private fun loadLoginBean() {
@@ -39,10 +52,10 @@ class MainActivity : BaseActivity<ActivityNavMainBinding>() {
             }
             return
         }
-        dbViewModel.setEntBean(lb)
+        mainViewModel.setEntBean(lb)
         getDataBinding().viewHeader.apply {
             lifecycleOwner = this@MainActivity
-            vm = dbViewModel
+            vm = mainViewModel
             tryException(errTips = "头像") {
                 //加载网络圆形图片
                 loadCircleView(lb.avatar,getDataBinding().viewHeader.ivLogoMain)

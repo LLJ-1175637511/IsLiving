@@ -37,14 +37,14 @@ android {
         jvmTarget = '1.8'
     }
 
-     lintOptions {
-         checkReleaseBuilds false
-         abortOnError false
-     }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
     android.applicationVariants.all {
         variant ->
             variant.outputs.all {
-                outputFileName = "PensionAuditSys_release.apk"
+                outputFileName = "PensionAuditSys111_release.apk"
             }
     }
 }
@@ -143,5 +143,5 @@ dependencies {
     //图片压缩
     implementation 'id.zelory:compressor:2.1.0'
     //视频压缩
-    implementation'com.iceteck.silicompressorr:silicompressor:2.2.1'
+    implementation 'com.iceteck.silicompressorr:silicompressor:2.2.1'
 }

@@ -13,20 +13,13 @@ import kotlinx.coroutines.launch
 class DatabaseTestVM(application: Application, savedStateHandle: SavedStateHandle) :
     BaseTestVM(application, savedStateHandle) {
 
-    private var suppleDoingDao: SuppleDoingDao
+/*    private var suppleDoingDao: SuppleDoingDao
     private var checkDoingDao: CheckDoingDao
     private var suppleFinishedDao: SuppleFinishedDao
     private var oldManInfoDao: OldManInfoDao
-    private var checkHadDao: CheckHadDao
+    private var checkHadDao: CheckHadDao*/
 
-    private val _entBeanLiveDate = MutableLiveData<LoginBean>()
-    val entBeanLiveDate: LiveData<LoginBean> = _entBeanLiveDate
-
-    fun setEntBean(lb: LoginBean) {
-        _entBeanLiveDate.postValue(lb)
-    }
-
-    init {
+   /* init {
         val oldDatabase: OldManDatabase = OldManDatabase.newInstance(application.applicationContext)
         suppleDoingDao = oldDatabase.getSuppleDoingDao()
         suppleFinishedDao = oldDatabase.getSuppleFinishedDao()
@@ -87,5 +80,21 @@ class DatabaseTestVM(application: Application, savedStateHandle: SavedStateHandl
     }
 
     fun getCheckFinishedLD() = checkHadDao.getAll()
+*/
+
+    private val _entBeanLiveDate = MutableLiveData<LoginBean>()
+    val entBeanLiveDate: LiveData<LoginBean> = _entBeanLiveDate
+
+
+    private val _isAllowUseByLocationLiveDate = MutableLiveData<Boolean?>()
+    val isAllowUseByLocation: LiveData<Boolean?> = _isAllowUseByLocationLiveDate
+
+    fun setEntBean(lb: LoginBean) {
+        _entBeanLiveDate.postValue(lb)
+    }
+
+    fun checkMainLocation(){
+        _isAllowUseByLocationLiveDate.postValue(checkLocation())
+    }
 
 }

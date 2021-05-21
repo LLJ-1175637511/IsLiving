@@ -47,7 +47,7 @@ abstract class BaseViewModel(
         LogUtils.d(TAG, "distance:${distance}")
         val degree = MyApplication.getDistance()
         if (distance > degree) { //如果 当前定位 到 规定定位 的距离 大于2公里
-            setToast("超出服务范围")
+            setToast("超出服务范围 请尝试重新登录")
             return null
         }
         return true
