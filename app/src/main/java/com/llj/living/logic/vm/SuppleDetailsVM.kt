@@ -16,6 +16,7 @@ import com.llj.living.net.config.BaiduNetConfig
 import com.llj.living.net.config.SysNetConfig
 import com.llj.living.net.repository.BaiduRepository
 import com.llj.living.net.repository.SystemRepository
+import com.llj.living.utils.LogUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
@@ -58,13 +59,15 @@ class SuppleDetailsVM(application: Application, savedStateHandle: SavedStateHand
         BaiduRepository.sendIdcardRecognizeRequest(baiduToken, baiduMap)
     }
 
-    suspend fun uploadBaiduInfo(idNumber: String, peopleId: Int) = withContext(Dispatchers.Default) {
+    suspend fun uploadBaiduInfo(idNumber: String, peopleId: Int) =
+        withContext(Dispatchers.Default) {
             val entId = getSP(Const.SPUser).getInt(Const.SPUserEntId, -1)
             base64Str ?: throw FaceLackException()
             if (entId == -1) throw EntIdException()
             val baiduToken = getSP(Const.SPBaidu).getString(Const.SPBaiduTokenString, "")
             baiduToken ?: throw BaiduTokenErrException()
-            val baiduPeopleId = "${peopleId}_${idNumber}"
+            val baiduPeopleId = "${peopleId}_${idNumber.trim()}"
+            LogUtils.d("${TAG}_TT", baiduPeopleId)
             val baiduMap = BaiduNetConfig.buildRegisterFaceMap(
                 base64Str!!,
                 ImageType.BASE64,

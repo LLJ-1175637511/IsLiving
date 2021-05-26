@@ -29,7 +29,7 @@
             android:paddingBottom="2dp"
             android:background="@drawable/btn_splash_normal"
             android:text="5"
-            android:enabled="false"
+            android:visibility="invisible"
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

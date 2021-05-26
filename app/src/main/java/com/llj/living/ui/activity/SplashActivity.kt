@@ -1,5 +1,6 @@
 package com.llj.living.ui.activity
 
+import android.view.View
 import android.widget.TextView
 import androidx.lifecycle.MutableLiveData
 import com.llj.living.R
@@ -49,8 +50,8 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
         val tvTime = findViewById<TextView>(R.id.tvTime)
         timeLiveData.baseObserver(this) {
             tvTime.text = if (timeIsOk) {
-                tvTime.isEnabled = true
-                "关闭 $it"
+                tvTime.visibility = View.VISIBLE
+                " 关闭 "
             } else it.toString()
         }
         tvTime.setOnClickListener {

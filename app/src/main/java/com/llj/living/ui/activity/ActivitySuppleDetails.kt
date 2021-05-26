@@ -133,9 +133,12 @@ class ActivitySuppleDetails : BaseTPActivity<ActivitySupplementInfoBinding>() {
                 bd.tvTipsStr.text = "人脸信息注册中"
                 val baiduResult = viewModel.uploadBaiduInfo(idNumber, peopleId)
                 LogUtils.d("${TAG}_TT", baiduResult.toString())
+
                 if (baiduResult.error_code.isBaiduCodeSuc() && baiduResult.error_msg.isBaiduMsgSuc()) {
                     bd.tvTipsStr.text = "服务器图片上传中"
-                } else {
+                } else if (baiduResult.error_code==222202&& baiduResult.error_msg=="pic not has face"){
+                    throw Exception("图片未检测到人脸")
+                }else{
                     throw Exception("人脸库注册失败")
                 }
                 val myResult = viewModel.uploadPictureInfo(
